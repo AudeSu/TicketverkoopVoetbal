@@ -64,6 +64,9 @@ builder.Services.AddTransient<IDAO<Club>, ClubDAO>();
 builder.Services.AddTransient<IService<Stadion>, StadionService>();
 builder.Services.AddTransient<IDAO<Stadion>, StadionDAO>();
 
+builder.Services.AddTransient<IService<AspNetUser>, UserService>();
+builder.Services.AddTransient<IDAO<AspNetUser>, UserDAO>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

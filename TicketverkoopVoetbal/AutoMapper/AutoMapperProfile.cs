@@ -27,6 +27,8 @@ namespace TicketverkoopVoetbal.AutoMapper
                 .ForMember(dest => dest.StadionNaam,
                 opts => opts.MapFrom(
                     src => src.Thuisstadion.Naam));
+
+            CreateMap<AspNetUser, AspNetUserVM>();
         }       
     }
 }
