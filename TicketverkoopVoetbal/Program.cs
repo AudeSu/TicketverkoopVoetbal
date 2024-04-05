@@ -30,6 +30,12 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddTransient<IService<Match>, MatchService>();
 builder.Services.AddTransient<IDAO<Match>, MatchDAO>();
 
+builder.Services.AddTransient<IService<Club>, ClubService>();
+builder.Services.AddTransient<IDAO<Club>, ClubDAO>();
+
+builder.Services.AddTransient<IService<Stadion>, StadionService>();
+builder.Services.AddTransient<IDAO<Stadion>, StadionDAO>();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
