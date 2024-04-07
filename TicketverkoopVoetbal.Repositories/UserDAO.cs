@@ -29,7 +29,7 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<AspNetUser> FindById(int id)
+        public Task<IEnumerable<AspNetUser>?> FindById(int id)
         {
             throw new NotImplementedException();
         }

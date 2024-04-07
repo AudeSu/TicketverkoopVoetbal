@@ -29,9 +29,23 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<Match> FindById(int id)
+        public async Task<IEnumerable<Match>?> FindById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _dbContext.Matches
+                .Where(a => a.ThuisploegId == id || a.UitploegId == id)
+                .Include(a => a.Thuisploeg)
+                .Include(a => a.Uitploeg)
+                 .Include(b => b.Stadion)
+
+                .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Match>?> GetAll()

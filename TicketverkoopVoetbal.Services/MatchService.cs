@@ -28,9 +28,9 @@ namespace TicketverkoopVoetbal.Services
             throw new NotImplementedException();
         }
 
-        public async Task<Match> FindById(int id)
+        public async Task<IEnumerable<Match>?> FindById(int id)
         {
-            throw new NotImplementedException();
+            return await _matchDAO.FindById(id);
         }
 
         public async Task<IEnumerable<Match>?> GetAll()

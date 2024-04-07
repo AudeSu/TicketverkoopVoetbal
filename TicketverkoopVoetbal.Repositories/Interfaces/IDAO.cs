@@ -12,6 +12,6 @@ namespace TicketverkoopVoetbal.Repositories.Interfaces
         Task Add(T entity);
         Task Delete(T entity);
         Task Update(T entity);
-        Task<T> FindById(int id);
+        Task<IEnumerable<T>?> FindById(int id);
     }
 }

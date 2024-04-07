@@ -1,5 +1,7 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using System.Diagnostics;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
@@ -10,21 +12,54 @@ namespace TicketverkoopVoetbal.Controllers
     {
 
         private IService<Match> _matchService;
+        private IService<Club> _clubService;
         private readonly IMapper _mapper;
 
-        public MatchController(IMapper mapper, IService<Match> matchservice)
+        public MatchController(IMapper mapper, IService<Match> matchservice, IService<Club> clubService)
         {
             _mapper = mapper;
             _matchService = matchservice;
+            _clubService = clubService;
         }
 
-        public async Task<IActionResult> Index()  // add using System.Threading.Tasks;
+        public async Task<ActionResult> Index()
         {
-            var list = await _matchService.GetAll();
-            List<MatchVM> listVM = _mapper.Map<List<MatchVM>>(list);
-            return View(listVM);
+            var matchlist = await _matchService.GetAll();
+
+            ClubMatchVM clubmatchVM = new ClubMatchVM();
+            clubmatchVM.Matches = _mapper.Map<List<MatchVM>>(matchlist);
+            clubmatchVM.Clubs = new SelectList(
+                await _clubService.GetAll(), "ClubId", "Naam");
+
+            return View(clubmatchVM);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(ClubMatchVM entity)
+        {
+            if (entity == null)
+            {
+                return NotFound();
+            }
+            try
+            {
+                var matchlist = await _matchService.FindById(Convert.ToInt16(entity.ClubNumber));
+
+                ClubMatchVM clubmatchVM = new ClubMatchVM();
+                clubmatchVM.Matches = _mapper.Map<List<MatchVM>>(matchlist);
+                clubmatchVM.Clubs =
+                new SelectList(await _clubService.GetAll(), "ClubId", "Naam", entity.ClubNumber);
+
+                return View(clubmatchVM);
 
 
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("errorlog" + ex.Message);
+            }
+
+            return View(entity);
         }
 
     }

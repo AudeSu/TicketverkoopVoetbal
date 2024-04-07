@@ -29,7 +29,7 @@ namespace TicketverkoopVoetbal.Services
             throw new NotImplementedException();
         }
 
-        public Task<Stadion> FindById(int id)
+        public Task<IEnumerable<Stadion>?> FindById(int id)
         {
             throw new NotImplementedException();
         }

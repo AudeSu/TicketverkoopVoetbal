@@ -1,41 +1,68 @@
-﻿@model IEnumerable<TicketverkoopVoetbal.ViewModels.MatchVM>
+﻿@model TicketverkoopVoetbal.ViewModels.ClubMatchVM
 
 @{
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index">
+            <div class="form-group">
+                <label for="ClubId" class="control-label">Select Club:</label>
+                <select asp-for="ClubNumber" asp-items="Model.Clubs">
+                    <option disabled selected value="">Kies een Club</option>
+                </select>
+            </div>
+        </form>
+    </div>
+</div>
 
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.StadionNaam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.ThuisploegNaam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.UitploegNaam)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.StadionNaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.ThuisploegNaam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.UitploegNaam)
-            </td>
+@if(Model.Matches != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Matches.First().StadionNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Matches.First().ThuisploegNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Matches.First().UitploegNaam)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Matches)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StadionNaam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ThuisploegNaam)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UitploegNaam)
+                    </td>
 
-        </tr>
+                </tr>
+            }
+        </tbody>
+    </table>
+
 }
-    </tbody>
-</table>
+
+@section scripts
+{
+
+    <script>
+        $("#ClubNumber").on("change", () => {
+            $("form").trigger("submit");
+        });
+
+    </script>
+}
