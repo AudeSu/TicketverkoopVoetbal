@@ -1,6 +1,9 @@
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Text;
 using TicketverkoopVoetbal.Data;
 using TicketverkoopVoetbal.Domains.Data;
 using TicketverkoopVoetbal.Domains.Entities;
@@ -66,6 +69,26 @@ builder.Services.AddTransient<IDAO<Stadion>, StadionDAO>();
 
 builder.Services.AddTransient<IService<AspNetUser>, UserService>();
 builder.Services.AddTransient<IDAO<AspNetUser>, UserDAO>();
+
+builder.Services
+ .AddAuthentication(options =>
+ {
+     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+ })
+ .AddJwtBearer(cfg =>
+ {
+     cfg.RequireHttpsMetadata = false;
+     cfg.SaveToken = true;
+     cfg.TokenValidationParameters = new TokenValidationParameters
+     {
+         ValidIssuer = builder.Configuration["JwtConfig:JwtIssuer"],
+         ValidAudience = builder.Configuration["JwtConfig:JwtIssuer"],
+         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:JwtKey"])),
+         ClockSkew = TimeSpan.Zero // remove delay of token when expire
+     };
+ });
 
 var app = builder.Build();
 

@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Services.Interfaces;
@@ -22,7 +23,7 @@ namespace TicketverkoopVoetbal.Controllers.API
         /// </summary>
         /// <returns>The list of Users.</returns>
         // GET: api/AspNetUser
-        [HttpGet]
+        [HttpGet, Authorize]
         public async Task<ActionResult<AspNetUserVM>> Get()
         {
             try

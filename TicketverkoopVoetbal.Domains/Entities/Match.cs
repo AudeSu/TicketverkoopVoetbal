@@ -15,7 +15,7 @@ public partial class Match
 
     public DateTime Datum { get; set; }
 
-    public byte[] Startuur { get; set; } = null!;
+    public TimeSpan Startuur { get; set; }
 
     public virtual Stadion Stadion { get; set; } = null!;
 
