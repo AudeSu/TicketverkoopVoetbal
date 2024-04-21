@@ -18,11 +18,14 @@
 </div>
 
 
-@if(Model.Matches != null)
+@if (Model.Matches != null)
 {
     <table class="table">
         <thead>
             <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Matches.First().MatchId)
+                </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Matches.First().StadionNaam)
                 </th>
@@ -32,19 +35,22 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Matches.First().UitploegNaam)
                 </th>
-                 <th>
+                <th>
                     @Html.DisplayNameFor(model => model.Matches.First().Datum)
                 </th>
                 <th>
                     @Html.DisplayNameFor(model => model.Matches.First().Startuur)
                 </th>
-               
+
             </tr>
         </thead>
         <tbody>
             @foreach (var item in Model.Matches)
             {
                 <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.MatchId)
+                    </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.StadionNaam)
                     </td>
@@ -60,7 +66,11 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.Startuur)
                     </td>
-
+                    <td>
+                        <a asp-action="Select" asp-route-id="@item.MatchId">
+                            <img src="~/images/shoppingcart.png" alt="shoppingcart" />
+                        </a>
+                    </td>
                 </tr>
             }
         </tbody>

@@ -29,7 +29,7 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Club>?> FindById(int id)
+        public Task<Club?> FindById(int id)
         {
             throw new NotImplementedException();
         }
@@ -50,6 +50,11 @@ namespace TicketverkoopVoetbal.Repositories
         }
 
         public Task Update(Club entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Club>?> IDAO<Club>.FilterById(int id)
         {
             throw new NotImplementedException();
         }

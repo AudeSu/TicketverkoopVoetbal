@@ -4,6 +4,7 @@ namespace TicketverkoopVoetbal.ViewModels
 {
     public class MatchVM
     {
+        public int MatchId { get; set; }
         public string? StadionNaam { get; set; }
         public string? ThuisploegNaam { get; set; }
         public string? UitploegNaam { get; set; }

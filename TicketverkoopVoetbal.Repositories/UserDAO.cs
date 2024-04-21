@@ -29,7 +29,7 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<AspNetUser>?> FindById(int id)
+        public Task<AspNetUser?> FindById(int id)
         {
             throw new NotImplementedException();
         }
@@ -48,6 +48,11 @@ namespace TicketverkoopVoetbal.Repositories
         }
 
         public Task Update(AspNetUser entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<AspNetUser>?> IDAO<AspNetUser>.FilterById(int id)
         {
             throw new NotImplementedException();
         }

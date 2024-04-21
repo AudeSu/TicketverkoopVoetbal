@@ -90,6 +90,16 @@ builder.Services
      };
  });
 
+
+//session
+builder.Services.AddSession(options =>
+{
+
+    options.Cookie.Name = "be.VIVES.Session";
+
+    options.IdleTimeout = TimeSpan.FromMinutes(20);
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -121,11 +131,14 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+//add session
+app.UseSession();
+
 app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Home}/{action=Index}/{id?}");
+    pattern: "{controller=Match}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();
