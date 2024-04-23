@@ -76,39 +76,39 @@ namespace TicketverkoopVoetbal.Controllers
 
             if (match != null)
             {
-                CartVM item = new CartVM
-                {
-                    MatchId = match.MatchId,
-                    StadionNaam = match.Stadion.Naam,
-                    ThuisploegNaam = match.Thuisploeg.Naam,
-                    UitploegNaam = match.Uitploeg.Naam,
-                    Datum = match.Datum,
-                    Startuur = match.Startuur,
-                    Aantal = 1,
-                    Prijs = 15,
-                    DateCreated = DateTime.Now
+                //CartVM item = new CartVM
+                //{
+                //    MatchId = match.MatchId,
+                //    StadionNaam = match.Stadion.Naam,
+                //    ThuisploegNaam = match.Thuisploeg.Naam,
+                //    UitploegNaam = match.Uitploeg.Naam,
+                //    Datum = match.Datum,
+                //    Startuur = match.Startuur,
+                //    Aantal = 1,
+                //    Prijs = 15,
+                //    DateCreated = DateTime.Now
                     
-                };
+                //};
 
-                ShoppingCartVM? shopping;
+                //ShoppingCartVM? shopping;
 
-                // var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
-                if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
-                {
-                    shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-                }
-                else
-                {
-                    shopping = new ShoppingCartVM();
-                    shopping.Carts = new List<CartVM>();
-                }
-                shopping?.Carts?.Add(item);
+                //// var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
+                //if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
+                //{
+                //    shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+                //}
+                //else
+                //{
+                //    shopping = new ShoppingCartVM();
+                //    shopping.Carts = new List<CartVM>();
+                //}
+                //shopping?.Carts?.Add(item);
 
 
-                HttpContext.Session.SetObject("ShoppingCart", shopping);
+                //HttpContext.Session.SetObject("ShoppingCart", shopping);
 
             }
-            return RedirectToAction("Index", "ShoppingCart");
+            return RedirectToAction("Index", "Ticket");
 
         }
 

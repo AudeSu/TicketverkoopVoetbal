@@ -12,13 +12,9 @@
 
     public class CartVM
     {
-        public int MatchId { get; set; }
+        public int? MatchId { get; set; }
 
-        public string StadionNaam { get; set; }
-        public string ThuisploegNaam { get; set; }
-        public string UitploegNaam { get; set; }
-        public DateTime? Datum { get; set; }
-        public TimeSpan? Startuur { get; set; }
+        public MatchVM matchVM { get; set; }
 
         public int Aantal { get; set; }
         public decimal Prijs { get; set; }

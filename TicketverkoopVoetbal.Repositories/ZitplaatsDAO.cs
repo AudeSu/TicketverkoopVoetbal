@@ -45,7 +45,6 @@ namespace TicketverkoopVoetbal.Repositories
             {
                 return await _dbContext.Zitplaats
                     .Include(b => b.Zone)
-                    .Include(b => b.Stadion)
                     .ToListAsync();
             }
             catch (Exception ex)

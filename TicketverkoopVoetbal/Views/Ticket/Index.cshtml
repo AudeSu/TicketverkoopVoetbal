@@ -1,0 +1,85 @@
+﻿@model TicketverkoopVoetbal.ViewModels.TicketVM
+@{
+    ViewData["Title"] = "Index";
+}
+@if (Model.matchVM != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.matchVM.StadionNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.matchVM.ThuisploegNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.matchVM.UitploegNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.matchVM.Datum)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.matchVM.Startuur)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.matchVM.StadionNaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.matchVM.ThuisploegNaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.matchVM.UitploegNaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.matchVM.Datum)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.matchVM.Startuur)
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index" method="post">
+            <div class="form-group">
+                <input type="hidden" asp-for="MatchId" />
+                <label for="ZoneId" class="control-label">Select Zone:</label>
+                <select asp-for="ZoneId" asp-items="@Model.Zones">
+                    <option disabled selected value="">Kies een Zone</option>
+                </select>
+
+                @if (Model.ZoneId != null)
+                {
+                    <input asp-for="Aantal"
+                           type="number" />
+
+                    @if (Model.Aantal != null)
+                    {
+                        <a asp-controller="Ticket" asp-action="Select" class="purchase-btn-primary">Confirm</a>
+                    }
+
+                }
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+    {
+
+    <script>
+        $("#ZoneId").on("change", () => {
+            $("form").trigger("submit");
+        });
+
+    </script>
+}

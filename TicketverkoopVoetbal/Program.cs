@@ -70,6 +70,12 @@ builder.Services.AddTransient<IDAO<Stadion>, StadionDAO>();
 builder.Services.AddTransient<IService<AspNetUser>, UserService>();
 builder.Services.AddTransient<IDAO<AspNetUser>, UserDAO>();
 
+builder.Services.AddTransient<IService<Zone>, ZoneService>();
+builder.Services.AddTransient<IDAO<Zone>, ZoneDAO>();
+
+builder.Services.AddTransient<IService<Zitplaat>, ZitplaatsService>();
+builder.Services.AddTransient<IDAO<Zitplaat>, ZitplaatsDAO>();
+
 builder.Services
  .AddAuthentication(options =>
  {

@@ -13,8 +13,6 @@ public partial class Zitplaat
 
     public bool Bezet { get; set; }
 
-    public virtual Stadion Stadion { get; set; } = null!;
-
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
     public virtual Zone Zone { get; set; } = null!;

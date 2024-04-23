@@ -13,5 +13,11 @@ public partial class Zone
 
     public int Aantal { get; set; }
 
+    public int StadionId { get; set; }
+
+    public virtual Stadion Stadion { get; set; } = null!;
+
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+
     public virtual ICollection<Zitplaat> Zitplaats { get; set; } = new List<Zitplaat>();
 }

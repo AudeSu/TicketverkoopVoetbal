@@ -57,7 +57,7 @@
                 <tr>
                     @Html.HiddenFor(m => Model.Carts[i].MatchId)
                     <td>
-                        <input asp-for="@Model.Carts[i].StadionNaam" readonly="readonly"
+                        <input asp-for="@Model.Carts[i].matchVM.StadionNaam" readonly="readonly"
                                class="form-control" />
 
                     </td>
