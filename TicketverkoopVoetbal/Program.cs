@@ -31,11 +31,7 @@ builder.Services.AddControllersWithViews();
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
 builder.Services.AddSingleton<IEmailSend, EmailSend>();
 
-// SwaggerGen produces JSON schema documents that power Swagger UI.By default, these are served up under / swagger /{ documentName}/ swagger.json, where { documentName} is usually the API version.  
-//provides the functionality to generate JSON Swagger documents that describe the objects, methods, return types, etc.
-//eerste paramter, is de naam van het swagger document
-//
-// Register the Swagger generator, defining 1 or more Swagger documents
+// Swagger
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
@@ -126,7 +122,7 @@ app.UseAuthorization();
 
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Match}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
 app.Run();
