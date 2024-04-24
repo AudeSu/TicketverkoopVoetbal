@@ -32,10 +32,13 @@
                 <th>
                     @Html.DisplayNameFor(model => model.Matches.First().UitploegNaam)
                 </th>
-                <th>
+                 <th>
                     @Html.DisplayNameFor(model => model.Matches.First().Datum)
                 </th>
-                <th></th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Matches.First().Startuur)
+                </th>
+               
             </tr>
         </thead>
         <tbody>
@@ -50,9 +53,6 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.UitploegNaam)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Datum)
                     </td>
 
                 </tr>
