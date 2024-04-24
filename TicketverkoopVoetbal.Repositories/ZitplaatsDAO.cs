@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TicketverkoopVoetbal.Domains.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
 
 namespace TicketverkoopVoetbal.Repositories
 {
-    public class ZitplaatsDAO : IDAO<Zitplaat>
+    public class ZitplaatsDAO : IDAO<Zitplaats>
     {
 
         private readonly FootballDbContext _dbContext;
@@ -19,27 +14,27 @@ namespace TicketverkoopVoetbal.Repositories
         {
             _dbContext = context;
         }
-        public Task Add(Zitplaat entity)
+        public Task Add(Zitplaats entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task Delete(Zitplaat entity)
+        public Task Delete(Zitplaats entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Zitplaat>?> FilterById(int id)
+        public Task<IEnumerable<Zitplaats>?> FilterById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Zitplaat?> FindById(int id)
+        public Task<Zitplaats?> FindById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Zitplaat>?> GetAll()
+        public async Task<IEnumerable<Zitplaats>?> GetAll()
         {
             try
             {
@@ -54,7 +49,7 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
-        public Task Update(Zitplaat entity)
+        public Task Update(Zitplaats entity)
         {
             throw new NotImplementedException();
         }

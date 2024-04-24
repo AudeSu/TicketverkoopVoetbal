@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace TicketverkoopVoetbal.Repositories.Interfaces
+﻿namespace TicketverkoopVoetbal.Repositories.Interfaces
 {
     public interface IDAO<T> where T : class
     {

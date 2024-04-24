@@ -72,8 +72,8 @@ builder.Services.AddTransient<IDAO<AspNetUser>, UserDAO>();
 builder.Services.AddTransient<IService<Zone>, ZoneService>();
 builder.Services.AddTransient<IDAO<Zone>, ZoneDAO>();
 
-builder.Services.AddTransient<IService<Zitplaat>, ZitplaatsService>();
-builder.Services.AddTransient<IDAO<Zitplaat>, ZitplaatsDAO>();
+builder.Services.AddTransient<IService<Zitplaats>, ZitplaatsService>();
+builder.Services.AddTransient<IDAO<Zitplaats>, ZitplaatsDAO>();
 
 //session
 builder.Services.AddSession(options =>

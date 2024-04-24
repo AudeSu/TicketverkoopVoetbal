@@ -1,50 +1,44 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TicketverkoopVoetbal.Domains.Entities;
-using TicketverkoopVoetbal.Repositories;
+﻿using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
 using TicketverkoopVoetbal.Services.Interfaces;
 
 namespace TicketverkoopVoetbal.Services
 {
-    public class ZitplaatsService : IService<Zitplaat>
+    public class ZitplaatsService : IService<Zitplaats>
     {
-        private IDAO<Zitplaat> _zitplaatsDAO;
+        private IDAO<Zitplaats> _zitplaatsDAO;
 
-        public ZitplaatsService(IDAO<Zitplaat> zitplaatsDAO)
+        public ZitplaatsService(IDAO<Zitplaats> zitplaatsDAO)
         {
             _zitplaatsDAO = zitplaatsDAO;
         }
 
-        public Task Add(Zitplaat entity)
+        public Task Add(Zitplaats entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task Delete(Zitplaat entity)
+        public Task Delete(Zitplaats entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Zitplaat>?> FilterById(int id)
+        public Task<IEnumerable<Zitplaats>?> FilterById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Zitplaat?> FindById(int id)
+        public Task<Zitplaats?> FindById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Zitplaat>?> GetAll()
+        public async Task<IEnumerable<Zitplaats>?> GetAll()
         {
             return await _zitplaatsDAO.GetAll();
         }
 
-        public Task Update(Zitplaat entity)
+        public Task Update(Zitplaats entity)
         {
             throw new NotImplementedException();
         }

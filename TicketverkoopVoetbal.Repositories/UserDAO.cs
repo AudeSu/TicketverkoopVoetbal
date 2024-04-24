@@ -1,16 +1,11 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TicketverkoopVoetbal.Domains.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
 
 namespace TicketverkoopVoetbal.Repositories
 {
-    public class UserDAO : IDAO<AspNetUser>
+    public class UserDAO : IUserDAO<AspNetUser>
     {
         private readonly FootballDbContext _dbContext;
 
@@ -34,6 +29,19 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
+        public async Task<AspNetUser> FindByStringId(string id)
+        {
+            try
+            {
+                return await _dbContext.AspNetUsers.Where(u => u.Id == id).FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<AspNetUser>?> GetAll()
         {
             try
@@ -42,7 +50,7 @@ namespace TicketverkoopVoetbal.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine(ex);
                 throw;
             }
         }

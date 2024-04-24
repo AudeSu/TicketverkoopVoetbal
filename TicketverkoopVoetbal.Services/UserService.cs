@@ -1,20 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TicketverkoopVoetbal.Domains.Entities;
-using TicketverkoopVoetbal.Repositories;
+﻿using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
 using TicketverkoopVoetbal.Services.Interfaces;
 
 namespace TicketverkoopVoetbal.Services
 {
-    public class UserService : IService<AspNetUser>
+    public class UserService : IUserService<AspNetUser>
     {
-        private IDAO<AspNetUser> _userDAO;
+        private IUserDAO<AspNetUser> _userDAO;
 
-        public UserService(IDAO<AspNetUser> userDAO)
+        public UserService(IUserDAO<AspNetUser> userDAO)
         {
             _userDAO = userDAO;
         }
@@ -32,6 +26,11 @@ namespace TicketverkoopVoetbal.Services
         public Task<AspNetUser?> FindById(int id)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<AspNetUser> FindByStringId(string id)
+        {
+            return await _userDAO.FindByStringId(id);
         }
 
         public async Task<IEnumerable<AspNetUser>?> GetAll()
