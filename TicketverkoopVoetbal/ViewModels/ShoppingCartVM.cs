@@ -4,8 +4,11 @@
     {
         public List<CartVM>? Carts { get; set; }
 
+        public decimal Total => ComputeTotalValue();
+
+        // Method to compute the total value
         public decimal ComputeTotalValue() =>
-       Carts.Sum(e => e.Prijs * e.Aantal);
+            Carts?.Sum(e => e.Prijs * e.Aantal) ?? 0;
 
 
     }
@@ -13,6 +16,10 @@
     public class CartVM
     {
         public int? MatchId { get; set; }
+
+        public int? ZoneId { get; set; }
+
+        public string ZoneNaam { get; set; }
 
         public MatchVM matchVM { get; set; }
 

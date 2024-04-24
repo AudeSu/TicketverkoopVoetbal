@@ -62,7 +62,7 @@ namespace TicketverkoopVoetbal.Controllers
                 ticketVM.Prijs = zone.Prijs;
                 ticketVM.Zones =
                 new SelectList(await _zoneService.FilterById(Convert.ToInt16(match.StadionId)), "ZoneId", "Naam", ticketVM.ZoneId);
-
+                HttpContext.Session.SetObject("TicketVM", ticketVM);
                 return View(ticketVM);
 
 
@@ -76,15 +76,16 @@ namespace TicketverkoopVoetbal.Controllers
         }
 
 
-        public async Task<IActionResult> Select(TicketVM ticketVM)
+        public async Task<IActionResult> Select()
         {
+            var ticketVM = HttpContext.Session.GetObject<TicketVM>("TicketVM");
             if (ticketVM == null)
             {
                 return NotFound();
             }
 
             Match? match = await _matchService.FindById(Convert.ToInt32(ticketVM.MatchId));
-
+            Zone? zone = await _zoneService.FindById(Convert.ToInt32(ticketVM.ZoneId));
             ShoppingCartVM? shopping;
 
             // var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
@@ -106,7 +107,9 @@ namespace TicketverkoopVoetbal.Controllers
                     {
                         MatchId = ticketVM.MatchId,
                         matchVM = _mapper.Map<MatchVM>(match),
-                        Aantal = ticketVM.Aantal,
+                        ZoneId = ticketVM.ZoneId,
+                        ZoneNaam = zone.Naam,
+                        Aantal = 1,
                         Prijs = ticketVM.Prijs,
                         DateCreated = DateTime.Now
 
