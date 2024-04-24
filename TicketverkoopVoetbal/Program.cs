@@ -66,8 +66,8 @@ builder.Services.AddTransient<IDAO<Club>, ClubDAO>();
 builder.Services.AddTransient<IService<Stadion>, StadionService>();
 builder.Services.AddTransient<IDAO<Stadion>, StadionDAO>();
 
-builder.Services.AddTransient<IService<AspNetUser>, UserService>();
-builder.Services.AddTransient<IDAO<AspNetUser>, UserDAO>();
+builder.Services.AddTransient<IUserService<AspNetUser>, UserService>();
+builder.Services.AddTransient<IUserDAO<AspNetUser>, UserDAO>();
 
 builder.Services.AddTransient<IService<Zone>, ZoneService>();
 builder.Services.AddTransient<IDAO<Zone>, ZoneDAO>();

@@ -50,32 +50,48 @@ namespace TicketverkoopVoetbal.Controllers
             return View("index", cartList);
         }
 
-        //[Authorize]
-        //[HttpPost]
-        //public async Task<IActionResult> Payement()
-        //{
-        //    ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-        //    string? userID = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
-        //    AspNetUser? user = await FindUser(userID);
+    //    FUCK DA kwas iets aant proberen ma idk
+    //    [Authorize]
+    //    [HttpPost]
+    //    public async Task<IActionResult> Payement()
+    //    {
+    //        ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+    //        string? userID = User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+    //        AspNetUser? user = await FindUser(userID);
 
-        //    if (cartList == null
-        //        || cartList.Cart == null
-        //        || cartList.Cart.Count == 0
-        //        || user == null)
-        //    {
-        //        return RedirectToAction("Index");
-        //    }
+    //        if (cartList == null
+    //            || cartList.Carts == null
+    //            || cartList.Carts.Count == 0
+    //            || user == null)
+    //        {
+    //            return RedirectToAction("Index");
+    //        }
 
-        //    List<Zitplaat>
-        //}
+    //        List<Stoeltje>? listStoeltjes = new();
 
-        private async Task<AspNetUser?> FindUser(string? userId)
-        {
-            if (userId != null)
-            {
-                return await _userService.FindByStringId(userId);
-            }
-            return null;
-        }
+    //        try
+    //        {
+    //            foreach (CartVM cart in cartList.Carts)
+    //            {
+
+    //            }
+    //        }
+    //        catch (Exception)
+    //        {
+    //            ModelState.AddModelError("", "Contact web admin");
+    //            return RedirectToAction("Index");
+    //        }
+    //    }
+
+    //    private async Task<AspNetUser?> FindUser(string? userId)
+    //    {
+    //        if (userId != null)
+    //        {
+    //            return await _userService.FindByStringId(userId);
+    //        }
+    //        return null;
+    //    }
+
+
     }
 }
