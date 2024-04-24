@@ -10,6 +10,8 @@ using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketVerkoopVoetbal.Util.Mail;
 using TicketVerkoopVoetbal.Util.Mail.Interfaces;
+using TicketVerkoopVoetbal.Util.PDF.Interfaces;
+using TicketVerkoopVoetbal.Util.PDF;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -74,6 +76,8 @@ builder.Services.AddTransient<IDAO<Zone>, ZoneDAO>();
 
 builder.Services.AddTransient<IService<Stoeltje>, StoeltjeService>();
 builder.Services.AddTransient<IDAO<Stoeltje>, StoeltjeDAO>();
+
+builder.Services.AddTransient<ICreatePDF, CreatePDF>();
 
 //session
 builder.Services.AddSession(options =>
