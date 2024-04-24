@@ -13,9 +13,9 @@ public partial class Match
 
     public int UitploegId { get; set; }
 
-    public DateTime Datum { get; set; }
+    public DateOnly Datum { get; set; }
 
-    public byte[] Startuur { get; set; } = null!;
+    public TimeSpan Startuur { get; set; }
 
     public virtual Stadion Stadion { get; set; } = null!;
 

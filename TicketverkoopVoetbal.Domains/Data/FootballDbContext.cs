@@ -185,9 +185,6 @@ public partial class FootballDbContext : DbContext
             entity.Property(e => e.MatchId).HasColumnName("MatchID");
             entity.Property(e => e.Datum).HasColumnType("date");
             entity.Property(e => e.StadionId).HasColumnName("StadionID");
-            entity.Property(e => e.Startuur)
-                .IsRowVersion()
-                .IsConcurrencyToken();
             entity.Property(e => e.ThuisploegId).HasColumnName("ThuisploegID");
             entity.Property(e => e.UitploegId).HasColumnName("UitploegID");
 
