@@ -4,41 +4,41 @@ using TicketverkoopVoetbal.Services.Interfaces;
 
 namespace TicketverkoopVoetbal.Services
 {
-    public class ZitplaatsService : IService<Zitplaats>
+    public class StoeltjeService : IService<Stoeltje>
     {
-        private IDAO<Zitplaats> _zitplaatsDAO;
+        private IDAO<Stoeltje> _stoeltjeDAO;
 
-        public ZitplaatsService(IDAO<Zitplaats> zitplaatsDAO)
+        public StoeltjeService(IDAO<Stoeltje> stoeltjeDAO)
         {
-            _zitplaatsDAO = zitplaatsDAO;
+            _stoeltjeDAO = stoeltjeDAO;
         }
 
-        public Task Add(Zitplaats entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        public Task Delete(Zitplaats entity)
+        public Task Add(Stoeltje entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Zitplaats>?> FilterById(int id)
+        public Task Delete(Stoeltje entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Zitplaats?> FindById(int id)
+        public Task<IEnumerable<Stoeltje>?> FilterById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Zitplaats>?> GetAll()
+        public Task<Stoeltje?> FindById(int id)
         {
-            return await _zitplaatsDAO.GetAll();
+            throw new NotImplementedException();
         }
 
-        public Task Update(Zitplaats entity)
+        public async Task<IEnumerable<Stoeltje>?> GetAll()
+        {
+            return await _stoeltjeDAO.GetAll();
+        }
+
+        public Task Update(Stoeltje entity)
         {
             throw new NotImplementedException();
         }

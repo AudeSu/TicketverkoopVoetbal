@@ -17,7 +17,7 @@ public partial class Zone
 
     public virtual Stadion Stadion { get; set; } = null!;
 
-    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
+    public virtual ICollection<Stoeltje> Stoeltjes { get; set; } = new List<Stoeltje>();
 
-    public virtual ICollection<Zitplaat> Zitplaats { get; set; } = new List<Zitplaat>();
+    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

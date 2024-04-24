@@ -9,7 +9,7 @@ public partial class Abonnement
 
     public string GebruikerId { get; set; } = null!;
 
-    public int ZitplaatsId { get; set; }
+    public int StoeltjeId { get; set; }
 
     public int ClubId { get; set; }
 

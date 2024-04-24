@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace TicketverkoopVoetbal.Domains.Entities;
 
-public partial class Zitplaat
+public partial class Stoeltje
 {
-    public int ZitplaatsId { get; set; }
+    public int StoeltjeId { get; set; }
 
     public int StadionId { get; set; }
 

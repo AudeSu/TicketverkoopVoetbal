@@ -5,40 +5,40 @@ using TicketverkoopVoetbal.Repositories.Interfaces;
 
 namespace TicketverkoopVoetbal.Repositories
 {
-    public class ZitplaatsDAO : IDAO<Zitplaats>
+    public class StoeltjeDAO : IDAO<Stoeltje>
     {
 
         private readonly FootballDbContext _dbContext;
 
-        public ZitplaatsDAO(FootballDbContext context)
+        public StoeltjeDAO(FootballDbContext context)
         {
             _dbContext = context;
         }
-        public Task Add(Zitplaats entity)
+        public Task Add(Stoeltje entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task Delete(Zitplaats entity)
+        public Task Delete(Stoeltje entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Zitplaats>?> FilterById(int id)
+        public Task<IEnumerable<Stoeltje>?> FilterById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Zitplaats?> FindById(int id)
+        public Task<Stoeltje?> FindById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Zitplaats>?> GetAll()
+        public async Task<IEnumerable<Stoeltje>?> GetAll()
         {
             try
             {
-                return await _dbContext.Zitplaats
+                return await _dbContext.Stoeltjes
                     .Include(b => b.Zone)
                     .ToListAsync();
             }
@@ -49,7 +49,7 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
-        public Task Update(Zitplaats entity)
+        public Task Update(Stoeltje entity)
         {
             throw new NotImplementedException();
         }
