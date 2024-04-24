@@ -1,9 +1,6 @@
-using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
-using System.Text;
 using TicketverkoopVoetbal.Data;
 using TicketverkoopVoetbal.Domains.Data;
 using TicketverkoopVoetbal.Domains.Entities;
@@ -11,6 +8,8 @@ using TicketverkoopVoetbal.Repositories;
 using TicketverkoopVoetbal.Repositories.Interfaces;
 using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
+using TicketVerkoopVoetbal.Util.Mail;
+using TicketVerkoopVoetbal.Util.Mail.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,6 +27,10 @@ builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.Requ
     .AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddControllersWithViews();
 
+// Email
+builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
+builder.Services.AddSingleton<IEmailSend, EmailSend>();
+
 // SwaggerGen produces JSON schema documents that power Swagger UI.By default, these are served up under / swagger /{ documentName}/ swagger.json, where { documentName} is usually the API version.  
 //provides the functionality to generate JSON Swagger documents that describe the objects, methods, return types, etc.
 //eerste paramter, is de naam van het swagger document
@@ -37,20 +40,20 @@ builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo
     {
-        Title = "My API Employee",
+        Title = "Ticketverkoop Voetbal",
         Version = "version 1",
-        Description = "An API to perform Employee operations",
-        TermsOfService = new Uri("https://example.com/terms"),
+        Description = "An API to buy football tickets",
+        TermsOfService = new Uri("https://ticketverkoop.com/terms"),
         Contact = new OpenApiContact
         {
-            Name = "CDW",
+            Name = "AS",
             Email = "aude.sustronck@student.vives.be",
             Url = new Uri("https://vives.be"),
         },
         License = new OpenApiLicense
         {
-            Name = "Employee API LICX",
-            Url = new Uri("https://example.com/license"),
+            Name = "Ticketverkoop Voetbal API LICX",
+            Url = new Uri("https://ticketverkoop.com/license"),
         }
     });
 });
@@ -75,27 +78,6 @@ builder.Services.AddTransient<IDAO<Zone>, ZoneDAO>();
 
 builder.Services.AddTransient<IService<Zitplaat>, ZitplaatsService>();
 builder.Services.AddTransient<IDAO<Zitplaat>, ZitplaatsDAO>();
-
-builder.Services
- .AddAuthentication(options =>
- {
-     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
-     options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
- })
- .AddJwtBearer(cfg =>
- {
-     cfg.RequireHttpsMetadata = false;
-     cfg.SaveToken = true;
-     cfg.TokenValidationParameters = new TokenValidationParameters
-     {
-         ValidIssuer = builder.Configuration["JwtConfig:JwtIssuer"],
-         ValidAudience = builder.Configuration["JwtConfig:JwtIssuer"],
-         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtConfig:JwtKey"])),
-         ClockSkew = TimeSpan.Zero // remove delay of token when expire
-     };
- });
-
 
 //session
 builder.Services.AddSession(options =>

@@ -3,13 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.9.34622.214
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketverkoopVoetbal", "TicketverkoopVoetbal\TicketverkoopVoetbal.csproj", "{F4C30F1E-6D7C-4FBD-B6F1-372CFF81ED70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketverkoopVoetbal", "TicketverkoopVoetbal\TicketverkoopVoetbal.csproj", "{F4C30F1E-6D7C-4FBD-B6F1-372CFF81ED70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketverkoopVoetbal.Domains", "TicketverkoopVoetbal.Domains\TicketverkoopVoetbal.Domains.csproj", "{627D3AAA-9D70-4B6B-8973-225C1C2BFE37}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketverkoopVoetbal.Domains", "TicketverkoopVoetbal.Domains\TicketverkoopVoetbal.Domains.csproj", "{627D3AAA-9D70-4B6B-8973-225C1C2BFE37}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketverkoopVoetbal.Repositories", "TicketverkoopVoetbal.Repositories\TicketverkoopVoetbal.Repositories.csproj", "{E885C353-BC7A-44AB-81F0-1FD907084D0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketverkoopVoetbal.Repositories", "TicketverkoopVoetbal.Repositories\TicketverkoopVoetbal.Repositories.csproj", "{E885C353-BC7A-44AB-81F0-1FD907084D0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketverkoopVoetbal.Services", "TicketverkoopVoetbal.Services\TicketverkoopVoetbal.Services.csproj", "{1A520B02-8B02-452A-B2DB-5117A434EDBA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TicketverkoopVoetbal.Services", "TicketverkoopVoetbal.Services\TicketverkoopVoetbal.Services.csproj", "{1A520B02-8B02-452A-B2DB-5117A434EDBA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TicketVerkoopVoetbal.Util", "TicketVerkoopVoetbal.Util\TicketVerkoopVoetbal.Util.csproj", "{6226D4D9-DDED-45FD-9D95-984C1FA11480}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +35,10 @@ Global
 		{1A520B02-8B02-452A-B2DB-5117A434EDBA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{1A520B02-8B02-452A-B2DB-5117A434EDBA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1A520B02-8B02-452A-B2DB-5117A434EDBA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6226D4D9-DDED-45FD-9D95-984C1FA11480}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6226D4D9-DDED-45FD-9D95-984C1FA11480}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6226D4D9-DDED-45FD-9D95-984C1FA11480}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6226D4D9-DDED-45FD-9D95-984C1FA11480}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
