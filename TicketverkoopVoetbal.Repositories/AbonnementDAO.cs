@@ -1,37 +1,43 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TicketverkoopVoetbal.Domains.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
 
 namespace TicketverkoopVoetbal.Repositories
 {
-    public class ClubDAO : IDAO<Club>
+    public class AbonnementDAO : IDAO<Abonnement>
     {
         private readonly FootballDbContext _dbContext;
 
-        public ClubDAO(FootballDbContext context)
+        public AbonnementDAO(FootballDbContext context)
         {
             _dbContext = context;
         }
 
-        public Task Add(Club entity)
+        public Task Add(Abonnement entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task Delete(Club entity)
+        public Task Delete(Abonnement entity)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<Club?> FindById(int id)
+        public async Task<IEnumerable<Abonnement>?> FilterById(int id)
         {
             try
             {
-                return await _dbContext.Clubs
-                .Where(a => a.ClubId == id)
-                 .Include(b => b.Thuisstadion)
-                .FirstOrDefaultAsync();
+                return await _dbContext.Abonnements
+                .Where(a => a.Club.ClubId == id)
+                .Include(a => a.Club)
+                .Include(a => a.Gebruiker)
+                 .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -40,12 +46,18 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
-        public async Task<IEnumerable<Club>?> GetAll()
+        public Task<Abonnement?> FindById(int id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Abonnement>?> GetAll()
         {
             try
             {
-                return await _dbContext.Clubs
-                    .Include(b => b.Thuisstadion)
+                return await _dbContext.Abonnements
+                    .Include(b => b.Club)
+                    .Include(b => b.Gebruiker)
                     .ToListAsync();
             }
             catch (Exception ex)
@@ -55,12 +67,7 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
-        public Task Update(Club entity)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<IEnumerable<Club>?> IDAO<Club>.FilterById(int id)
+        public Task Update(Abonnement entity)
         {
             throw new NotImplementedException();
         }

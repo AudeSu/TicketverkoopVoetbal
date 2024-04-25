@@ -60,11 +60,14 @@
                 {
                     <input asp-for="Aantal"
                            type="number"
+                      
+                           min="1"
+                           max="4"
                            id="Number"/>
 
                     @if (Model.Aantal != null)
                     {
-                        <a asp-controller="Ticket" asp-action="Select"  class="purchase-btn-primary">Confirm</a>
+                        <a asp-controller="PurchaseTicket" asp-action="Select"  class="purchase-btn-primary">Confirm</a>
                     }
 
                 }

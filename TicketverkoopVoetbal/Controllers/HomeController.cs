@@ -6,11 +6,10 @@ namespace TicketverkoopVoetbal.Controllers
 {
     public class HomeController : Controller
     {
-        private IEmailSend _emailSend;
-
-        public HomeController(IEmailSend emailSend)
+  
+        public HomeController()
         {
-            _emailSend = emailSend;
+            
         }
 
         public IActionResult Index()
@@ -18,28 +17,28 @@ namespace TicketverkoopVoetbal.Controllers
             return View();
         }
 
-        public IActionResult Contact()
-        {
-            return View();
-        }
+        //public IActionResult Contact()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public IActionResult Contact(SendMailVM sendMailVM)
-        {
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _emailSend.SendEmailAsync(sendMailVM.Email, "Contactformulier", sendMailVM.Message);
-                    return View("Thanks");
-                }
-                catch (Exception ex)
-                {
-                    ModelState.AddModelError("", ex.Message);
-                }
-            }
-            return View(sendMailVM);
-        }
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Contact(SendMailVM sendMailVM)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        try
+        //        {
+        //            _emailSend.SendEmailAsync(sendMailVM.Email, "Contactformulier", sendMailVM.Message);
+        //            return View("Thanks");
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            ModelState.AddModelError("", ex.Message);
+        //        }
+        //    }
+        //    return View(sendMailVM);
+        //}
     }
 }

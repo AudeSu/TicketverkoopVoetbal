@@ -10,13 +10,13 @@ using TicketverkoopVoetbal.ViewModels;
 
 namespace TicketverkoopVoetbal.Controllers
 {
-    public class TicketController : Controller
+    public class PurchaseTicketController : Controller
     {
         private IService<Match> _matchService;
         private IService<Zone> _zoneService;
         private readonly IMapper _mapper;
 
-        public TicketController(IMapper mapper, IService<Match> matchservice, IService<Zone> zoneService)
+        public PurchaseTicketController(IMapper mapper, IService<Match> matchservice, IService<Zone> zoneService)
         {
             _mapper = mapper;
             _matchService = matchservice;
@@ -96,14 +96,18 @@ namespace TicketverkoopVoetbal.Controllers
             else
             {
                 shopping = new ShoppingCartVM();
-                shopping.Carts = new List<CartVM>();
+
+            }
+            if (shopping.Carts == null)
+            {
+                shopping.Carts = new List<CartTicketVM>();
             }
 
             if (match != null)
             {
                 for (int i = 0; i < ticketVM.Aantal; i++)
                 {
-                    CartVM item = new CartVM
+                    CartTicketVM item = new CartTicketVM
                     {
                         MatchId = ticketVM.MatchId,
                         matchVM = _mapper.Map<MatchVM>(match),

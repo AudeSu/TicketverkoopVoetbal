@@ -1,6 +1,6 @@
 ﻿namespace TicketverkoopVoetbal.ViewModels
 {
-    public class CartVM
+    public class CartTicketVM
     {
         public int? MatchId { get; set; }
 

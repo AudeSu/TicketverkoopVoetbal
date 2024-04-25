@@ -1,6 +1,9 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TicketverkoopVoetbal.Domains.Entities;
+using TicketverkoopVoetbal.Extensions;
+using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
 
@@ -11,7 +14,9 @@ namespace TicketverkoopVoetbal.Controllers
         private IService<Club> _clubService;
         private readonly IMapper _mapper;
 
-        public ClubController(IMapper mapper, IService<Club> clubservice)
+
+        public ClubController(IMapper mapper, 
+            IService<Club> clubservice)            
         {
             _mapper = mapper;
             _clubService = clubservice;
@@ -23,5 +28,10 @@ namespace TicketverkoopVoetbal.Controllers
             List<ClubVM> listVM = _mapper.Map<List<ClubVM>>(list);
             return View(listVM);
         }
+
+
+
+
+
     }
 }

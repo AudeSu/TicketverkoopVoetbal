@@ -2,7 +2,9 @@
 {
     public class ShoppingCartVM
     {
-        public List<CartVM>? Carts { get; set; }
+        public List<CartTicketVM>? Carts { get; set; }
+
+        public CartAbonnementVM Abonnement { get; set; }
 
         public decimal Total => ComputeTotalValue();
 
