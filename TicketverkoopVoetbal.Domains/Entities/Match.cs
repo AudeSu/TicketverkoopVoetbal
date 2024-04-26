@@ -13,7 +13,7 @@ public partial class Match
 
     public int UitploegId { get; set; }
 
-    public DateTime Datum { get; set; }
+    public DateOnly Datum { get; set; }
 
     public TimeSpan Startuur { get; set; }
 
