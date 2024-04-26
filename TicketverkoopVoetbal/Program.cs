@@ -45,7 +45,7 @@ builder.Services.AddSwaggerGen(c =>
         Contact = new OpenApiContact
         {
             Name = "AS",
-            Email = "aude.sustronck@student.vives.be",
+            Email = "tickets.voetbal.league@gmail.com",
             Url = new Uri("https://vives.be"),
         },
         License = new OpenApiLicense
