@@ -29,7 +29,7 @@ namespace TicketverkoopVoetbal.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Stadion>?> FindById(int id)
+        public Task<Stadion?> FindById(int id)
         {
             throw new NotImplementedException();
         }
@@ -40,6 +40,11 @@ namespace TicketverkoopVoetbal.Services
         }
 
         public Task Update(Stadion entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Stadion>?> IService<Stadion>.FilterById(int id)
         {
             throw new NotImplementedException();
         }

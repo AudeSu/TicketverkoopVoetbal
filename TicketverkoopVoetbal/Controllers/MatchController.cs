@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using TicketverkoopVoetbal.Domains.Entities;
+using TicketverkoopVoetbal.Extensions;
+using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
 
@@ -43,7 +45,8 @@ namespace TicketverkoopVoetbal.Controllers
             }
             try
             {
-                var matchlist = await _matchService.FindById(Convert.ToInt16(entity.ClubNumber));
+                var matchlist = await _matchService.FilterById(Convert.ToInt32(entity.ClubNumber));
+                   
 
                 ClubMatchVM clubmatchVM = new ClubMatchVM();
                 clubmatchVM.Matches = _mapper.Map<List<MatchVM>>(matchlist);
@@ -60,6 +63,53 @@ namespace TicketverkoopVoetbal.Controllers
             }
 
             return View(entity);
+        }
+
+        public async Task<IActionResult> Select(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            Match? match = await _matchService.FindById(Convert.ToInt32(id));
+
+            if (match != null)
+            {
+                //CartVM item = new CartVM
+                //{
+                //    MatchId = match.MatchId,
+                //    StadionNaam = match.Stadion.Naam,
+                //    ThuisploegNaam = match.Thuisploeg.Naam,
+                //    UitploegNaam = match.Uitploeg.Naam,
+                //    Datum = match.Datum,
+                //    Startuur = match.Startuur,
+                //    Aantal = 1,
+                //    Prijs = 15,
+                //    DateCreated = DateTime.Now
+                    
+                //};
+
+                //ShoppingCartVM? shopping;
+
+                //// var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
+                //if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
+                //{
+                //    shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+                //}
+                //else
+                //{
+                //    shopping = new ShoppingCartVM();
+                //    shopping.Carts = new List<CartVM>();
+                //}
+                //shopping?.Carts?.Add(item);
+
+
+                //HttpContext.Session.SetObject("ShoppingCart", shopping);
+
+            }
+            return RedirectToAction("Index", "Ticket");
+
         }
 
     }

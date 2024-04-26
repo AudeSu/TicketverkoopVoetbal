@@ -19,5 +19,5 @@ public partial class Stadion
 
     public virtual ICollection<Match> Matches { get; set; } = new List<Match>();
 
-    public virtual ICollection<Zitplaat> Zitplaats { get; set; } = new List<Zitplaat>();
+    public virtual ICollection<Zone> Zones { get; set; } = new List<Zone>();
 }

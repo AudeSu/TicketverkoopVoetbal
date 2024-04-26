@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TicketverkoopVoetbal.Domains.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
@@ -29,7 +24,7 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Match>?> FindById(int id)
+        public async Task<IEnumerable<Match>?> FilterById(int id)
         {
             try
             {
@@ -39,7 +34,26 @@ namespace TicketverkoopVoetbal.Repositories
                 .Include(a => a.Uitploeg)
                  .Include(b => b.Stadion)
 
-                .ToListAsync();
+                 .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
+        }
+
+        public async Task<Match?> FindById(int id)
+        {
+            try
+            {
+                return await _dbContext.Matches
+                .Where(a => a.MatchId == id)
+                .Include(a => a.Thuisploeg)
+                .Include(a => a.Uitploeg)
+                 .Include(b => b.Stadion)
+
+                .FirstOrDefaultAsync();
             }
             catch (Exception ex)
             {

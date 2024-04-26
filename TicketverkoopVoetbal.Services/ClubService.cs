@@ -29,9 +29,9 @@ namespace TicketverkoopVoetbal.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Club>?> FindById(int id)
+        public async Task<Club?> FindById(int id)
         {
-            throw new NotImplementedException();
+            return await _clubDAO.FindById(id);
         }
 
         public async Task<IEnumerable<Club>?> GetAll()
@@ -40,6 +40,12 @@ namespace TicketverkoopVoetbal.Services
         }
 
         public Task Update(Club entity)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        Task<IEnumerable<Club>?> IService<Club>.FilterById(int id)
         {
             throw new NotImplementedException();
         }

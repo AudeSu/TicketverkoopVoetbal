@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using TicketverkoopVoetbal.Domains.Entities;
+﻿using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
 using TicketverkoopVoetbal.Services.Interfaces;
 
@@ -28,9 +23,14 @@ namespace TicketverkoopVoetbal.Services
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Match>?> FindById(int id)
+        public async Task<Match?> FindById(int id)
         {
             return await _matchDAO.FindById(id);
+        }
+
+        public async Task<IEnumerable<Match>?> FilterById(int id)
+        {
+            return await _matchDAO.FilterById(id);
         }
 
         public async Task<IEnumerable<Match>?> GetAll()

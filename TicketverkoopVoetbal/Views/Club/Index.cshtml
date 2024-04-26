@@ -28,6 +28,13 @@
             <td>
                 @Html.DisplayFor(modelItem => item.StadionNaam)
             </td>
+            <td>
+                    <a asp-controller="PurchaseAbonnement" asp-action="Index" asp-route-id="@item.ClubId">
+                        Koop Abonnement
+                    </a>
+
+            </td>
+             
         </tr>
 }
     </tbody>

@@ -1,0 +1,65 @@
+﻿@model TicketverkoopVoetbal.ViewModels.AbonnementVM
+@{
+    ViewData["Title"] = "Index";
+}
+@if (Model != null)
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.StadionNaam)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Naam)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.StadionNaam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => Model.Naam)
+                </td>
+                <td>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+}
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Index" method="post">
+            <div class="form-group">
+                <input type="hidden" asp-for="ClubId" />
+                <input type="hidden" asp-for="StadionNaam" />
+                <input type="hidden" asp-for="Naam" />
+                <label for="ZoneId" class="control-label">Select Zone:</label>
+                <select asp-for="ZoneId" asp-items="@Model.Zones">
+                    <option disabled selected value="">Kies een Zone</option>
+                </select>
+            </div>
+            @if (Model.ZoneId != 0)
+            {
+                <a asp-controller="PurchaseAbonnement" asp-action="Select" class="purchase-btn-primary">Confirm</a>
+            }
+
+        </form>
+
+    </div>
+</div>
+
+
+@section Scripts
+{
+    <script>
+        $(document).ready(function () {
+            $("#ZoneId, #Number").on("change", function () {
+                $("form").trigger("submit");
+            });
+        });
+    </script>
+}

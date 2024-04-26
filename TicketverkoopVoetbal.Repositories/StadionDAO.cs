@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TicketverkoopVoetbal.Domains.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
@@ -29,7 +24,7 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Stadion>?> FindById(int id)
+        public Task<Stadion?> FindById(int id)
         {
             throw new NotImplementedException();
         }
@@ -49,6 +44,11 @@ namespace TicketverkoopVoetbal.Repositories
         }
 
         public Task Update(Stadion entity)
+        {
+            throw new NotImplementedException();
+        }
+
+        Task<IEnumerable<Stadion>?> IDAO<Stadion>.FilterById(int id)
         {
             throw new NotImplementedException();
         }

@@ -1,0 +1,102 @@
+﻿@model TicketverkoopVoetbal.ViewModels.ShoppingCartVM
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h3><em>Review</em> your cart:</h3>
+
+@if (Model != null)
+{
+    <form asp-controller="ShoppingCart" asp-action="Purchase" method="post">
+        @if(Model.Carts.Count < 1 && Model.Abonnement == null)
+        {
+            <p>Your shopping cart is empty at the moment.</p>
+        } else
+        {
+                    @if (Model.Carts != null && Model.Carts.Any())
+        {
+            <h1>Tickets</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Carts[0].matchVM.UitploegNaam)</th>
+                        <th>@Html.DisplayNameFor(model => model.Carts[0].matchVM.ThuisploegNaam)</th>
+                        <th>@Html.DisplayNameFor(model => model.Carts[0].matchVM.StadionNaam)</th>
+                        <th>@Html.DisplayNameFor(model => model.Carts[0].ZoneNaam)</th>
+                        <th>@Html.DisplayNameFor(model => model.Carts[0].Aantal)</th>
+                        <th>@Html.DisplayNameFor(model => model.Carts[0].Prijs)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model.Carts)
+                    {
+                        <tr>
+                            @Html.HiddenFor(m => item.MatchId)
+                            <td>@item.matchVM.UitploegNaam</td>
+                            <td>@item.matchVM.ThuisploegNaam</td>
+                            <td>@item.matchVM.StadionNaam</td>
+                            <td>@item.ZoneNaam</td>
+                            <td>@item.Aantal</td>
+                            <td>@item.Prijs.ToString("c")</td>
+                            <td>
+                                <a asp-action="DeleteTicket" asp-route-matchId="@item.MatchId">
+                                    <img src="~/Images/Delete_Icon.png" alt="Delete" />
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="6">Total: @Model.ComputeTotalValue().ToString("c")</td>
+                    </tr>
+                </tfoot>
+            </table>
+        }
+
+        @if (Model.Abonnement != null)
+        {
+            <h1>Abonnement</h1>
+            <table>
+                <thead>
+                    <tr>
+                        <th>@Html.DisplayNameFor(model => model.Abonnement.clubVM.Naam)</th>
+                        <th>@Html.DisplayNameFor(model => model.Abonnement.clubVM.StadionNaam)</th>
+                        <th>@Html.DisplayNameFor(model => model.Abonnement.ZoneNaam)</th>
+                        <th>@Html.DisplayNameFor(model => model.Abonnement.Prijs)</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>@Model.Abonnement.clubVM.Naam</td>
+                        <td>@Model.Abonnement.clubVM.StadionNaam</td>
+                        <td>@Model.Abonnement.ZoneNaam</td>
+                        <td>@Model.Abonnement.Prijs.ToString("c")</td>
+                        <td>
+                            <a asp-action="DeleteAbonnement">
+                                <img src="~/Images/Delete_Icon.png" alt="Delete" />
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        }
+        <button type="submit">Afrekenen</button>
+        }
+
+    </form>
+}
+else
+{
+    <p>Your shopping cart is empty at the moment.</p>
+}
+
+
+@section Scripts {
+    <script>
+        // Your scripts here
+    </script>
+}

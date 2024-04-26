@@ -1,5 +1,4 @@
 ﻿using AutoMapper;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Services.Interfaces;
@@ -26,7 +25,7 @@ namespace TicketverkoopVoetbal.Controllers.API
         /// </summary>
         /// <returns>The list of Matches.</returns>
         // GET: api/Match
-        [HttpGet, Authorize]
+        [HttpGet]
         public async Task<ActionResult<MatchVM>> Get()
         {
             try
