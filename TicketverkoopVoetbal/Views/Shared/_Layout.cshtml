@@ -29,6 +29,7 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Club" asp-action="Index">Ploegen</a>
                         </li>
                     </ul>
+                    @await Html.PartialAsync("_SelectCulture")
                     <partial name="_LoginPartial" />
                 </div>
             </div>
@@ -42,12 +43,20 @@
 
     <footer class="border-top footer text-muted">
         <div class="container">
-            &copy; 2024 - TicketverkoopVoetbal - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+            &copy; 2024 - TicketverkoopVoetbal
         </div>
     </footer>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
+    <script>
+        console.log("OK");
+        $(document).ready(() => {
+            $(".setLang").on("change", () => {
+                $('form').submit();
+            });
+        })
+    </script>
 </body>
 </html>

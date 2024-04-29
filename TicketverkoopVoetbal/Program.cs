@@ -12,6 +12,7 @@ using TicketVerkoopVoetbal.Util.Mail;
 using TicketVerkoopVoetbal.Util.Mail.Interfaces;
 using TicketVerkoopVoetbal.Util.PDF.Interfaces;
 using TicketVerkoopVoetbal.Util.PDF;
+using Microsoft.AspNetCore.Mvc.Razor;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -27,7 +28,21 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+
+// Localization
+builder.Services.AddControllersWithViews()
+    .AddViewLocalization(LanguageViewLocationExpanderFormat.SubFolder) // vertaling op View
+    .AddDataAnnotationsLocalization(); // vertaling op ViewModel
+
+builder.Services.AddLocalization(options => options.ResourcesPath = "Resources"); // in welk map de resources staan
+
+var supportedCultures = new[] { "nl", "en", "fr" };
+
+builder.Services.Configure<RequestLocalizationOptions>(options => {
+    options.SetDefaultCulture(supportedCultures[0])
+      .AddSupportedCultures(supportedCultures)  //Culture is used when formatting or parsing culture dependent data like dates, numbers, currencies, etc
+      .AddSupportedUICultures(supportedCultures);  //UICulture is used when localizing strings, for example when using resource files.
+});
 
 // Email
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
@@ -101,6 +116,13 @@ else
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
 }
+
+var localizationOptions = new RequestLocalizationOptions()
+    .SetDefaultCulture(supportedCultures[0])
+    .AddSupportedCultures(supportedCultures)
+    .AddSupportedUICultures(supportedCultures);
+
+app.UseRequestLocalization(localizationOptions);
 
 var swaggerOptions = new TicketverkoopVoetbal.Options.SwaggerOptions();
 builder.Configuration.GetSection(nameof(TicketverkoopVoetbal.Options.SwaggerOptions)).Bind(swaggerOptions);
