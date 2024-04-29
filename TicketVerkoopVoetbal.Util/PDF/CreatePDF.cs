@@ -3,6 +3,7 @@ using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;
 using iText.Kernel.Pdf;
+using iText.Layout;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using QRCoder;
@@ -14,6 +15,51 @@ namespace TicketVerkoopVoetbal.Util.PDF
 {
     public class CreatePDF : ICreatePDF
     {
+        //public MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, string logoPath)
+        //{
+        //    MemoryStream memoryStream = new MemoryStream();
+        //    PdfWriter pdfWriter = new PdfWriter(memoryStream);
+        //    PdfDocument pdfDocument = new PdfDocument(pdfWriter);
+        //    Document document = new Document(pdfDocument);
+
+        //    // Voeg logo toe
+        //    iText.Layout.Element.Image logo = new iText.Layout.Element.Image(ImageDataFactory.Create(logoPath));
+        //    logo.SetWidth(100);
+        //    document.Add(logo);
+
+        //    // Titel van het ticket
+        //    Paragraph title = new Paragraph("Ticket Details")
+        //        .SetTextAlignment(TextAlignment.CENTER)
+        //        .SetFontSize(18);
+        //    document.Add(title);
+
+        //    // Voeg ticketinformatie toe
+        //    foreach (var ticket in tickets)
+        //    {
+        //        document.Add(new Paragraph($"Ticket ID: {ticket.TicketId}"));
+        //        // document.Add(new Paragraph($"Match: {ticket.MatchId}"));
+        //        // document.Add(new Paragraph($"Datum: {ticket.Match.Startuur.ToString("dd-MM-yyyy HH:mm")}"));
+        //        //document.Add(new Paragraph($"Zone: {ticket.Zone}"));
+        //        //document.Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"));
+
+        //        // Voeg QR-code toe met ticketinformatie
+        //        string qrText = "Ticket ID:";
+        //        QRCodeGenerator qrGenerator = new QRCodeGenerator();
+        //        QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrText, QRCodeGenerator.ECCLevel.Q);
+        //        QRCode qrCode = new QRCode(qrCodeData);
+        //        Bitmap qrCodeBitmap = qrCode.GetGraphic(5);
+        //        iText.Layout.Element.Image qrCodeImageElement = new iText.Layout.Element.Image(ImageDataFactory.Create(BitmapToBytes(qrCodeBitmap))).SetHorizontalAlignment(HorizontalAlignment.CENTER);
+        //        document.Add(qrCodeImageElement);
+
+        //        // Voeg een lege regel toe tussen de tickets
+        //        document.Add(new AreaBreak());
+        //    }
+
+        //    document.Close();
+        //    return memoryStream;
+        //}
+
+        
         public MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, string logoPath)
         {
             using (MemoryStream stream = new MemoryStream())
@@ -26,47 +72,39 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 iText.Layout.Element.Image image = new iText.Layout.Element.Image(imageData).SetMaxWidth(100);
                 document.Add(image);
 
-                string qrContent = "https://example.com";
-                QRCodeGenerator qrGenerator = new QRCodeGenerator();
-                QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
-                QRCode qrCode = new QRCode(qrCodeData);
-                Bitmap qrCodeImage = qrCode.GetGraphic(5); // Grootte van 20 pixels
-                iText.Layout.Element.Image qrCodeImageElement = new
-                iText.Layout.Element.Image(ImageDataFactory.Create(BitmapToBytes(qrCodeImage))).SetHorizontalAlignment(HorizontalAlignment.CENTER);
-                document.Add(qrCodeImageElement);
+
 
                 document.Add(new Paragraph("Factuur").SetFontSize(20));
                 document.Add(new Paragraph("Factuurnummer: 001").SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA)).SetFontSize(16).SetFontColor(ColorConstants.BLUE));
                 document.Add(new Paragraph("Datum: " + DateTime.Now.ToShortDateString()));
                 document.Add(new Paragraph(""));
 
-                //Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
-                //table.AddHeaderCell("Product");
-                //table.AddHeaderCell("Prijs per stuk");
-                //table.AddHeaderCell("Totaal");
-                //decimal totalPrice = 0;
-                //foreach (var ticket in tickets)
-                //{
-                //    table.AddCell(ticket.GebruikersId);
-                //    table.AddCell(ticket.Zone.Prijs.ToString("C"));
-                //    decimal totalProductPrice = ticket.Zone.Prijs * ticket.Zone.Aantal;
-                //    table.AddCell(totalProductPrice.ToString("C"));
-                //    totalPrice += totalProductPrice;
-                //}
-                //document.Add(table);
+                foreach (var ticket in tickets)
+                {
+                    document.Add(new Paragraph($"Ticket ID: {ticket.TicketId}"));
+                    document.Add(new Paragraph($"Match: {ticket.MatchId}"));
+                    // document.Add(new Paragraph($"Datum: {ticket.Match.Startuur.ToString("dd-MM-yyyy HH:mm")}"));
+                    //document.Add(new Paragraph($"Zone: {ticket.Zone}"));
+                    //document.Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"));
 
-                //Paragraph paragraph = new Paragraph("Totaal: " + totalPrice.ToString("C"))
-                //     .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA))
-                //     .SetFontSize(12)
-                //     .SetFontColor(ColorConstants.BLACK)
-                //     .SetTextAlignment(TextAlignment.LEFT);
-                //document.Add(paragraph);
+                    // Voeg QR-code toe met ticketinformatie
+                    string qrContent = "https://example.com";
+                    QRCodeGenerator qrGenerator = new QRCodeGenerator();
+                    QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
+                    QRCode qrCode = new QRCode(qrCodeData);
+                    Bitmap qrCodeImage = qrCode.GetGraphic(5); // Grootte van 5 pixels
+                    iText.Layout.Element.Image qrCodeImageElement = new iText.Layout.Element.Image(ImageDataFactory.Create(BitmapToBytes(qrCodeImage))).SetHorizontalAlignment(HorizontalAlignment.CENTER);
+                    document.Add(qrCodeImageElement);
+
+                    // Voeg een lege regel toe tussen de tickets
+                    document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
+                }
 
                 document.Close();
                 return new MemoryStream(stream.ToArray());
             }
         }
-        // This method is for converting bitmap into a byte array
+
         private static byte[] BitmapToBytes(Bitmap img)
         {
             using (MemoryStream stream = new MemoryStream())
