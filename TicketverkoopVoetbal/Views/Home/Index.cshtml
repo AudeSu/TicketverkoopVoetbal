@@ -47,8 +47,8 @@
         <div>
             <h2>@Localizer["Start"].Value</h2>
             <p>@Localizer["Start tekst"].Value</p>
-            <a href="#" class="cta-button">@Localizer["Tickets"].Value</a>
-            <a href="#" class="cta-button">@Localizer["Abonnement"].Value</a>
+            <a asp-controller="Match" asp-action="Index" class="cta-button">@Localizer["Tickets"].Value</a>
+            <a asp-controller="Club" asp-action="Index" class="cta-button">@Localizer["Abonnement"].Value</a>
         </div>
     </section>
 </body>
