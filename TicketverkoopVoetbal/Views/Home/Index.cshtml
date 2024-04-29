@@ -1,8 +1,54 @@
-﻿@{
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@{
     ViewData["Title"] = "Ticketverkoop";
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://docs.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<body>
+    <header>
+        <h1>@Localizer["Welcome"].Value</h1>
+        <h4>@Localizer["Subtitel"].Value</h4>
+        <p>@Localizer["Inleiding"].Value</p>
+    </header>
+
+    <section id="about">
+        <div>
+            <h2>@Localizer["About us"].Value</h2>
+            <p>@Localizer["About tekst"].Value</p>
+        </div>
+    </section>
+
+    <section id="offer">
+        <div>
+            <h2>@Localizer["Offer"].Value</h2>
+            <p>@Localizer["Lijst"].Value</p>
+            <ul>
+                <li>@Localizer["Punt1"].Value</li>
+                <li>@Localizer["Punt2"].Value</li>
+                <li>@Localizer["Punt3"].Value</li>
+                <li>@Localizer["Punt4"].Value</li>
+                <li>@Localizer["Punt5"].Value</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="features">
+        <div>
+            <h2>@Localizer["Kenmerken"].Value</h2>
+            <ul>
+                <li>@Localizer["Punt6"].Value</li>
+                <li>@Localizer["Punt7"].Value</li>
+                <li>@Localizer["Punt8"].Value</li>
+            </ul>
+        </div>
+    </section>
+
+    <section id="purchase-options">
+        <div>
+            <h2>@Localizer["Start"].Value</h2>
+            <p>@Localizer["Start tekst"].Value</p>
+            <a asp-controller="Match" asp-action="Index" class="cta-button">@Localizer["Tickets"].Value</a>
+            <a asp-controller="Club" asp-action="Index" class="cta-button">@Localizer["Abonnement"].Value</a>
+        </div>
+    </section>
+</body>

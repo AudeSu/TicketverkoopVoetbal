@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using TicketverkoopVoetbal.ViewModels;
-using TicketVerkoopVoetbal.Util.Mail.Interfaces;
+﻿using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.Mvc;
 
 namespace TicketverkoopVoetbal.Controllers
 {
     public class HomeController : Controller
     {
-  
         public HomeController()
         {
             
@@ -17,28 +15,18 @@ namespace TicketverkoopVoetbal.Controllers
             return View();
         }
 
-        //public IActionResult Contact()
-        //{
-        //    return View();
-        //}
+        [HttpPost]
+        public IActionResult SetAppLanguage(string lang, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(lang)),
+                new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddYears(1)
+                });
 
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Contact(SendMailVM sendMailVM)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        try
-        //        {
-        //            _emailSend.SendEmailAsync(sendMailVM.Email, "Contactformulier", sendMailVM.Message);
-        //            return View("Thanks");
-        //        }
-        //        catch (Exception ex)
-        //        {
-        //            ModelState.AddModelError("", ex.Message);
-        //        }
-        //    }
-        //    return View(sendMailVM);
-        //}
+            return LocalRedirect(returnUrl);
+        }
     }
 }
