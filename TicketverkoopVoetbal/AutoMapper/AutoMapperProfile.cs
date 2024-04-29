@@ -34,6 +34,8 @@ namespace TicketverkoopVoetbal.AutoMapper
             CreateMap<AspNetUser, AspNetUserVM>();
 
             CreateMap<CartTicketVM, Ticket>();
+
+
         }       
     }
 }
