@@ -10,7 +10,7 @@
 
         // Method to compute the total value
         public decimal ComputeTotalValue() =>
-            Carts?.Sum(e => e.Prijs * e.Aantal) ?? 0;
+            Carts?.Sum(e => e.Prijs) ?? 0;
     }
 }
 

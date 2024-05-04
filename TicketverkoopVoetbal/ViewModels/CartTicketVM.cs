@@ -12,7 +12,6 @@
 
         public MatchVM matchVM { get; set; }
 
-        public int Aantal { get; set; }
         public decimal Prijs { get; set; }
         public System.DateTime DateCreated { get; set; }
 

@@ -65,52 +65,52 @@ namespace TicketverkoopVoetbal.Controllers
             return View(entity);
         }
 
-        public async Task<IActionResult> Select(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
+        //public async Task<IActionResult> Select(int? id)
+        //{
+        //    if (id == null)
+        //    {
+        //        return NotFound();
+        //    }
 
-            Match? match = await _matchService.FindById(Convert.ToInt32(id));
+        //    Match? match = await _matchService.FindById(Convert.ToInt32(id));
 
-            if (match != null)
-            {
-                //CartVM item = new CartVM
-                //{
-                //    MatchId = match.MatchId,
-                //    StadionNaam = match.Stadion.Naam,
-                //    ThuisploegNaam = match.Thuisploeg.Naam,
-                //    UitploegNaam = match.Uitploeg.Naam,
-                //    Datum = match.Datum,
-                //    Startuur = match.Startuur,
-                //    Aantal = 1,
-                //    Prijs = 15,
-                //    DateCreated = DateTime.Now
+        //    if (match != null)
+        //    {
+        //        //CartVM item = new CartVM
+        //        //{
+        //        //    MatchId = match.MatchId,
+        //        //    StadionNaam = match.Stadion.Naam,
+        //        //    ThuisploegNaam = match.Thuisploeg.Naam,
+        //        //    UitploegNaam = match.Uitploeg.Naam,
+        //        //    Datum = match.Datum,
+        //        //    Startuur = match.Startuur,
+        //        //    Aantal = 1,
+        //        //    Prijs = 15,
+        //        //    DateCreated = DateTime.Now
                     
-                //};
+        //        //};
 
-                //ShoppingCartVM? shopping;
+        //        //ShoppingCartVM? shopping;
 
-                //// var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
-                //if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
-                //{
-                //    shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-                //}
-                //else
-                //{
-                //    shopping = new ShoppingCartVM();
-                //    shopping.Carts = new List<CartVM>();
-                //}
-                //shopping?.Carts?.Add(item);
+        //        //// var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
+        //        //if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
+        //        //{
+        //        //    shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+        //        //}
+        //        //else
+        //        //{
+        //        //    shopping = new ShoppingCartVM();
+        //        //    shopping.Carts = new List<CartVM>();
+        //        //}
+        //        //shopping?.Carts?.Add(item);
 
 
-                //HttpContext.Session.SetObject("ShoppingCart", shopping);
+        //        //HttpContext.Session.SetObject("ShoppingCart", shopping);
 
-            }
-            return RedirectToAction("Index", "Ticket");
+        //    }
+        //    return RedirectToAction("Index", "Ticket");
 
-        }
+        //}
 
     }
 
