@@ -24,7 +24,6 @@
                         <th>@Html.DisplayNameFor(model => model.Carts[0].matchVM.ThuisploegNaam)</th>
                         <th>@Html.DisplayNameFor(model => model.Carts[0].matchVM.StadionNaam)</th>
                         <th>@Html.DisplayNameFor(model => model.Carts[0].ZoneNaam)</th>
-                        <th>@Html.DisplayNameFor(model => model.Carts[0].Aantal)</th>
                         <th>@Html.DisplayNameFor(model => model.Carts[0].Prijs)</th>
                         <th>Actions</th>
                     </tr>
@@ -38,7 +37,6 @@
                             <td>@item.matchVM.ThuisploegNaam</td>
                             <td>@item.matchVM.StadionNaam</td>
                             <td>@item.ZoneNaam</td>
-                            <td>@item.Aantal</td>
                             <td>@item.Prijs.ToString("c")</td>
                             <td>
                                 <a asp-action="DeleteTicket" asp-route-matchId="@item.MatchId">

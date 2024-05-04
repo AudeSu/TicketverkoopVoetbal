@@ -1,0 +1,28 @@
+﻿@model IEnumerable<TicketverkoopVoetbal.ViewModels.TicketNameVM>;
+
+@{
+    ViewData["Title"] = "Tickets";
+}
+
+<form asp-controller="PurchaseTicket" asp-action="Select" method="post">
+    @foreach (var item in Model.Select((value, index) => new { Value = value, Index = index }))
+    {
+        <div class="form-group">
+            <div class="row">
+                <div class="col">
+                    <label for="Voornaam">Voornaam:</label>
+                    <input type="text" id="Name" name="nameVMs[@item.Index].Name" class="form-control" value="@item.Value.Name" />
+                    <span asp-validation-for="nameVMs[@item.Index].Name" class="text-danger"></span>
+                </div>
+@*                 <div class="col">
+                    <label for="Achternaam">Achternaam:</label>
+                    <input type="text" id="Achternaam" name="nameVMs[@item.Index].Achternaam" class="form-control" value="@item.Value.Achternaam" />
+                    <span asp-validation-for="nameVMs[@item.Index].Achternaam" class="text-danger"></span>
+                </div> *@
+            </div>
+        </div>
+    }
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
