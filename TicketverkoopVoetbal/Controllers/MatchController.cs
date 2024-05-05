@@ -47,17 +47,21 @@ namespace TicketverkoopVoetbal.Controllers
             try
             {
                 var matchlist = await _matchService.FilterById(Convert.ToInt32(entity.ClubNumber));
+                var matchVMs = _mapper.Map<List<MatchVM>>(matchlist);
+                // Sorting matches by Datum and Startuur
+                matchVMs = matchVMs.OrderBy(m => m.Datum).ThenBy(m => m.Startuur).ToList();
 
-                ClubMatchVM clubmatchVM = new ClubMatchVM();
-                clubmatchVM.Matches = _mapper.Map<List<MatchVM>>(matchlist);
-                clubmatchVM.Clubs =
-                new SelectList(await _clubService.GetAll(), "ClubId", "Naam", entity.ClubNumber);
+                var clubmatchVM = new ClubMatchVM
+                {
+                    Matches = matchVMs,
+                    Clubs = new SelectList(await _clubService.GetAll(), "ClubId", "Naam", entity.ClubNumber)
+                };
 
                 return View(clubmatchVM);
             }
             catch (Exception ex)
             {
-                Debug.WriteLine("errorlog" + ex.Message);
+                Debug.WriteLine("Error: " + ex.Message);
             }
 
             return View(entity);
