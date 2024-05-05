@@ -10,9 +10,9 @@ namespace TicketverkoopVoetbal.Controllers.API
     [ApiController]
     public class AspNetUserController : Controller
     {
-        private IService<AspNetUser> _userService;
+        private IUserService<AspNetUser> _userService;
         private readonly IMapper _mapper;
-        public AspNetUserController(IMapper mapper, IService<AspNetUser> userService)
+        public AspNetUserController(IMapper mapper, IUserService<AspNetUser> userService)
         {
             _mapper = mapper;
             _userService = userService;

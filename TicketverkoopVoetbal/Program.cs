@@ -60,7 +60,7 @@ builder.Services.AddSwaggerGen(c =>
         Contact = new OpenApiContact
         {
             Name = "AS",
-            Email = "aude.sustronck@student.vives.be",
+            Email = "tickets.voetbal.league@gmail.com",
             Url = new Uri("https://vives.be"),
         },
         License = new OpenApiLicense
@@ -74,8 +74,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddAutoMapper(typeof(Program));
 
 // DI
-builder.Services.AddTransient<IService<Match>, MatchService>();
-builder.Services.AddTransient<IDAO<Match>, MatchDAO>();
+builder.Services.AddTransient<IMatchService<Match>, MatchService>();
+builder.Services.AddTransient<IMatchDAO<Match>, MatchDAO>();
 
 builder.Services.AddTransient<IService<Club>, ClubService>();
 builder.Services.AddTransient<IDAO<Club>, ClubDAO>();

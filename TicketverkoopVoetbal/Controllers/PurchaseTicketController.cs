@@ -12,11 +12,11 @@ namespace TicketverkoopVoetbal.Controllers
 {
     public class PurchaseTicketController : Controller
     {
-        private IService<Match> _matchService;
+        private IMatchService<Match> _matchService;
         private IService<Zone> _zoneService;
         private readonly IMapper _mapper;
 
-        public PurchaseTicketController(IMapper mapper, IService<Match> matchservice, IService<Zone> zoneService)
+        public PurchaseTicketController(IMapper mapper, IMatchService<Match> matchservice, IService<Zone> zoneService)
         {
             _mapper = mapper;
             _matchService = matchservice;
