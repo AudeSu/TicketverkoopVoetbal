@@ -4,38 +4,45 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Clubs</h1>
 
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Naam)
+                Club Naam
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.StadionNaam)
+                Stadion Naam
             </th>
-            <th></th>
+            <th>
+                Logo
+            </th>
+            <th>
+                Acties
+            </th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Naam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StadionNaam)
-            </td>
-            <td>
-                    <a asp-controller="PurchaseAbonnement" asp-action="Index" asp-route-id="@item.ClubId">
+        @foreach (var club in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => club.Naam)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => club.StadionNaam)
+                </td>
+                <td>
+                    <img src="@Url.Content(club.LogoPath)" alt="@club.Naam Logo" style="max-width: 100px; max-height: 100px;" />
+                </td>
+                <td>
+                    <a asp-controller="PurchaseAbonnement" asp-action="Index" asp-route-id="@club.ClubId">
                         Koop Abonnement
                     </a>
-
-            </td>
-             
-        </tr>
-}
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
