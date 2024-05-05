@@ -24,7 +24,7 @@ namespace TicketverkoopVoetbal.Controllers
         private IConfiguration _Configure;
         private string? BaseUrl;
 
-        public PurchaseTicketController(IMapper mapper, IService<Match> matchservice, IService<Zone> zoneService, IConfiguration configuration)
+        public PurchaseTicketController(IMapper mapper, IMatchService<Match> matchservice, IService<Zone> zoneService, IConfiguration configuration)
         {
             _mapper = mapper;
             _matchService = matchservice;
