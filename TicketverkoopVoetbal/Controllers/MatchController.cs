@@ -24,9 +24,7 @@ namespace TicketverkoopVoetbal.Controllers
         public async Task<ActionResult> Index()
         {
             var matchlist = await _matchService.GetAll();
-            var matchVMs = _mapper.Map<List<MatchVM>>(matchlist);
-            // Sorting matches by Datum and Startuur
-            matchVMs = matchVMs.OrderBy(m => m.Datum).ThenBy(m => m.Startuur).ToList();
+            var matchVMs = GetFutureMatches(matchlist);
 
             var clubmatchVM = new ClubMatchVM
             {
@@ -47,9 +45,7 @@ namespace TicketverkoopVoetbal.Controllers
             try
             {
                 var matchlist = await _matchService.FilterById(Convert.ToInt32(entity.ClubNumber));
-                var matchVMs = _mapper.Map<List<MatchVM>>(matchlist);
-                // Sorting matches by Datum and Startuur
-                matchVMs = matchVMs.OrderBy(m => m.Datum).ThenBy(m => m.Startuur).ToList();
+                var matchVMs = GetFutureMatches(matchlist);
 
                 var clubmatchVM = new ClubMatchVM
                 {
@@ -65,6 +61,21 @@ namespace TicketverkoopVoetbal.Controllers
             }
 
             return View(entity);
+        }
+
+        private List<MatchVM> GetFutureMatches(IEnumerable<Match> matches)
+        {
+            var currentDate = DateTime.Today;
+
+            var futureMatches = matches
+                .Where(m => m.Datum >= currentDate)
+                .OrderBy(m => m.Datum)
+                .ThenBy(m => m.Startuur)
+                .ToList();
+
+            var matchVMs = _mapper.Map<List<MatchVM>>(futureMatches);
+
+            return matchVMs;
         }
     }
 }
