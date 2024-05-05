@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using TicketverkoopVoetbal.Domains;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.ViewModels;
 
@@ -32,6 +33,14 @@ namespace TicketverkoopVoetbal.AutoMapper
                     src => src.Thuisstadion.Naam));
 
             CreateMap<AspNetUser, AspNetUserVM>();
+
+            CreateMap<CartTicketVM, Ticket>();
+
+
+            //API
+            CreateMap<Hotel, HotelVM>();
+
+
 
 
         }       

@@ -60,17 +60,35 @@
                 {
                     <input asp-for="Aantal"
                            type="number"
-                      
                            min="1"
                            max="4"
-                           id="Number"/>
+                           id="Number" />
+
+
+
+                    @if (Model.HotelLijst != null && Model.HotelLijst.Any())
+                    {
+
+                        <h2>Hotels dicht bij @Model.matchVM.StadionNaam </h2>
+                        <ul id="hotelList">
+                            @foreach (var hotel in Model.HotelLijst)
+                            {
+                                <li>@hotel.name</li>
+                            }
+                        </ul>
+
+                    }
+
+
 
                     @if (Model.Aantal != null)
                     {
-                        <a asp-controller="PurchaseTicket" asp-action="Select"  class="purchase-btn-primary">Confirm</a>
+                        <a asp-controller="PurchaseTicket" asp-action="Names" class="purchase-btn-primary">Confirm</a>
                     }
 
                 }
+            </div>
+            <div>
             </div>
         </form>
     </div>
@@ -85,6 +103,9 @@
                 $("form").trigger("submit");
             });
         });
+
+
+
     </script>
 }
 

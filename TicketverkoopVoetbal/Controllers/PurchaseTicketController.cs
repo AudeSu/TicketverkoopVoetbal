@@ -1,12 +1,18 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
+using Newtonsoft.Json;
+using System.Configuration;
 using System.Diagnostics;
+using System.Diagnostics.Metrics;
+using TicketverkoopVoetbal.Domains;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
+using static Azure.Core.HttpHeader;
 
 namespace TicketverkoopVoetbal.Controllers
 {
@@ -15,12 +21,16 @@ namespace TicketverkoopVoetbal.Controllers
         private IMatchService<Match> _matchService;
         private IService<Zone> _zoneService;
         private readonly IMapper _mapper;
+        private IConfiguration _Configure;
+        private string? BaseUrl;
 
-        public PurchaseTicketController(IMapper mapper, IMatchService<Match> matchservice, IService<Zone> zoneService)
+        public PurchaseTicketController(IMapper mapper, IService<Match> matchservice, IService<Zone> zoneService, IConfiguration configuration)
         {
             _mapper = mapper;
             _matchService = matchservice;
             _zoneService = zoneService;
+            _Configure = configuration;
+            BaseUrl = _Configure.GetValue<string>("APIURL");
         }
 
         public async Task<IActionResult> Index(int? id)
@@ -63,6 +73,7 @@ namespace TicketverkoopVoetbal.Controllers
                 ticketVM.Zones =
                 new SelectList(await _zoneService.FilterById(Convert.ToInt16(match.StadionId)), "ZoneId", "Naam", ticketVM.ZoneId);
                 HttpContext.Session.SetObject("TicketVM", ticketVM);
+                ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
                 return View(ticketVM);
 
 
@@ -75,8 +86,48 @@ namespace TicketverkoopVoetbal.Controllers
             return View(ticketVM);
         }
 
+        private async Task<List<HotelVM>> GetHotelsAsync(string StadNaam)
+        {
+            using (var httpClient = new HttpClient())
+            {
+                httpClient.DefaultRequestHeaders.Add("Referer", "FullStack_Opdracht");
 
-        public async Task<IActionResult> Select()
+                var search = $"/search?q=hotels+in+{StadNaam},Belgium";
+                var format = "json";
+                var limit = "3";
+
+                var url = $"{BaseUrl}{search}&format={format}&limit={limit}";
+
+  
+
+                using (var response = await httpClient.GetAsync(url))
+                {
+                    string apiResponse = await response.Content.ReadAsStringAsync();
+                    var hotels = JsonConvert.DeserializeObject<List<Hotel>>(apiResponse);
+
+                    // Map the Hotel objects to HotelVM objects
+                    return _mapper.Map<List<HotelVM>>(hotels);
+                }
+            }
+        }
+
+        [Authorize]
+        public IActionResult Names()
+        {
+
+            int? aantal = HttpContext.Session.GetObject<TicketVM>("TicketVM").Aantal;
+
+            List<TicketNameVM> nameVMs = new List<TicketNameVM>();
+            for (int i = 0; i < aantal; i++)
+            {
+                nameVMs.Add(new TicketNameVM());
+            }
+
+            return View(nameVMs);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Select(List<TicketNameVM> nameVMs)
         {
             var ticketVM = HttpContext.Session.GetObject<TicketVM>("TicketVM");
             if (ticketVM == null)
@@ -113,7 +164,7 @@ namespace TicketverkoopVoetbal.Controllers
                         matchVM = _mapper.Map<MatchVM>(match),
                         ZoneId = ticketVM.ZoneId,
                         ZoneNaam = zone.Naam,
-                        Aantal = 1,
+                        Eigenaar = nameVMs[i].Name,
                         Prijs = ticketVM.Prijs,
                         DateCreated = DateTime.Now
 
