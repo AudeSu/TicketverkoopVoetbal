@@ -82,7 +82,7 @@ namespace TicketverkoopVoetbal.Controllers
                 CartAbonnementVM abonnement = new CartAbonnementVM
                 {
                     ClubId = abonnementVM.ClubId,
-                    GebruikerId = abonnementVM.GebruikerId,
+                    GebruikerID = abonnementVM.GebruikerID,
                     StoeltjeId = abonnementVM.StoeltjeId,
                     ZoneId = abonnementVM.ZoneId,
                     clubVM = _mapper.Map<ClubVM>(club),

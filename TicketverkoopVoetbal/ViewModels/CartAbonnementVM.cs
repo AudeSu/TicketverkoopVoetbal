@@ -3,7 +3,7 @@
     public class CartAbonnementVM
     {
         public int ClubId { get; set; }
-        public string GebruikerId { get; set; }
+        public string GebruikerID { get; set; }
 
         public int StoeltjeId { get; set; }
 

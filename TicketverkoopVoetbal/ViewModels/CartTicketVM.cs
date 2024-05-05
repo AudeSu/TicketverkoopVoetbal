@@ -2,9 +2,13 @@
 {
     public class CartTicketVM
     {
-        public int? MatchId { get; set; }
+        public int MatchID { get; set; }
 
-        public int? ZoneId { get; set; }
+        public int ZoneID { get; set; }
+
+        public int StoeltjeID { get; set; }
+
+        public string GebruikersID { get; set; }
 
         public string Eigenaar { get; set; }
 

@@ -1,4 +1,5 @@
 ﻿using TicketverkoopVoetbal.Domains.Entities;
+using TicketverkoopVoetbal.Repositories;
 using TicketverkoopVoetbal.Repositories.Interfaces;
 using TicketverkoopVoetbal.Services.Interfaces;
 
@@ -13,9 +14,9 @@ namespace TicketverkoopVoetbal.Services
             _stoeltjeDAO = stoeltjeDAO;
         }
 
-        public Task Add(Stoeltje entity)
+        public async Task Add(Stoeltje entity)
         {
-            throw new NotImplementedException();
+            await _stoeltjeDAO.Add(entity);
         }
 
         public Task Delete(Stoeltje entity)

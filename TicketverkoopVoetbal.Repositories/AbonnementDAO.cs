@@ -19,9 +19,18 @@ namespace TicketverkoopVoetbal.Repositories
             _dbContext = context;
         }
 
-        public Task Add(Abonnement entity)
+        public async Task Add(Abonnement entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(entity).State = EntityState.Added;
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         public Task Delete(Abonnement entity)

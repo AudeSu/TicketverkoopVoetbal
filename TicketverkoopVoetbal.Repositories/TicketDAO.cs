@@ -1,20 +1,25 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 using TicketverkoopVoetbal.Domains.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
 
 namespace TicketverkoopVoetbal.Repositories
 {
-    public class StoeltjeDAO : IDAO<Stoeltje>
+    public class TicketDAO : IDAO<Ticket>
     {
-
         private readonly FootballDbContext _dbContext;
 
-        public StoeltjeDAO(FootballDbContext context)
+        public TicketDAO(FootballDbContext context)
         {
             _dbContext = context;
         }
-        public async Task Add(Stoeltje entity)
+
+        public async Task Add(Ticket entity)
         {
             _dbContext.Entry(entity).State = EntityState.Added;
             try
@@ -28,37 +33,27 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
-        public Task Delete(Stoeltje entity)
+        public Task Delete(Ticket entity)
         {
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Stoeltje>?> FilterById(int id)
+        public Task<IEnumerable<Ticket>?> FilterById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public Task<Stoeltje?> FindById(int id)
+        public Task<Ticket?> FindById(int id)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Stoeltje>?> GetAll()
+        public Task<IEnumerable<Ticket>?> GetAll()
         {
-            try
-            {
-                return await _dbContext.Stoeltjes
-                    .Include(b => b.Zone)
-                    .ToListAsync();
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("error in DAO");
-                throw;
-            }
+            throw new NotImplementedException();
         }
 
-        public Task Update(Stoeltje entity)
+        public Task Update(Ticket entity)
         {
             throw new NotImplementedException();
         }

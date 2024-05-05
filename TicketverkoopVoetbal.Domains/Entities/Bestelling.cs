@@ -14,6 +14,4 @@ public partial class Bestelling
     public DateTime Datum { get; set; }
 
     public virtual AspNetUser Gebruiker { get; set; } = null!;
-
-    public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 }

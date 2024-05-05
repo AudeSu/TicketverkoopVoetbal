@@ -19,9 +19,9 @@ namespace TicketverkoopVoetbal.Services
            _abonnementDAO = abonnementDAO;
         }
 
-        public Task Add(Abonnement entity)
+        public async Task Add(Abonnement entity)
         {
-            throw new NotImplementedException();
+            await _abonnementDAO.Add(entity);
         }
 
         public Task Delete(Abonnement entity)
