@@ -18,7 +18,7 @@ namespace TicketverkoopVoetbal.Controllers
 {
     public class PurchaseTicketController : Controller
     {
-        private IService<Match> _matchService;
+        private IMatchService<Match> _matchService;
         private IService<Zone> _zoneService;
         private readonly IMapper _mapper;
         private IConfiguration _Configure;

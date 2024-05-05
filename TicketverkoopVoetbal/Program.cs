@@ -74,8 +74,8 @@ builder.Services.AddSwaggerGen(c =>
 builder.Services.AddAutoMapper(typeof(Program));
 
 // DI
-builder.Services.AddTransient<IService<Match>, MatchService>();
-builder.Services.AddTransient<IDAO<Match>, MatchDAO>();
+builder.Services.AddTransient<IMatchService<Match>, MatchService>();
+builder.Services.AddTransient<IMatchDAO<Match>, MatchDAO>();
 
 builder.Services.AddTransient<IService<Club>, ClubService>();
 builder.Services.AddTransient<IDAO<Club>, ClubDAO>();

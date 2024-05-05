@@ -5,7 +5,7 @@ using TicketverkoopVoetbal.Repositories.Interfaces;
 
 namespace TicketverkoopVoetbal.Repositories
 {
-    public class MatchDAO : IDAO<Match>
+    public class MatchDAO : IMatchDAO<Match>
     {
         private readonly FootballDbContext _dbContext;
 
@@ -62,13 +62,32 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
+        public async Task<IEnumerable<Match>?> FindByTwoIds(int thuisploegId, int uitploegId)
+        {
+            try
+            {
+                return await _dbContext.Matches
+                .Where(a => a.ThuisploegId == thuisploegId && a.UitploegId == uitploegId  || a.UitploegId == thuisploegId && a.ThuisploegId == uitploegId)
+                .Include(a => a.Thuisploeg)
+                .Include(a => a.Uitploeg)
+                 .Include(b => b.Stadion)
+
+                 .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
+        }
+
         public async Task<IEnumerable<Match>?> GetAll()
         {
             try
             {
                 return await _dbContext.Matches
                     .Include(b => b.Thuisploeg)
-                    .Include(b=> b.Uitploeg)
+                    .Include(b => b.Uitploeg)
                     .Include(b => b.Stadion)
                     .ToListAsync();
             }

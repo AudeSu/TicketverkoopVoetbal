@@ -121,7 +121,7 @@
     <value>Purchase your subscription</value>
   </data>
   <data name="About tekst" xml:space="preserve">
-    <value>Ticketverkoop Voetbal is an initiative of the Belgian Pro League to set a new standard in professional football ticket sales. We believe that football is not just a sport but a shared passion that everyone should experience.</value>
+    <value>We are Aude Sustronck and Beau Van Nieuwenhuyse, two applied informatics students at Hogeschool Vives in Belgium. Ticketverkoop Voetbal is our initiative in collaboration with the Belgian Pro League to set a new standard in ticket sales for professional football. Our mission is to share the joy of football matches and make it accessible to all enthusiasts of the game.</value>
   </data>
   <data name="About us" xml:space="preserve">
     <value>About us</value>
@@ -131,9 +131,6 @@
   </data>
   <data name="Kenmerken" xml:space="preserve">
     <value>Our Features</value>
-  </data>
-  <data name="Lijst" xml:space="preserve">
-    <value>With Ticketverkoop Voetbal, you can:</value>
   </data>
   <data name="Offer" xml:space="preserve">
     <value>What We Offer?</value>

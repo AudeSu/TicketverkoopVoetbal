@@ -4,11 +4,11 @@ using TicketverkoopVoetbal.Services.Interfaces;
 
 namespace TicketverkoopVoetbal.Services
 {
-    public class MatchService : IService<Match>
+    public class MatchService : IMatchService<Match>
     {
-        private IDAO<Match> _matchDAO;
+        private IMatchDAO<Match> _matchDAO;
 
-        public MatchService(IDAO<Match> matchDAO)
+        public MatchService(IMatchDAO<Match> matchDAO)
         {
             _matchDAO = matchDAO;
         }
@@ -41,6 +41,11 @@ namespace TicketverkoopVoetbal.Services
         public async Task Update(Match entity)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Match>?> FindByTwoIds(int thuisploedId, int uitploegId)
+        {
+            return await _matchDAO.FindByTwoIds(thuisploedId, uitploegId);
         }
     }
 }
