@@ -121,7 +121,7 @@
     <value>Achetez votre abonnement</value>
   </data>
   <data name="About tekst" xml:space="preserve">
-    <value>Ticketverkoop Voetbal est une initiative de la Pro League belge visant à établir une nouvelle norme dans la vente de billets de football professionnel. Nous croyons que le football n'est pas seulement un sport mais une passion partagée que tout le monde devrait vivre.</value>
+    <value>Nous sommes Aude Sustronck et Beau Van Nieuwenhuyse, deux étudiants en informatique appliquée à la Hogeschool Vives en Belgique. Ticketverkoop Voetbal est notre initiative en collaboration avec la Pro League belge pour établir une nouvelle norme dans la vente de billets pour le football professionnel. Notre mission est de partager la joie des matchs de football et de la rendre accessible à tous les passionnés du jeu.</value>
   </data>
   <data name="About us" xml:space="preserve">
     <value>À propos de nous</value>
@@ -131,9 +131,6 @@
   </data>
   <data name="Kenmerken" xml:space="preserve">
     <value>Nos Caractéristiques</value>
-  </data>
-  <data name="Lijst" xml:space="preserve">
-    <value>Avec Ticketverkoop Voetbal, vous pouvez :</value>
   </data>
   <data name="Offer" xml:space="preserve">
     <value>Ce que Nous Offrons?</value>
