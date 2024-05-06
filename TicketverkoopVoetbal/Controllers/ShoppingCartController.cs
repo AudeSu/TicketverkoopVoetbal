@@ -18,9 +18,9 @@ namespace TicketverkoopVoetbal.Controllers
         private IEmailSend _emailSend;
         private ICreatePDF _createPDF;
         private IUserService<AspNetUser> _userService;
-        private IService<Abonnement> _abonnementService;
+        private IAbonnementService<Abonnement> _abonnementService;
         private IService<Stoeltje> _stoelService;
-        private IService<Ticket> _ticketService;
+        private ITicketService<Ticket> _ticketService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMapper _mapper;
@@ -29,9 +29,9 @@ namespace TicketverkoopVoetbal.Controllers
             IEmailSend emailsend,
             ICreatePDF createPDF,
             IUserService<AspNetUser> userService,
-            IService<Abonnement> abonnementService,
+            IAbonnementService<Abonnement> abonnementService,
             IService<Stoeltje> stoelService,
-             IService<Ticket> ticketService,
+            ITicketService<Ticket> ticketService,
             UserManager<IdentityUser> userManager,
             IWebHostEnvironment hostingEnvironment,
             IMapper mapper)
@@ -59,7 +59,7 @@ namespace TicketverkoopVoetbal.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Purchase()
         {
-            var currentUser = await _userService.FindByStringId(GetCurrentUserId());
+            var currentUser = await _userManager.GetUserAsync(User);
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             if (cartList == null
                 || currentUser == null)
@@ -129,12 +129,11 @@ namespace TicketverkoopVoetbal.Controllers
             stoelVM.ZoneID = cartAbonnementVM.ZoneId;
             stoelVM.StadionID = cartAbonnementVM.clubVM.StadionID;
             Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
+            await _stoelService.Add(stoel);
 
-
-            cartAbonnementVM.GebruikerID = GetCurrentUserId();
+            cartAbonnementVM.GebruikerID = _userManager.GetUserId(User);
             cartAbonnementVM.StoeltjeId = stoel.StoeltjeId;
             Abonnement abonnement = _mapper.Map<Abonnement>(cartAbonnementVM);
-            await _stoelService.Add(stoel);
             await _abonnementService.Add(abonnement);
 
         }
@@ -149,12 +148,11 @@ namespace TicketverkoopVoetbal.Controllers
                 stoelVM.ZoneID = currentTicket.ZoneID;
                 stoelVM.StadionID = currentTicket.matchVM.StadionId;
                 Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
+                await _stoelService.Add(stoel);
 
-
-                currentTicket.GebruikersID = GetCurrentUserId();
+                currentTicket.GebruikersID = _userManager.GetUserId(User);
                 currentTicket.StoeltjeID = stoel.StoeltjeId;
                 Ticket ticket = _mapper.Map<Ticket>(currentTicket);
-                await _stoelService.Add(stoel);
                 await _ticketService.Add(ticket);
             }
         }
@@ -191,18 +189,18 @@ namespace TicketverkoopVoetbal.Controllers
             return RedirectToAction("Index");
         }
 
-        private string GetCurrentUserId()
-        {
-            var user = _userManager.GetUserAsync(User).Result;
+        //private string GetCurrentUserId()
+        //{
+        //    var user = _userManager.GetUserAsync(User).Result;
 
-            if (user != null)
-            {
-                return user.Id;
-            }
-            else
-            {
-                return "fout";
-            }
-        }
+        //    if (user != null)
+        //    {
+        //        return user.Id;
+        //    }
+        //    else
+        //    {
+        //        return "fout";
+        //    }
+        //}
     }
 }

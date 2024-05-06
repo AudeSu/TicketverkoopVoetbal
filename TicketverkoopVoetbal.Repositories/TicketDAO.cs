@@ -10,7 +10,7 @@ using TicketverkoopVoetbal.Repositories.Interfaces;
 
 namespace TicketverkoopVoetbal.Repositories
 {
-    public class TicketDAO : IDAO<Ticket>
+    public class TicketDAO : ITicketDAO<Ticket>
     {
         private readonly FootballDbContext _dbContext;
 
@@ -38,7 +38,7 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Ticket>?> FilterById(int id)
+        public async Task<IEnumerable<Ticket>?> FilterById(int id)
         {
             throw new NotImplementedException();
         }
@@ -56,6 +56,27 @@ namespace TicketverkoopVoetbal.Repositories
         public Task Update(Ticket entity)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Ticket>?> FindByStringId(string? id)
+        {
+            try
+            {
+                return await _dbContext.Tickets
+                .Where(a => a.GebruikersId == id)
+                .Include(a => a.Gebruikers)
+                .Include(a => a.Match)
+                .Include(b => b.Stoeltje)
+                .Include(b => b.Zone)
+
+
+                 .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
         }
     }
 }

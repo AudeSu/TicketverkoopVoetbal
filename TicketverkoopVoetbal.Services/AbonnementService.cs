@@ -10,11 +10,11 @@ using TicketverkoopVoetbal.Services.Interfaces;
 
 namespace TicketverkoopVoetbal.Services
 {
-    public class AbonnementService : IService<Abonnement>
+    public class AbonnementService : IAbonnementService<Abonnement>
     {
-        private IDAO<Abonnement> _abonnementDAO;
+        private IAbonnementDAO<Abonnement> _abonnementDAO;
 
-        public AbonnementService(IDAO<Abonnement> abonnementDAO)
+        public AbonnementService(IAbonnementDAO<Abonnement> abonnementDAO)
         {
            _abonnementDAO = abonnementDAO;
         }
@@ -47,6 +47,11 @@ namespace TicketverkoopVoetbal.Services
         public Task Update(Abonnement entity)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Abonnement>?> FindByStringId(string? id)
+        {
+            return await _abonnementDAO.FindByStringId(id);
         }
     }
 }

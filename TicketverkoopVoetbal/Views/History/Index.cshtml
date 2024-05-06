@@ -1,0 +1,107 @@
+﻿@model TicketverkoopVoetbal.ViewModels.HistoryVM
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Ticket History</h2>
+@if(Model.CartTicketVMs == null)
+{
+    <p>Nog geen Tickets gekocht</p>
+} else
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.CartTicketVMs.First().MatchID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CartTicketVMs.First().ZoneID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CartTicketVMs.First().StoeltjeID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CartTicketVMs.First().GebruikersID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CartTicketVMs.First().ZoneNaam)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.CartTicketVMs)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.MatchID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZoneID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StoeltjeID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GebruikersID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Eigenaar)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZoneNaam)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}
+
+
+<h2>Abonnement History</h2>
+@if(Model.AbonnementVMs == null)
+{
+    <p>Nog geen abonnementen gekocht</p>
+} else
+{
+    <table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.AbonnementVMs.First().GebruikerID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CartTicketVMs.First().ZoneID)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CartTicketVMs.First().StoeltjeID)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.AbonnementVMs)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.GebruikerID)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ZoneId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StoeltjeId)
+                </td>
+                <td>
+                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+}

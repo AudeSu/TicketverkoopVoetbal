@@ -10,11 +10,11 @@ using TicketverkoopVoetbal.Services.Interfaces;
 
 namespace TicketverkoopVoetbal.Services
 {
-    public class TicketService : IService<Ticket>
+    public class TicketService : ITicketService<Ticket>
     {
-        private IDAO<Ticket> _ticketDAO;
+        private ITicketDAO<Ticket> _ticketDAO;
 
-        public TicketService(IDAO<Ticket> ticketDAO)
+        public TicketService(ITicketDAO<Ticket> ticketDAO)
         {
             _ticketDAO = ticketDAO;
         }
@@ -29,7 +29,7 @@ namespace TicketverkoopVoetbal.Services
             throw new NotImplementedException();
         }
 
-        public Task<IEnumerable<Ticket>?> FilterById(int id)
+        public async Task<IEnumerable<Ticket>?> FilterById(int id)
         {
             throw new NotImplementedException();
         }
@@ -48,5 +48,11 @@ namespace TicketverkoopVoetbal.Services
         {
             throw new NotImplementedException();
         }
+
+        public async Task<IEnumerable<Ticket>?> FindByStringId(string? id)
+        {
+           return await _ticketDAO.FindByStringId(id);
+        }
+
     }
 }

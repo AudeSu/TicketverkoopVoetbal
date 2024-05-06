@@ -77,11 +77,11 @@ builder.Services.AddTransient<IDAO<Zone>, ZoneDAO>();
 builder.Services.AddTransient<IService<Stoeltje>, StoeltjeService>();
 builder.Services.AddTransient<IDAO<Stoeltje>, StoeltjeDAO>();
 
-builder.Services.AddTransient<IService<Abonnement>, AbonnementService>();
-builder.Services.AddTransient<IDAO<Abonnement>, AbonnementDAO>();
+builder.Services.AddTransient<IAbonnementService<Abonnement>, AbonnementService>();
+builder.Services.AddTransient<IAbonnementDAO<Abonnement>, AbonnementDAO>();
 
-builder.Services.AddTransient<IService<Ticket>, TicketService>();
-builder.Services.AddTransient<IDAO<Ticket>, TicketDAO>();
+builder.Services.AddTransient<ITicketService<Ticket>, TicketService>();
+builder.Services.AddTransient<ITicketDAO<Ticket>, TicketDAO>();
 
 builder.Services.AddTransient<ICreatePDF, CreatePDF>();
 
