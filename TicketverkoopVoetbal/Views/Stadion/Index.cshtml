@@ -1,43 +1,33 @@
 ﻿@model IEnumerable<TicketverkoopVoetbal.ViewModels.StadionVM>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Stadions";
 }
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                Stadion Naam
-            </th>
-            <th>
-                Adres
-            </th>
-            <th>
-                Stad
-            </th>
-            <th>
-                Capaciteit
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var stadion in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => stadion.Naam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => stadion.Adres)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => stadion.Stad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => stadion.TotalCapaciteit)
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+<style>
+    .card-img-top {
+        height: 250px;
+        object-fit: cover;
+    }
+</style>
+
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var stadion in Model)
+        {
+            <div class="col">
+                <div class="card">
+                    <img src="@Url.Content(stadion.FotoPath)" class="card-img-top" alt="@stadion.Naam">
+                    <div class="card-body">
+                        <h5 class="card-title">@stadion.Naam</h5>
+                        <p class="card-text">
+                            <strong>Adres:</strong> @stadion.Adres <br>
+                            <strong>Stad:</strong> @stadion.Stad <br>
+                            <strong>Capaciteit:</strong> @stadion.Capaciteit
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

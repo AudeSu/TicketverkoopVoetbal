@@ -5,6 +5,7 @@
         public string Naam { get; set; }
         public string Adres { get; set; }
         public string Stad { get; set; }
-        public int TotalCapaciteit { get; set; }
+        public int Capaciteit { get; set; }
+        public string FotoPath { get; set; }
     }
 }

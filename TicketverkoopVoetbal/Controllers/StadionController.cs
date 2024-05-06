@@ -41,13 +41,33 @@ namespace TicketverkoopVoetbal.Controllers
                     Naam = stadion.Naam,
                     Adres = stadion.Adres,
                     Stad = stadion.Stad,
-                    TotalCapaciteit = totalCapacity
+                    Capaciteit = totalCapacity,
+                    FotoPath = GetStadionFotoPath(stadion.StadionId)
                 };
 
                 stadionVMList.Add(stadionVM);
             }
 
             return View(stadionVMList);
+        }
+
+        private string GetStadionFotoPath(int stadionId)
+        {
+            switch (stadionId)
+            {
+                case 1:
+                    return "~/images/Joseph_Marien_stadion.jpg";
+                case 2:
+                    return "~/images/Lotto_Park_stadion.jpg";
+                case 3:
+                    return "~/images/Jan_Breydel_stadion.jpg";
+                case 4:
+                    return "~/images/Cegeka_Arena_stadion.jpg";
+                case 5:
+                    return "~/images/Bosuil_stadion.jpg";
+                default:
+                    return "";
+            }
         }
     }
 }
