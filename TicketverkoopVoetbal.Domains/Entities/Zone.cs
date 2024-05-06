@@ -11,7 +11,7 @@ public partial class Zone
 
     public decimal Prijs { get; set; }
 
-    public int Aantal { get; set; }
+    public int Capaciteit { get; set; }
 
     public int StadionId { get; set; }
 

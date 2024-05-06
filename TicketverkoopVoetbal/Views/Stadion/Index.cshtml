@@ -1,47 +1,33 @@
 ﻿@model IEnumerable<TicketverkoopVoetbal.ViewModels.StadionVM>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Stadions";
 }
 
-<h1>Index</h1>
+<style>
+    .card-img-top {
+        height: 250px;
+        object-fit: cover;
+    }
+</style>
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Naam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Adres)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Stad)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Capaciteit)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Naam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Adres)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stad)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Capaciteit)
-            </td>
-
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        @foreach (var stadion in Model)
+        {
+            <div class="col">
+                <div class="card">
+                    <img src="@Url.Content(stadion.FotoPath)" class="card-img-top" alt="@stadion.Naam">
+                    <div class="card-body">
+                        <h5 class="card-title">@stadion.Naam</h5>
+                        <p class="card-text">
+                            <strong>Adres:</strong> @stadion.Adres <br>
+                            <strong>Stad:</strong> @stadion.Stad <br>
+                            <strong>Capaciteit:</strong> @stadion.Capaciteit
+                        </p>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

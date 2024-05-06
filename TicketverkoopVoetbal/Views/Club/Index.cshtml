@@ -1,41 +1,33 @@
 ﻿@model IEnumerable<TicketverkoopVoetbal.ViewModels.ClubVM>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Clubs";
 }
 
-<h1>Index</h1>
+<style>
+    .card-img-top {
+        padding-top: 20px;
+        max-height: 200px; 
+        object-fit: contain;
+    }
+</style>
 
-
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Naam)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.StadionNaam)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Naam)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StadionNaam)
-            </td>
-            <td>
-                    <a asp-controller="PurchaseAbonnement" asp-action="Index" asp-route-id="@item.ClubId">
-                        Koop Abonnement
-                    </a>
-
-            </td>
-             
-        </tr>
-}
-    </tbody>
-</table>
+<div class="container">
+    <div class="row row-cols-1 row-cols-md-2 g-4">
+        @foreach (var club in Model)
+        {
+            <div class="col">
+                <div class="card h-100">
+                    <img src="@Url.Content(club.LogoPath)" class="card-img-top" alt="@club.Naam Logo">
+                    <div class="card-body">
+                        <h5 class="card-title">@club.Naam</h5>
+                        <p class="card-text">@club.StadionNaam</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="@Url.Action("Index", "PurchaseAbonnement", new { id = club.ClubId })" class="btn btn-primary">Koop Abonnement</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

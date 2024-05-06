@@ -233,18 +233,12 @@ public partial class FootballDbContext : DbContext
             entity.ToTable("Ticket");
 
             entity.Property(e => e.TicketId).HasColumnName("TicketID");
-            entity.Property(e => e.BestellingId).HasColumnName("BestellingID");
             entity.Property(e => e.GebruikersId)
                 .HasMaxLength(450)
                 .HasColumnName("GebruikersID");
             entity.Property(e => e.MatchId).HasColumnName("MatchID");
             entity.Property(e => e.StoeltjeId).HasColumnName("StoeltjeID");
             entity.Property(e => e.ZoneId).HasColumnName("ZoneID");
-
-            entity.HasOne(d => d.Bestelling).WithMany(p => p.Tickets)
-                .HasForeignKey(d => d.BestellingId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Ticket_Bestelling");
 
             entity.HasOne(d => d.Gebruikers).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.GebruikersId)
