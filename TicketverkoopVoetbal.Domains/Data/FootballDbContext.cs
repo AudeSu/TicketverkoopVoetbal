@@ -54,9 +54,7 @@ public partial class FootballDbContext : DbContext
         {
             entity.ToTable("Abonnement");
 
-            entity.Property(e => e.AbonnementId)
-                .ValueGeneratedNever()
-                .HasColumnName("AbonnementID");
+            entity.Property(e => e.AbonnementId).HasColumnName("AbonnementID");
             entity.Property(e => e.ClubId).HasColumnName("ClubID");
             entity.Property(e => e.GebruikerId)
                 .HasMaxLength(450)

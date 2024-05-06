@@ -160,9 +160,9 @@ namespace TicketverkoopVoetbal.Controllers
                 {
                     CartTicketVM item = new CartTicketVM
                     {
-                        MatchId = ticketVM.MatchId,
+                        MatchID = ticketVM.MatchId,
                         matchVM = _mapper.Map<MatchVM>(match),
-                        ZoneId = ticketVM.ZoneId,
+                        ZoneID = ticketVM.ZoneId,
                         ZoneNaam = zone.Naam,
                         Eigenaar = nameVMs[i].Name,
                         Prijs = ticketVM.Prijs,

@@ -4,7 +4,7 @@ namespace TicketverkoopVoetbal.ViewModels
 {
     public class AbonnementVM
     {
-        public string GebruikerId { get; set; }
+        public string GebruikerID { get; set; }
 
         public int StoeltjeId { get; set; }
 

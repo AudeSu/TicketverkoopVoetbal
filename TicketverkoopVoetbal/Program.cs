@@ -92,6 +92,12 @@ builder.Services.AddTransient<IDAO<Zone>, ZoneDAO>();
 builder.Services.AddTransient<IService<Stoeltje>, StoeltjeService>();
 builder.Services.AddTransient<IDAO<Stoeltje>, StoeltjeDAO>();
 
+builder.Services.AddTransient<IAbonnementService<Abonnement>, AbonnementService>();
+builder.Services.AddTransient<IAbonnementDAO<Abonnement>, AbonnementDAO>();
+
+builder.Services.AddTransient<ITicketService<Ticket>, TicketService>();
+builder.Services.AddTransient<ITicketDAO<Ticket>, TicketDAO>();
+
 builder.Services.AddTransient<ICreatePDF, CreatePDF>();
 
 //session
@@ -100,7 +106,7 @@ builder.Services.AddSession(options =>
 
     options.Cookie.Name = "be.VIVES.Session";
 
-    options.IdleTimeout = TimeSpan.FromMinutes(20);
+    options.IdleTimeout = TimeSpan.FromMinutes(10);
 });
 
 var app = builder.Build();

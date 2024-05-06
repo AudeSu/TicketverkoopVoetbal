@@ -10,7 +10,7 @@ using TicketverkoopVoetbal.Repositories.Interfaces;
 
 namespace TicketverkoopVoetbal.Repositories
 {
-    public class AbonnementDAO : IDAO<Abonnement>
+    public class AbonnementDAO : IAbonnementDAO<Abonnement>
     {
         private readonly FootballDbContext _dbContext;
 
@@ -19,9 +19,18 @@ namespace TicketverkoopVoetbal.Repositories
             _dbContext = context;
         }
 
-        public Task Add(Abonnement entity)
+        public async Task Add(Abonnement entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(entity).State = EntityState.Added;
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         public Task Delete(Abonnement entity)
@@ -70,6 +79,23 @@ namespace TicketverkoopVoetbal.Repositories
         public Task Update(Abonnement entity)
         {
             throw new NotImplementedException();
+        }
+
+        public async Task<IEnumerable<Abonnement>?> FindByStringId(string? id)
+        {
+            try
+            {
+                return await _dbContext.Abonnements
+                    .Where(a => a.GebruikerId == id)
+                    .Include(b => b.Club)
+                    .Include(b => b.Gebruiker)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
         }
     }
 }

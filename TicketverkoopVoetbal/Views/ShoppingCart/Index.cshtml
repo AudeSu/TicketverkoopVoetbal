@@ -9,7 +9,7 @@
 @if (Model != null)
 {
     <form asp-controller="ShoppingCart" asp-action="Purchase" method="post">
-        @if(Model.Carts.Count < 1 && Model.Abonnement == null)
+        @if(Model.Carts == null && Model.Abonnement == null)
         {
             <p>Your shopping cart is empty at the moment.</p>
         } else
@@ -32,14 +32,14 @@
                     @foreach (var item in Model.Carts)
                     {
                         <tr>
-                            @Html.HiddenFor(m => item.MatchId)
+                            @Html.HiddenFor(m => item.MatchID)
                             <td>@item.matchVM.UitploegNaam</td>
                             <td>@item.matchVM.ThuisploegNaam</td>
                             <td>@item.matchVM.StadionNaam</td>
                             <td>@item.ZoneNaam</td>
                             <td>@item.Prijs.ToString("c")</td>
                             <td>
-                                <a asp-action="DeleteTicket" asp-route-matchId="@item.MatchId">
+                                <a asp-action="DeleteTicket" asp-route-matchId="@item.MatchID">
                                     <img src="~/Images/Delete_Icon.png" alt="Delete" />
                                 </a>
                             </td>
