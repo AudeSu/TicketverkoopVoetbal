@@ -4,43 +4,39 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
-
-
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Naam)
+                Stadion Naam
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Adres)
+                Adres
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Stad)
+                Stad
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Capaciteit)
+                Capaciteit
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var stadion in Model) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.Naam)
+                @Html.DisplayFor(modelItem => stadion.Naam)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Adres)
+                @Html.DisplayFor(modelItem => stadion.Adres)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Stad)
+                @Html.DisplayFor(modelItem => stadion.Stad)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Capaciteit)
+                @Html.DisplayFor(modelItem => stadion.TotalCapaciteit)
             </td>
-
         </tr>
 }
     </tbody>

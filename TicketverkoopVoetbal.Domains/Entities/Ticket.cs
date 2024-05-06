@@ -9,15 +9,11 @@ public partial class Ticket
 
     public string GebruikersId { get; set; } = null!;
 
-    public int BestellingId { get; set; }
-
     public int StoeltjeId { get; set; }
 
     public int MatchId { get; set; }
 
     public int ZoneId { get; set; }
-
-    public virtual Bestelling Bestelling { get; set; } = null!;
 
     public virtual AspNetUser Gebruikers { get; set; } = null!;
 
