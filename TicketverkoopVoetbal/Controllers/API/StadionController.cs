@@ -10,13 +10,14 @@ namespace TicketverkoopVoetbal.Controllers.API
     [ApiController]
     public class StadionController : Controller
     {
-        private IService<Stadion> _stadionService;
+        private readonly IService<Stadion> _stadionService;
         private readonly IMapper _mapper;
-        public StadionController(IMapper mapper, IService<Stadion> stadionService)
+        public StadionController(IService<Stadion> stadionService, IMapper mapper)
         {
-            _mapper = mapper;
             _stadionService = stadionService;
+            _mapper = mapper;
         }
+
         /// <summary>
         /// Get the list of all Stadions.
         /// </summary>
@@ -31,16 +32,13 @@ namespace TicketverkoopVoetbal.Controllers.API
                 var data = _mapper.Map<List<StadionVM>>(listStadion);
 
                 if (data == null)
-                {// Als de gegevens niet worden gevonden, retourneer een 404 Not Found-status
+                {
                     return NotFound();
                 }
-                // Retourneer de gegevens als alles goed is verlopen
-                // HTTP-statuscode 200
                 return Ok(data);
             }
             catch (Exception ex)
             {
-                // Als er een fout optreedt, retourneer een 500 Internal Server Error-status
                 return StatusCode(500, new { error = ex.Message });
             }
         }

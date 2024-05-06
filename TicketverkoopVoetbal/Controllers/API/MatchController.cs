@@ -10,12 +10,12 @@ namespace TicketverkoopVoetbal.Controllers.API
     [ApiController]
     public class MatchController : Controller
     {
-        private IMatchService<Match> _matchService;
+        private readonly IMatchService<Match> _matchService;
         private readonly IMapper _mapper;
-        public MatchController(IMapper mapper, IMatchService<Match> matchService)
+        public MatchController(IMatchService<Match> matchService, IMapper mapper)
         {
-            _mapper = mapper;
             _matchService = matchService;
+            _mapper = mapper;
         }
 
         /// <summary>
@@ -32,16 +32,13 @@ namespace TicketverkoopVoetbal.Controllers.API
                 var data = _mapper.Map<List<MatchVM>>(listMatch);
 
                 if (data == null)
-                {// Als de gegevens niet worden gevonden, retourneer een 404 Not Found-status
+                {
                     return NotFound();
                 }
-                // Retourneer de gegevens als alles goed is verlopen
-                // HTTP-statuscode 200
                 return Ok(data);
             }
             catch (Exception ex)
             {
-                // Als er een fout optreedt, retourneer een 500 Internal Server Error-status
                 return StatusCode(500, new { error = ex.Message });
             }
         }
@@ -50,26 +47,23 @@ namespace TicketverkoopVoetbal.Controllers.API
         /// Get one Matches.
         /// </summary>
         /// <returns>The list of Matches.</returns>
-        // GET: api/Match
-        [HttpGet("{id1, id2}", Name = "Get")]
-        public async Task<ActionResult<MatchVM>> Get( int id1 ,  int id2)
+        // GET: api/Match/{thuisploegId, uitploegId}
+        [HttpGet("{thuisploegId, uitploegId}", Name = "Get")]
+        public async Task<ActionResult<MatchVM>> Get(int thuisploegId, int uitploegId)
         {
             try
             {
-                var listMatch = await _matchService.FindByTwoIds(id1, id2);
+                var listMatch = await _matchService.FindByTwoIds(thuisploegId, uitploegId);
                 var data = _mapper.Map<List<MatchVM>>(listMatch);
 
                 if (data == null)
-                {// Als de gegevens niet worden gevonden, retourneer een 404 Not Found-status
+                {
                     return NotFound();
                 }
-                // Retourneer de gegevens als alles goed is verlopen
-                // HTTP-statuscode 200
                 return Ok(data);
             }
             catch (Exception ex)
             {
-                // Als er een fout optreedt, retourneer een 500 Internal Server Error-status
                 return StatusCode(500, new { error = ex.Message });
             }
         }

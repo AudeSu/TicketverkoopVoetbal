@@ -14,11 +14,11 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IService<Club> _clubService;
         private readonly IMapper _mapper;
 
-        public MatchController(IMapper mapper, IMatchService<Match> matchservice, IService<Club> clubService)
+        public MatchController(IMatchService<Match> matchservice, IService<Club> clubService, IMapper mapper)
         {
-            _mapper = mapper;
             _matchService = matchservice;
             _clubService = clubService;
+            _mapper = mapper;
         }
 
         public async Task<ActionResult> Index()

@@ -7,7 +7,6 @@ namespace TicketverkoopVoetbal.AutoMapper
 {
     public class AutoMapperProfile : Profile
     {
-
         public AutoMapperProfile()
         {
             CreateMap<Match, MatchVM>()
@@ -23,7 +22,6 @@ namespace TicketverkoopVoetbal.AutoMapper
                     .ForMember(dest => dest.StadionId,
                     opts => opts.MapFrom(
                         src => src.StadionId));
-
 
             CreateMap<Stadion, StadionVM>();
 
@@ -50,10 +48,6 @@ namespace TicketverkoopVoetbal.AutoMapper
 
             //API
             CreateMap<Hotel, HotelVM>();
-
-
-
-
-        }       
+        }
     }
 }

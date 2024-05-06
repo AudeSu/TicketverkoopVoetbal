@@ -11,13 +11,13 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IService<Club> _clubService;
         private readonly IMapper _mapper;
 
-        public ClubController(IMapper mapper, IService<Club> clubservice)
+        public ClubController(IService<Club> clubservice, IMapper mapper)
         {
-            _mapper = mapper;
             _clubService = clubservice;
+            _mapper = mapper;
         }
 
-        public async Task<IActionResult> Index()  // add using System.Threading.Tasks;
+        public async Task<IActionResult> Index()
         {
             var clubs = await _clubService.GetAll();
             var clubVMs = new List<ClubVM>();

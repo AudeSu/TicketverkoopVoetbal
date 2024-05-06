@@ -2,33 +2,33 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.Identity.Client.Platforms.Features.DesktopOs.Kerberos;
 using Newtonsoft.Json;
-using System.Configuration;
 using System.Diagnostics;
-using System.Diagnostics.Metrics;
 using TicketverkoopVoetbal.Domains;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
-using static Azure.Core.HttpHeader;
 
 namespace TicketverkoopVoetbal.Controllers
 {
     public class PurchaseTicketController : Controller
     {
-        private IMatchService<Match> _matchService;
-        private IService<Zone> _zoneService;
+        private readonly IMatchService<Match> _matchService;
+        private readonly IService<Zone> _zoneService;
         private readonly IMapper _mapper;
-        private IConfiguration _Configure;
+        private readonly IConfiguration _Configure;
         private string? BaseUrl;
 
-        public PurchaseTicketController(IMapper mapper, IMatchService<Match> matchservice, IService<Zone> zoneService, IConfiguration configuration)
+        public PurchaseTicketController(
+            IMatchService<Match> matchservice,
+            IService<Zone> zoneService,
+            IMapper mapper,
+            IConfiguration configuration)
         {
-            _mapper = mapper;
             _matchService = matchservice;
             _zoneService = zoneService;
+            _mapper = mapper;
             _Configure = configuration;
             BaseUrl = _Configure.GetValue<string>("APIURL");
         }
@@ -49,8 +49,7 @@ namespace TicketverkoopVoetbal.Controllers
             TicketVM ticketVM = new TicketVM();
             ticketVM.MatchId = match.MatchId;
             ticketVM.matchVM = matchVM;
-            ticketVM.Zones = new SelectList(
-                await _zoneService.FilterById(match.StadionId), "ZoneId", "Naam");
+            ticketVM.Zones = new SelectList(await _zoneService.FilterById(match.StadionId), "ZoneId", "Naam");
 
             return View(ticketVM);
         }
@@ -75,8 +74,6 @@ namespace TicketverkoopVoetbal.Controllers
                 HttpContext.Session.SetObject("TicketVM", ticketVM);
                 ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
                 return View(ticketVM);
-
-
             }
             catch (Exception ex)
             {
@@ -98,8 +95,6 @@ namespace TicketverkoopVoetbal.Controllers
 
                 var url = $"{BaseUrl}{search}&format={format}&limit={limit}";
 
-  
-
                 using (var response = await httpClient.GetAsync(url))
                 {
                     string apiResponse = await response.Content.ReadAsStringAsync();
@@ -114,7 +109,6 @@ namespace TicketverkoopVoetbal.Controllers
         [Authorize]
         public IActionResult Names()
         {
-
             int? aantal = HttpContext.Session.GetObject<TicketVM>("TicketVM").Aantal;
 
             List<TicketNameVM> nameVMs = new List<TicketNameVM>();
@@ -147,7 +141,6 @@ namespace TicketverkoopVoetbal.Controllers
             else
             {
                 shopping = new ShoppingCartVM();
-
             }
             if (shopping.Carts == null)
             {
@@ -171,15 +164,9 @@ namespace TicketverkoopVoetbal.Controllers
                     };
                     shopping?.Carts?.Add(item);
                 }
-
-
-
-
                 HttpContext.Session.SetObject("ShoppingCart", shopping);
-
             }
             return RedirectToAction("Index", "ShoppingCart");
-
         }
     }
 }
