@@ -27,7 +27,7 @@ namespace TicketverkoopVoetbal.AutoMapper
                         src => src.Thuisploeg.LogoPath))
                     .ForMember(dest => dest.UitploegLogoPath,
                     opts => opts.MapFrom(
-                        src => src.Uitploeg.LogoPath));
+                        src => src.Uitploeg.LogoPath))
                     .ForMember(dest => dest.ClubId,
                     opts => opts.MapFrom(
                         src => src.ThuisploegId));
