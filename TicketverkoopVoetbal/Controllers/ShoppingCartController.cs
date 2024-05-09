@@ -55,6 +55,7 @@ namespace TicketverkoopVoetbal.Controllers
         public async Task<IActionResult> Purchase()
         {
             var currentUser = await _userManager.GetUserAsync(User);
+            var email = currentUser!.Email;
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             if (cartList == null || currentUser == null)
             {
@@ -85,8 +86,8 @@ namespace TicketverkoopVoetbal.Controllers
                         ticketList.Add(ticket);
                     }
                     // Het pad naar de map waarin het logo zich bevindt
-                    string logoPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "logo.png");
-                    var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, logoPath);
+                    string logoPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "Website_logo.png");
+                    var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, logoPath, email!);
 
                     // Als de map pdf nog niet bestaat in de wwwroot map,
                     // maak deze dan aan voordat je het PDF-document opslaat.

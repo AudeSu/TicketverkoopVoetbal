@@ -30,11 +30,11 @@ public partial class FootballDbContext : DbContext
 
     public virtual DbSet<AspNetUserToken> AspNetUserTokens { get; set; }
 
-    public virtual DbSet<Bestelling> Bestellings { get; set; }
-
     public virtual DbSet<Club> Clubs { get; set; }
 
     public virtual DbSet<Match> Matches { get; set; }
+
+    public virtual DbSet<Seizoen> Seizoens { get; set; }
 
     public virtual DbSet<Stadion> Stadions { get; set; }
 
@@ -61,6 +61,7 @@ public partial class FootballDbContext : DbContext
             entity.Property(e => e.GebruikerId)
                 .HasMaxLength(450)
                 .HasColumnName("GebruikerID");
+            entity.Property(e => e.SeizoenId).HasColumnName("SeizoenID");
             entity.Property(e => e.StoeltjeId).HasColumnName("StoeltjeID");
 
             entity.HasOne(d => d.Club).WithMany(p => p.Abonnements)
@@ -72,6 +73,11 @@ public partial class FootballDbContext : DbContext
                 .HasForeignKey(d => d.GebruikerId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Abonnement_AspNetUsers");
+
+            entity.HasOne(d => d.Seizoen).WithMany(p => p.Abonnements)
+                .HasForeignKey(d => d.SeizoenId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Abonnement_Seizoen");
         });
 
         modelBuilder.Entity<AspNetRole>(entity =>
@@ -146,22 +152,6 @@ public partial class FootballDbContext : DbContext
             entity.HasOne(d => d.User).WithMany(p => p.AspNetUserTokens).HasForeignKey(d => d.UserId);
         });
 
-        modelBuilder.Entity<Bestelling>(entity =>
-        {
-            entity.ToTable("Bestelling");
-
-            entity.Property(e => e.BestellingId).HasColumnName("BestellingID");
-            entity.Property(e => e.Datum).HasColumnType("datetime");
-            entity.Property(e => e.GebruikerId)
-                .HasMaxLength(450)
-                .HasColumnName("GebruikerID");
-
-            entity.HasOne(d => d.Gebruiker).WithMany(p => p.Bestellings)
-                .HasForeignKey(d => d.GebruikerId)
-                .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Bestelling_AspNetUsers");
-        });
-
         modelBuilder.Entity<Club>(entity =>
         {
             entity.ToTable("Club");
@@ -184,9 +174,15 @@ public partial class FootballDbContext : DbContext
 
             entity.Property(e => e.MatchId).HasColumnName("MatchID");
             entity.Property(e => e.Datum).HasColumnType("date");
+            entity.Property(e => e.SeizoenId).HasColumnName("SeizoenID");
             entity.Property(e => e.StadionId).HasColumnName("StadionID");
             entity.Property(e => e.ThuisploegId).HasColumnName("ThuisploegID");
             entity.Property(e => e.UitploegId).HasColumnName("UitploegID");
+
+            entity.HasOne(d => d.Seizoen).WithMany(p => p.Matches)
+                .HasForeignKey(d => d.SeizoenId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Match_Seizoen");
 
             entity.HasOne(d => d.Stadion).WithMany(p => p.Matches)
                 .HasForeignKey(d => d.StadionId)
@@ -204,6 +200,15 @@ public partial class FootballDbContext : DbContext
                 .HasConstraintName("FK_Match_Club1");
         });
 
+        modelBuilder.Entity<Seizoen>(entity =>
+        {
+            entity.ToTable("Seizoen");
+
+            entity.Property(e => e.SeizoenId).HasColumnName("SeizoenID");
+            entity.Property(e => e.Einddatum).HasColumnType("date");
+            entity.Property(e => e.Startdatum).HasColumnType("date");
+        });
+
         modelBuilder.Entity<Stadion>(entity =>
         {
             entity.ToTable("Stadion");
@@ -219,8 +224,18 @@ public partial class FootballDbContext : DbContext
             entity.ToTable("Stoeltje");
 
             entity.Property(e => e.StoeltjeId).HasColumnName("StoeltjeID");
+            entity.Property(e => e.ClubId).HasColumnName("ClubID");
+            entity.Property(e => e.MatchId).HasColumnName("MatchID");
             entity.Property(e => e.StadionId).HasColumnName("StadionID");
             entity.Property(e => e.ZoneId).HasColumnName("ZoneID");
+
+            entity.HasOne(d => d.Club).WithMany(p => p.Stoeltjes)
+                .HasForeignKey(d => d.ClubId)
+                .HasConstraintName("FK_Stoeltje_Club");
+
+            entity.HasOne(d => d.Match).WithMany(p => p.Stoeltjes)
+                .HasForeignKey(d => d.MatchId)
+                .HasConstraintName("FK_Stoeltje_Match");
 
             entity.HasOne(d => d.Zone).WithMany(p => p.Stoeltjes)
                 .HasForeignKey(d => d.ZoneId)

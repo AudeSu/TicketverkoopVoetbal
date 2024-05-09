@@ -17,5 +17,7 @@ public partial class Club
 
     public virtual ICollection<Match> MatchUitploegs { get; set; } = new List<Match>();
 
+    public virtual ICollection<Stoeltje> Stoeltjes { get; set; } = new List<Stoeltje>();
+
     public virtual Stadion Thuisstadion { get; set; } = null!;
 }
