@@ -1,6 +1,4 @@
-﻿/* matchstyles.css */
-
-/* Algemene opmaak */
+﻿/* Algemene opmaak*/
 body {
     font-family: Arial, sans-serif;
     background-color: #f5f5f5;
@@ -15,7 +13,7 @@ body {
     margin-bottom: 15px;
 }
 
-/* Stijlen voor formulieren */
+/*Stijlen voor formulieren*/
 label.control-label {
     font-weight: bold;
 }
@@ -34,7 +32,7 @@ select {
         border-color: dodgerblue;
     }
 
-/* Opmaak voor wedstrijditems */
+/*Opmaak voor wedstrijditems*/
 .match-container {
     background-color: #fff;
     border: 1px solid #ddd;
@@ -44,30 +42,39 @@ select {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.match-header {
+.team-home-container {
     display: flex;
-    justify-content: space-between;
+    justify-content: end;
     align-items: center;
 }
 
-.team-container {
+.team-away-container {
     display: flex;
+    justify-content: start;
     align-items: center;
 }
 
 .team-logo {
-    width: 40px;
-    height: 40px;
-    margin-right: 10px;
+    width: 50px;
+    margin: 20px;
 }
 
-.team-name {
+.team-home-name {
+    font-weight: bold;
+    font-size: 18px;
+}
+
+.team-away-name {
     font-weight: bold;
     font-size: 18px;
 }
 
 .match-details {
-    text-align: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
 .match-date {
@@ -75,8 +82,10 @@ select {
 }
 
 .add-to-cart {
-    margin-top: 15px;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }
 
     .add-to-cart button {
@@ -91,5 +100,5 @@ select {
     }
 
         .add-to-cart button:hover {
-            background-color: #007bff; /* Donkerder tint van dodgerblue */
+            background-color: #007bff;
         }
