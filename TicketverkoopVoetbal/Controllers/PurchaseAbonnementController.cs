@@ -19,7 +19,7 @@ namespace TicketverkoopVoetbal.Controllers
         public PurchaseAbonnementController(
             IService<Club> clubservice,
             IService<Zone> zoneService,
-            IStoelService<Stoeltje> stoelservice
+            IStoelService<Stoeltje> stoelservice,
             IMapper mapper)
         {
             _clubService = clubservice;
@@ -58,7 +58,6 @@ namespace TicketverkoopVoetbal.Controllers
                 new SelectList(await _zoneService.FilterById(Convert.ToInt16(club.ThuisstadionId)), "ZoneId", "Naam", abonnementVM.ZoneId);
                 HttpContext.Session.SetObject("AbonnementVM", abonnementVM);
 
-                abonnementVM.AantalVrijePlaatsen = VrijePlaatsen(abonnementVM);
                 return View(abonnementVM);
             }
             catch (Exception ex)
@@ -67,16 +66,6 @@ namespace TicketverkoopVoetbal.Controllers
             }
 
             return View(abonnementVM);
-        }
-
-        public int VrijePlaatsen(AbonnementVM abonnementVM)
-        {
-            var currentZone = _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId)).Result;
-
-            int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(abonnementVM.matchVM.ClubId, abonnementVM.ZoneId, abonnementVM.matchVM.SeizoenID).Result.Count();
-            int aantalticketPlaatsen = _stoelService.GetTakenSeatsByMatchID(abonnementVM.MatchId, abonnementVM.ZoneId).Result.Count();
-
-            return currentZone.Capaciteit - (aantalAbonnementPlaatsen + aantalticketPlaatsen);
         }
 
         public async Task<IActionResult> Select()

@@ -3,16 +3,16 @@
 <div class="match-container">
     <div class="match-header">
         <div class="team-container">
-            <img src="@Model.ThuisploegLogoPath" alt="Thuisploeg logo" class="team-logo" />
             <span class="team-name">@Model.ThuisploegNaam</span>
+            <img src="@Model.ThuisploegLogoPath" alt="Thuisploeg logo" class="team-logo" />
         </div>
         <div class="match-details">
             <p class="match-date">@Model.Datum?.ToString("dd/MM/yyyy")</p>
             <p>@Model.Startuur?.ToString("hh\\:mm")</p>
         </div>
         <div class="team-container">
-            <span class="team-name">@Model.UitploegNaam</span>
             <img src="@Model.UitploegLogoPath" alt="Uitploeg logo" class="team-logo" />
+            <span class="team-name">@Model.UitploegNaam</span>
         </div>
     </div>
     @if (Model.Datum.HasValue && (Model.Datum.Value - DateTime.Today).TotalDays <= 30)
