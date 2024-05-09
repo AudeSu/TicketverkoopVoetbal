@@ -5,7 +5,6 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout;
-using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using QRCoder;
@@ -19,7 +18,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
     {
         public MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, string logoPath, string email)
         {
-            using MemoryStream stream = new MemoryStream();
+            MemoryStream stream = new MemoryStream();
             PdfWriter writer = new PdfWriter(stream);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
@@ -50,6 +49,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
 
             // Body
             document.Add(new Paragraph()
+                .Add("\n")
                 .Add(new Text(GetCustomerNameFromEmail(email)).SetBold().SetFontSize(20))
                 .Add("\nFactuurdatum: " + DateTime.Now.ToShortDateString())
                 .Add("\nFactuurnummer: " + DateTime.Now.ToString("MMddHHmmss"))
@@ -129,8 +129,6 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 return email;
             }
         }
-
-
 
         private static byte[] BitmapToBytes(Bitmap img)
         {
