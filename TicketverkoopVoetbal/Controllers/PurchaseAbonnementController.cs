@@ -13,12 +13,18 @@ namespace TicketverkoopVoetbal.Controllers
     {
         private readonly IService<Club> _clubService;
         private readonly IService<Zone> _zoneService;
+        private readonly IStoelService<Stoeltje> _stoelService;
         private readonly IMapper _mapper;
 
-        public PurchaseAbonnementController(IService<Club> clubservice, IService<Zone> zoneService, IMapper mapper)
+        public PurchaseAbonnementController(
+            IService<Club> clubservice,
+            IService<Zone> zoneService,
+            IStoelService<Stoeltje> stoelservice
+            IMapper mapper)
         {
             _clubService = clubservice;
             _zoneService = zoneService;
+            _stoelService = stoelservice;
             _mapper = mapper;
         }
         public async Task<IActionResult> Index(int? id)
@@ -51,6 +57,8 @@ namespace TicketverkoopVoetbal.Controllers
                 abonnementVM.Zones =
                 new SelectList(await _zoneService.FilterById(Convert.ToInt16(club.ThuisstadionId)), "ZoneId", "Naam", abonnementVM.ZoneId);
                 HttpContext.Session.SetObject("AbonnementVM", abonnementVM);
+
+                abonnementVM.AantalVrijePlaatsen = VrijePlaatsen(abonnementVM);
                 return View(abonnementVM);
             }
             catch (Exception ex)
@@ -59,6 +67,16 @@ namespace TicketverkoopVoetbal.Controllers
             }
 
             return View(abonnementVM);
+        }
+
+        public int VrijePlaatsen(AbonnementVM abonnementVM)
+        {
+            var currentZone = _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId)).Result;
+
+            int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(abonnementVM.matchVM.ClubId, abonnementVM.ZoneId, abonnementVM.matchVM.SeizoenID).Result.Count();
+            int aantalticketPlaatsen = _stoelService.GetTakenSeatsByMatchID(abonnementVM.MatchId, abonnementVM.ZoneId).Result.Count();
+
+            return currentZone.Capaciteit - (aantalAbonnementPlaatsen + aantalticketPlaatsen);
         }
 
         public async Task<IActionResult> Select()

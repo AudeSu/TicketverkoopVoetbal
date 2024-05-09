@@ -7,6 +7,8 @@
 
         public int StoeltjeId { get; set; }
 
+        public int SeizoenID { get; set; }
+
         public int ZoneId { get; set; }
         public string ZoneNaam { get; set; }
 

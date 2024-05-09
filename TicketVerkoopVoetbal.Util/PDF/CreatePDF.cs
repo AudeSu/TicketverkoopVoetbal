@@ -1,4 +1,4 @@
-﻿using iText.IO.Font.Constants;
+using iText.IO.Font.Constants;
 using iText.IO.Image;
 using iText.Kernel.Colors;
 using iText.Kernel.Font;

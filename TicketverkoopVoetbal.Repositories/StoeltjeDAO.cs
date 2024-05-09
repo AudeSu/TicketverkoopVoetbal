@@ -5,7 +5,7 @@ using TicketverkoopVoetbal.Repositories.Interfaces;
 
 namespace TicketverkoopVoetbal.Repositories
 {
-    public class StoeltjeDAO : IDAO<Stoeltje>
+    public class StoeltjeDAO : IStoelDAO<Stoeltje>
     {
 
         private readonly FootballDbContext _dbContext;
@@ -38,9 +38,20 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Stoeltje?> FindById(int id)
+        public async Task<Stoeltje?> FindById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _dbContext.Stoeltjes
+                .Where(a => a.StoeltjeId == id)
+                .Include(a => a.Zone)
+                .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Stoeltje>?> GetAll()
@@ -58,9 +69,50 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
-        public Task Update(Stoeltje entity)
+        public async Task Update(Stoeltje entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(entity).State = EntityState.Modified;
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Stoeltje>>GetTakenSeatsByClubID(int ClubID, int ZoneID, int SeizoenID)
+        {
+            try
+            {
+
+                return await _dbContext.Stoeltjes
+                    .Where(b => b.ZoneId == ZoneID && b.ClubId== ClubID && b.MatchId == null)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Stoeltje>>GetTakenSeatsByMatchID(int MatchID, int ZoneID)
+        {
+            try
+            {
+
+                return await _dbContext.Stoeltjes
+                    .Where(b => b.ZoneId == ZoneID &&  b.MatchId == MatchID)
+                    .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
     }
 }

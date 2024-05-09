@@ -24,9 +24,9 @@ namespace TicketverkoopVoetbal.Services
             await _ticketDAO.Add(entity);
         }
 
-        public Task Delete(Ticket entity)
+        public async Task Delete(Ticket entity)
         {
-            throw new NotImplementedException();
+            await _ticketDAO.Delete(entity);
         }
 
         public async Task<IEnumerable<Ticket>?> FilterById(int id)
@@ -34,9 +34,9 @@ namespace TicketverkoopVoetbal.Services
             throw new NotImplementedException();
         }
 
-        public Task<Ticket?> FindById(int id)
+        public async Task<Ticket?> FindById(int id)
         {
-            throw new NotImplementedException();
+            return await _ticketDAO.FindById(id);
         }
 
         public Task<IEnumerable<Ticket>?> GetAll()
