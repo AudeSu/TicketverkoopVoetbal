@@ -1,4 +1,4 @@
-﻿@model TicketverkoopVoetbal.ViewModels.TicketVM
+﻿@model TicketverkoopVoetbal.ViewModels.SelectTicketVM
 @{
     ViewData["Title"] = "Index";
 }
@@ -55,38 +55,46 @@
                 <select asp-for="ZoneId" asp-items="@Model.Zones">
                     <option disabled selected value="">Kies een Zone</option>
                 </select>
-
-                @if (Model.ZoneId != null)
+                @if (Model.VrijePlaatsen <= 0)
                 {
-                    <input asp-for="Aantal"
-                           type="number"
-                           min="1"
-                           max="4"
-                           id="Number" />
-
-
-
-                    @if (Model.HotelLijst != null && Model.HotelLijst.Any())
-                    {
-
-                        <h2>Hotels dicht bij @Model.matchVM.StadionNaam </h2>
-                        <ul id="hotelList">
-                            @foreach (var hotel in Model.HotelLijst)
-                            {
-                                <li>@hotel.name</li>
-                            }
-                        </ul>
-
-                    }
-
-
-
-                    @if (Model.Aantal != null)
-                    {
-                        <a asp-controller="PurchaseTicket" asp-action="Names" class="purchase-btn-primary">Confirm</a>
-                    }
-
+                    <p>Kies een andere zone, Er is geen plaats meer</p>
                 }
+                else
+                {
+                    @if (Model.ZoneId != null)
+                    {
+                        <input asp-for="Aantal"
+                               type="number"
+                               min="1"
+                               max="4"
+                               id="Number" />
+
+
+
+                        @if (Model.HotelLijst != null && Model.HotelLijst.Any())
+                        {
+
+                            <h2>Hotels dicht bij @Model.matchVM.StadionNaam </h2>
+                            <ul id="hotelList">
+                                @foreach (var hotel in Model.HotelLijst)
+                                {
+                                    <li>@hotel.name</li>
+                                }
+                            </ul>
+
+                        }
+
+
+
+                        @if (Model.Aantal != null)
+                        {
+                            <a asp-controller="PurchaseTicket" asp-action="Names" class="purchase-btn-primary">Confirm</a>
+                        }
+
+                    }
+                }
+
+
             </div>
             <div>
             </div>

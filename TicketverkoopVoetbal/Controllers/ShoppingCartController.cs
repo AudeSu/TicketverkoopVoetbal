@@ -19,7 +19,7 @@ namespace TicketverkoopVoetbal.Controllers
         private ICreatePDF _createPDF;
         private IUserService<AspNetUser> _userService;
         private IAbonnementService<Abonnement> _abonnementService;
-        private IService<Stoeltje> _stoelService;
+        private IStoelService<Stoeltje> _stoelService;
         private ITicketService<Ticket> _ticketService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _hostingEnvironment;
@@ -30,7 +30,7 @@ namespace TicketverkoopVoetbal.Controllers
             ICreatePDF createPDF,
             IUserService<AspNetUser> userService,
             IAbonnementService<Abonnement> abonnementService,
-            IService<Stoeltje> stoelService,
+            IStoelService<Stoeltje> stoelService,
             ITicketService<Ticket> ticketService,
             UserManager<IdentityUser> userManager,
             IWebHostEnvironment hostingEnvironment,
@@ -128,11 +128,16 @@ namespace TicketverkoopVoetbal.Controllers
             CreateStoelVM stoelVM = new CreateStoelVM();
             stoelVM.ZoneID = cartAbonnementVM.ZoneId;
             stoelVM.StadionID = cartAbonnementVM.clubVM.StadionID;
+            stoelVM.ClubID = cartAbonnementVM.ClubId;
+            stoelVM.MatchID = null;
+            stoelVM.Bezet = true;
             Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
             await _stoelService.Add(stoel);
 
             cartAbonnementVM.GebruikerID = _userManager.GetUserId(User);
             cartAbonnementVM.StoeltjeId = stoel.StoeltjeId;
+            //voorlopig hardcoded want ik weet niet hoe
+            cartAbonnementVM.SeizoenID = 1;
             Abonnement abonnement = _mapper.Map<Abonnement>(cartAbonnementVM);
             await _abonnementService.Add(abonnement);
 
@@ -147,6 +152,9 @@ namespace TicketverkoopVoetbal.Controllers
                 CreateStoelVM stoelVM = new CreateStoelVM();
                 stoelVM.ZoneID = currentTicket.ZoneID;
                 stoelVM.StadionID = currentTicket.matchVM.StadionId;
+                stoelVM.ClubID = currentTicket.matchVM.ClubId;
+                stoelVM.MatchID = currentTicket.MatchID;
+                stoelVM.Bezet = true;
                 Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
                 await _stoelService.Add(stoel);
 
@@ -189,18 +197,5 @@ namespace TicketverkoopVoetbal.Controllers
             return RedirectToAction("Index");
         }
 
-        //private string GetCurrentUserId()
-        //{
-        //    var user = _userManager.GetUserAsync(User).Result;
-
-        //    if (user != null)
-        //    {
-        //        return user.Id;
-        //    }
-        //    else
-        //    {
-        //        return "fout";
-        //    }
-        //}
     }
 }

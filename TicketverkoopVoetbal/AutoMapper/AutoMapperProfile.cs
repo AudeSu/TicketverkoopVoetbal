@@ -22,7 +22,10 @@ namespace TicketverkoopVoetbal.AutoMapper
                         src => src.Uitploeg.Naam))
                     .ForMember(dest => dest.StadionId,
                     opts => opts.MapFrom(
-                        src => src.StadionId));
+                        src => src.StadionId))
+                    .ForMember(dest => dest.ClubId,
+                    opts => opts.MapFrom(
+                        src => src.ThuisploegId));
 
 
             CreateMap<Stadion, StadionVM>();
@@ -43,7 +46,7 @@ namespace TicketverkoopVoetbal.AutoMapper
             CreateMap<Abonnement, CartAbonnementVM>();
 
             CreateMap<CartTicketVM, Ticket>();
-            CreateMap<Ticket, CartTicketVM>();
+            CreateMap<Ticket, TicketVM>();
 
             CreateMap<CreateStoelVM, Stoeltje>();
             CreateMap<Stoeltje, CreateStoelVM>();

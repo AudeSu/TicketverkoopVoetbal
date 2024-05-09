@@ -47,5 +47,10 @@ namespace TicketverkoopVoetbal.Services
         {
             return await _matchDAO.FindByTwoIds(thuisploedId, uitploegId);
         }
+
+        public async Task<IEnumerable<Match>?> FindByHomeClub(int thuisploegId)
+        {
+            return await _matchDAO.FindByHomeClub(thuisploegId);
+        }
     }
 }

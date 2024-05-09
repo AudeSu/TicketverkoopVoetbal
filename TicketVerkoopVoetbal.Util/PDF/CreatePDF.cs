@@ -83,9 +83,9 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 {
                     document.Add(new Paragraph($"Ticket ID: {ticket.TicketId}"));
                     document.Add(new Paragraph($"Match: {ticket.MatchId}"));
-                    // document.Add(new Paragraph($"Datum: {ticket.Match.Startuur.ToString("dd-MM-yyyy HH:mm")}"));
-                    //document.Add(new Paragraph($"Zone: {ticket.Zone}"));
-                    //document.Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"));
+                    //document.Add(new Paragraph($"Datum: {ticket.Match.Startuur.ToString("dd-MM-yyyy HH:mm")}"));
+                    //document.Add(new Paragraph($"Zone: {ticket.Zone.Naam}"));
+                    document.Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"));
 
                     // Voeg QR-code toe met ticketinformatie
                     string qrContent = "https://example.com";

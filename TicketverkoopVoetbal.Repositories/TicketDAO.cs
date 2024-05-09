@@ -33,9 +33,18 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
-        public Task Delete(Ticket entity)
+        public async Task Delete(Ticket entity)
         {
-            throw new NotImplementedException();
+            _dbContext.Entry(entity).State = EntityState.Deleted;
+            try
+            {
+                await _dbContext.SaveChangesAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
         }
 
         public async Task<IEnumerable<Ticket>?> FilterById(int id)
@@ -43,9 +52,25 @@ namespace TicketverkoopVoetbal.Repositories
             throw new NotImplementedException();
         }
 
-        public Task<Ticket?> FindById(int id)
+        public async Task<Ticket?> FindById(int id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                return await _dbContext.Tickets
+                .Where(a => a.TicketId == id)
+                .Include(a => a.Gebruikers)
+                .Include(a => a.Match)
+                .Include(b => b.Stoeltje)
+                .Include(b => b.Zone)
+
+
+                .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
         }
 
         public Task<IEnumerable<Ticket>?> GetAll()
