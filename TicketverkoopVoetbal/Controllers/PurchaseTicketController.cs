@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
@@ -7,6 +8,7 @@ using System.Diagnostics;
 using TicketverkoopVoetbal.Domains;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
+using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
 
@@ -17,6 +19,8 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IMatchService<Match> _matchService;
         private readonly IService<Zone> _zoneService;
         private readonly IStoelService<Stoeltje> _stoelService;
+        private readonly ITicketService<Ticket> _ticketService;
+        private readonly UserManager<IdentityUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IConfiguration _Configure;
         private string? BaseUrl;
@@ -25,17 +29,22 @@ namespace TicketverkoopVoetbal.Controllers
             IMatchService<Match> matchservice,
             IService<Zone> zoneService,
             IStoelService<Stoeltje> stoelService,
+            ITicketService<Ticket> ticketService,
+            UserManager<IdentityUser> userManager,
             IMapper mapper,
             IConfiguration configuration)
         {
             _matchService = matchservice;
             _zoneService = zoneService;
             _stoelService = stoelService;
+            _ticketService = ticketService;
+            _userManager = userManager;
             _mapper = mapper;
             _Configure = configuration;
             BaseUrl = _Configure.GetValue<string>("APIURL");
         }
 
+        [Authorize]
         public async Task<IActionResult> Index(int? id)
         {
             if (id == null)
@@ -78,8 +87,16 @@ namespace TicketverkoopVoetbal.Controllers
                 ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
 
                 ticketVM.VrijePlaatsen = VrijePlaatsen(ticketVM); ;
+                if (CheckTicketHistory(ticketVM))
+                {
+                    return View("DoubleBooked");
+                }
+                else
+                {
+                    return View(ticketVM);
+                }
 
-                return View(ticketVM);
+
             }
             catch (Exception ex)
             {
@@ -88,6 +105,24 @@ namespace TicketverkoopVoetbal.Controllers
 
             return View(ticketVM);
         }
+
+        public Boolean CheckTicketHistory(SelectTicketVM ticketVM)
+        {
+            var hasTicket = false;
+            var currentUserID = _userManager.GetUserId(User);
+            var ticketList = _ticketService.FindByStringId(currentUserID);
+
+            foreach (var ticket in ticketList.Result)
+            {
+                if (ticket.Match.Datum == ticketVM.matchVM.Datum)
+                {
+                    hasTicket = true;
+                }
+            }
+
+            return hasTicket;
+        }
+
 
         public int VrijePlaatsen(SelectTicketVM ticketVM)
         {
