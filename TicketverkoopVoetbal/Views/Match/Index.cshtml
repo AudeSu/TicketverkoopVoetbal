@@ -69,9 +69,12 @@
                         @Html.DisplayFor(modelItem => item.Startuur)
                     </td>
                     <td>
-                        <a asp-controller="PurchaseTicket" asp-action="Index" asp-route-id="@item.MatchId">
-                            <img src="~/images/shoppingcart.png" alt="shoppingcart" />
-                        </a>
+                        @if (item.Datum.HasValue && (item.Datum.Value - DateTime.Today).TotalDays <= 30)
+                        {
+                            <a asp-controller="PurchaseTicket" asp-action="Index" asp-route-id="@item.MatchId">
+                                <img src="~/images/shoppingcart.png" alt="shoppingcart" />
+                            </a>
+                        }
                     </td>
                 </tr>
             }
