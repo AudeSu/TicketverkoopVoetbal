@@ -157,6 +157,9 @@ public partial class FootballDbContext : DbContext
             entity.ToTable("Club");
 
             entity.Property(e => e.ClubId).HasColumnName("ClubID");
+            entity.Property(e => e.LogoPath)
+                .HasMaxLength(50)
+                .IsFixedLength();
             entity.Property(e => e.Naam)
                 .HasMaxLength(50)
                 .IsFixedLength();

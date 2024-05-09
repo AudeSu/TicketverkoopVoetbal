@@ -10,13 +10,14 @@ namespace TicketverkoopVoetbal.Controllers.API
     [ApiController]
     public class AspNetUserController : Controller
     {
-        private IUserService<AspNetUser> _userService;
+        private readonly IUserService<AspNetUser> _userService;
         private readonly IMapper _mapper;
-        public AspNetUserController(IMapper mapper, IUserService<AspNetUser> userService)
+        public AspNetUserController(IUserService<AspNetUser> userService, IMapper mapper)
         {
-            _mapper = mapper;
             _userService = userService;
+            _mapper = mapper;
         }
+
         /// <summary>
         /// Get the list of all Users.
         /// </summary>
@@ -31,16 +32,13 @@ namespace TicketverkoopVoetbal.Controllers.API
                 var data = _mapper.Map<List<AspNetUserVM>>(listUser);
 
                 if (data == null)
-                {// Als de gegevens niet worden gevonden, retourneer een 404 Not Found-status
+                {
                     return NotFound();
                 }
-                // Retourneer de gegevens als alles goed is verlopen
-                // HTTP-statuscode 200
                 return Ok(data);
             }
             catch (Exception ex)
             {
-                // Als er een fout optreedt, retourneer een 500 Internal Server Error-status
                 return StatusCode(500, new { error = ex.Message });
             }
         }

@@ -12,24 +12,24 @@ namespace TicketverkoopVoetbal.Controllers
 {
     public class HistoryController : Controller
     {
-        private ITicketService<Ticket> _ticketService;
-        private IAbonnementService<Abonnement> _abonnementService;
-        private IService<Stoeltje> _stoelService;
+        private readonly ITicketService<Ticket> _ticketService;
+        private readonly IAbonnementService<Abonnement> _abonnementService;
+        private readonly IStoelService<Stoeltje> _stoelService;
         private readonly IMapper _mapper;
         private readonly UserManager<IdentityUser> _userManager;
 
         public HistoryController(
-            IMapper mapper,
             ITicketService<Ticket> ticketservice,
             IAbonnementService<Abonnement> abonnementservice,
-            IService<Stoeltje> stoelservice,
+            IStoelService<Stoeltje> stoelservice,
+            IMapper mapper,
             UserManager<IdentityUser> userManager
             )
         {
-            _mapper = mapper;
             _ticketService = ticketservice;
             _abonnementService = abonnementservice;
             _stoelService = stoelservice;
+            _mapper = mapper;
             _userManager = userManager;
         }
 
@@ -51,7 +51,6 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return View(ex);
             }
-
         }
 
 

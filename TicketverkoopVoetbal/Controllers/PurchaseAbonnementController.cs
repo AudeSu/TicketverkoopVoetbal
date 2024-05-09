@@ -4,7 +4,6 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
-using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
 
@@ -12,22 +11,21 @@ namespace TicketverkoopVoetbal.Controllers
 {
     public class PurchaseAbonnementController : Controller
     {
-        private IService<Club> _clubService;
-        private IService<Zone> _zoneService;
-        private IStoelService<Stoeltje> _stoelService;
+        private readonly IService<Club> _clubService;
+        private readonly IService<Zone> _zoneService;
+        private readonly IStoelService<Stoeltje> _stoelService;
         private readonly IMapper _mapper;
 
         public PurchaseAbonnementController(
-            IMapper mapper, 
-            IService<Club> clubservice, 
+            IService<Club> clubservice,
             IService<Zone> zoneService,
             IStoelService<Stoeltje> stoelservice
-            )
+            IMapper mapper)
         {
-            _mapper = mapper;
             _clubService = clubservice;
             _zoneService = zoneService;
-            _stoelService = stoelservice;   
+            _stoelService = stoelservice;
+            _mapper = mapper;
         }
         public async Task<IActionResult> Index(int? id)
         {
@@ -40,9 +38,7 @@ namespace TicketverkoopVoetbal.Controllers
             abonnement.ClubId = club.ClubId;
             abonnement.StadionNaam = club.Thuisstadion.Naam;
             abonnement.Naam = club.Naam;
-            abonnement.Zones = new SelectList(
-                await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam");
-
+            abonnement.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam");
             return View(abonnement);
         }
 
@@ -64,8 +60,6 @@ namespace TicketverkoopVoetbal.Controllers
 
                 abonnementVM.AantalVrijePlaatsen = VrijePlaatsen(abonnementVM);
                 return View(abonnementVM);
-
-
             }
             catch (Exception ex)
             {
@@ -87,7 +81,6 @@ namespace TicketverkoopVoetbal.Controllers
 
         public async Task<IActionResult> Select()
         {
-
             var abonnementVM = HttpContext.Session.GetObject<AbonnementVM>("AbonnementVM");
             if (abonnementVM == null)
             {
@@ -123,12 +116,9 @@ namespace TicketverkoopVoetbal.Controllers
                 }
                 shopping.Abonnement = abonnement;
 
-
                 HttpContext.Session.SetObject("ShoppingCart", shopping);
-
             }
             return RedirectToAction("Index", "ShoppingCart");
-
         }
     }
 }

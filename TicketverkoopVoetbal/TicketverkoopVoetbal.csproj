@@ -29,4 +29,8 @@
     <ProjectReference Include="..\TicketVerkoopVoetbal.Util\TicketVerkoopVoetbal.Util.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="wwwroot\pdf\" />
+  </ItemGroup>
+
 </Project>

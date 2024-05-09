@@ -11,6 +11,8 @@ public partial class Club
 
     public int ThuisstadionId { get; set; }
 
+    public string LogoPath { get; set; } = null!;
+
     public virtual ICollection<Abonnement> Abonnements { get; set; } = new List<Abonnement>();
 
     public virtual ICollection<Match> MatchThuisploegs { get; set; } = new List<Match>();

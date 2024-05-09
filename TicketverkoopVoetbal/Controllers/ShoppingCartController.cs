@@ -2,10 +2,8 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System.Security.Policy;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
-using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
 using TicketVerkoopVoetbal.Util.Mail.Interfaces;
@@ -15,12 +13,11 @@ namespace TicketverkoopVoetbal.Controllers
 {
     public class ShoppingCartController : Controller
     {
-        private IEmailSend _emailSend;
-        private ICreatePDF _createPDF;
-        private IUserService<AspNetUser> _userService;
-        private IAbonnementService<Abonnement> _abonnementService;
-        private IStoelService<Stoeltje> _stoelService;
-        private ITicketService<Ticket> _ticketService;
+        private readonly IEmailSend _emailSend;
+        private readonly ICreatePDF _createPDF;
+        private readonly IAbonnementService<Abonnement> _abonnementService;
+        private readonly IStoelService<Stoeltje> _stoelService;
+        private readonly ITicketService<Ticket> _ticketService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMapper _mapper;
@@ -28,7 +25,6 @@ namespace TicketverkoopVoetbal.Controllers
         public ShoppingCartController(
             IEmailSend emailsend,
             ICreatePDF createPDF,
-            IUserService<AspNetUser> userService,
             IAbonnementService<Abonnement> abonnementService,
             IStoelService<Stoeltje> stoelService,
             ITicketService<Ticket> ticketService,
@@ -38,7 +34,6 @@ namespace TicketverkoopVoetbal.Controllers
         {
             _emailSend = emailsend;
             _createPDF = createPDF;
-            _userService = userService;
             _abonnementService = abonnementService;
             _stoelService = stoelService;
             _ticketService = ticketService;
@@ -60,9 +55,9 @@ namespace TicketverkoopVoetbal.Controllers
         public async Task<IActionResult> Purchase()
         {
             var currentUser = await _userManager.GetUserAsync(User);
+            var email = currentUser!.Email;
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            if (cartList == null
-                || currentUser == null)
+            if (cartList == null || currentUser == null)
             {
                 return RedirectToAction("Index", "Match");
             }
@@ -70,17 +65,13 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 await CreateAbonnement(cartList.Abonnement);
             }
-
             if (cartList.Carts != null)
             {
                 await CreateTicket(cartList.Carts);
             }
 
-
-
             try
             {
-
                 string pdfFile = "Factuur" + DateTime.Now.Year;
                 var pdfFileName = $"{pdfFile}_{Guid.NewGuid()}.pdf";
 
@@ -95,8 +86,8 @@ namespace TicketverkoopVoetbal.Controllers
                         ticketList.Add(ticket);
                     }
                     // Het pad naar de map waarin het logo zich bevindt
-                    string logoPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "logo.png");
-                    var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, logoPath);
+                    string logoPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "Website_logo.png");
+                    var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, logoPath, email!);
 
                     // Als de map pdf nog niet bestaat in de wwwroot map,
                     // maak deze dan aan voordat je het PDF-document opslaat.
@@ -124,7 +115,6 @@ namespace TicketverkoopVoetbal.Controllers
 
         private async Task CreateAbonnement(CartAbonnementVM cartAbonnementVM)
         {
-
             CreateStoelVM stoelVM = new CreateStoelVM();
             stoelVM.ZoneID = cartAbonnementVM.ZoneId;
             stoelVM.StadionID = cartAbonnementVM.clubVM.StadionID;
@@ -140,7 +130,6 @@ namespace TicketverkoopVoetbal.Controllers
             cartAbonnementVM.SeizoenID = 1;
             Abonnement abonnement = _mapper.Map<Abonnement>(cartAbonnementVM);
             await _abonnementService.Add(abonnement);
-
         }
 
 
@@ -185,7 +174,6 @@ namespace TicketverkoopVoetbal.Controllers
 
         public IActionResult DeleteAbonnement()
         {
-
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             CartAbonnementVM? itemToRemove = cartList?.Abonnement;
 
@@ -196,6 +184,5 @@ namespace TicketverkoopVoetbal.Controllers
             }
             return RedirectToAction("Index");
         }
-
     }
 }

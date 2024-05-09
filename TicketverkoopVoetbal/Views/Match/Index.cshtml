@@ -3,6 +3,7 @@
 @{
     ViewData["Title"] = "Index";
 }
+<link rel="stylesheet" href="~/css/matchstyles.css" />
 
 <div class="row">
     <div class="col-md-4">
@@ -17,66 +18,12 @@
     </div>
 </div>
 
-
 @if (Model.Matches != null)
 {
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.Matches.First().MatchId)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Matches.First().StadionNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Matches.First().ThuisploegNaam)
-                    @* Voeg hier het clublogo toe *@
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Matches.First().UitploegNaam)
-                    @* Voeg hier het clublogo toe *@
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Matches.First().Datum)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Matches.First().Startuur)
-                </th>
-
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model.Matches)
-            {
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.MatchId)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.StadionNaam)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.ThuisploegNaam)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.UitploegNaam)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Datum)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.Startuur)
-                    </td>
-                    <td>
-                        <a asp-controller="PurchaseTicket" asp-action="Index" asp-route-id="@item.MatchId">
-                            <img src="~/images/shoppingcart.png" alt="shoppingcart" />
-                        </a>
-                    </td>
-                </tr>
-            }
-        </tbody>
-    </table>
+    @foreach (var item in Model.Matches)
+    {
+        @await Html.PartialAsync("_Match", item);
+    }
 }
 
 @section scripts
