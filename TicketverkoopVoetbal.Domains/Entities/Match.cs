@@ -13,11 +13,17 @@ public partial class Match
 
     public int UitploegId { get; set; }
 
+    public int SeizoenId { get; set; }
+
     public DateTime Datum { get; set; }
 
     public TimeSpan Startuur { get; set; }
 
+    public virtual Seizoen Seizoen { get; set; } = null!;
+
     public virtual Stadion Stadion { get; set; } = null!;
+
+    public virtual ICollection<Stoeltje> Stoeltjes { get; set; } = new List<Stoeltje>();
 
     public virtual Club Thuisploeg { get; set; } = null!;
 

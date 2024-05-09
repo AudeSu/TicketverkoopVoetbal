@@ -13,13 +13,13 @@ namespace TicketVerkoopVoetbal.Util.Mail
             _emailSettings = emailSettings.Value;
         }
 
-        public async Task SendEmailAsync(string email)
+        public async Task SendEmailAsync(string email, string subject, string message)
         {
             var mail = new MailMessage(); // aanmaken van een mail-object
             mail.To.Add(new MailAddress(email));
             mail.From = new MailAddress("tickets.voetbal.league@gmail.com");
-            mail.Subject = "Tickets";
-            mail.Body = "Bedankt om te bestellen op onze website u vind de ticket(s) in de onderstaande bijlage(n)";
+            mail.Subject = subject;
+            mail.Body = message;
             mail.IsBodyHtml = true;
             try
             {

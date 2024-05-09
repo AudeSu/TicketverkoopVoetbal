@@ -89,8 +89,8 @@ builder.Services.AddTransient<IUserDAO<AspNetUser>, UserDAO>();
 builder.Services.AddTransient<IService<Zone>, ZoneService>();
 builder.Services.AddTransient<IDAO<Zone>, ZoneDAO>();
 
-builder.Services.AddTransient<IService<Stoeltje>, StoeltjeService>();
-builder.Services.AddTransient<IDAO<Stoeltje>, StoeltjeDAO>();
+builder.Services.AddTransient<IStoelService<Stoeltje>, StoeltjeService>();
+builder.Services.AddTransient<IStoelDAO<Stoeltje>, StoeltjeDAO>();
 
 builder.Services.AddTransient<IAbonnementService<Abonnement>, AbonnementService>();
 builder.Services.AddTransient<IAbonnementDAO<Abonnement>, AbonnementDAO>();

@@ -5,11 +5,11 @@ using TicketverkoopVoetbal.Services.Interfaces;
 
 namespace TicketverkoopVoetbal.Services
 {
-    public class StoeltjeService : IService<Stoeltje>
+    public class StoeltjeService : IStoelService<Stoeltje>
     {
-        private IDAO<Stoeltje> _stoeltjeDAO;
+        private IStoelDAO<Stoeltje> _stoeltjeDAO;
 
-        public StoeltjeService(IDAO<Stoeltje> stoeltjeDAO)
+        public StoeltjeService(IStoelDAO<Stoeltje> stoeltjeDAO)
         {
             _stoeltjeDAO = stoeltjeDAO;
         }
@@ -29,9 +29,9 @@ namespace TicketverkoopVoetbal.Services
             throw new NotImplementedException();
         }
 
-        public Task<Stoeltje?> FindById(int id)
+        public async Task<Stoeltje?> FindById(int id)
         {
-            throw new NotImplementedException();
+            return await _stoeltjeDAO.FindById(id);
         }
 
         public async Task<IEnumerable<Stoeltje>?> GetAll()
@@ -39,9 +39,19 @@ namespace TicketverkoopVoetbal.Services
             return await _stoeltjeDAO.GetAll();
         }
 
-        public Task Update(Stoeltje entity)
+        public async Task Update(Stoeltje entity)
         {
-            throw new NotImplementedException();
+            await _stoeltjeDAO.Update(entity);
+        }
+
+        public async Task<IEnumerable<Stoeltje>>GetTakenSeatsByClubID(int ClubID, int ZoneID, int SeizoenID)
+        {
+            return await _stoeltjeDAO.GetTakenSeatsByClubID(ClubID,ZoneID,SeizoenID);
+        }
+
+        public async Task<IEnumerable<Stoeltje>>GetTakenSeatsByMatchID(int MatchID, int ZoneID)
+        {
+            return await _stoeltjeDAO.GetTakenSeatsByMatchID(MatchID,ZoneID);
         }
     }
 }

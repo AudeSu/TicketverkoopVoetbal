@@ -3,7 +3,7 @@
     public class HistoryVM
     {
 
-        public List<CartTicketVM> CartTicketVMs { get; set; }
+        public List<TicketVM> TicketVMs { get; set; }
 
         public List<CartAbonnementVM> AbonnementVMs { get; set; }
     }

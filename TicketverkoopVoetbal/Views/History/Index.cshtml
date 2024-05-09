@@ -5,7 +5,7 @@
 }
 
 <h2>Ticket History</h2>
-@if(Model.CartTicketVMs.Count() < 1)
+@if(Model.TicketVMs.Count() < 1)
 {
     <p>Nog geen Tickets gekocht</p>
 } else
@@ -14,25 +14,28 @@
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.CartTicketVMs.First().MatchID)
+                @Html.DisplayNameFor(model => model.TicketVMs.First().MatchID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CartTicketVMs.First().ZoneID)
+                @Html.DisplayNameFor(model => model.TicketVMs.First().ZoneID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CartTicketVMs.First().StoeltjeID)
+                @Html.DisplayNameFor(model => model.TicketVMs.First().StoeltjeID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CartTicketVMs.First().GebruikersID)
+                @Html.DisplayNameFor(model => model.TicketVMs.First().GebruikersID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CartTicketVMs.First().ZoneNaam)
+                @Html.DisplayNameFor(model => model.TicketVMs.First().ZoneNaam)
             </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TicketVMs.First().TicketID)
+                </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.CartTicketVMs)
+        @foreach (var item in Model.TicketVMs)
         {
             <tr>
                 <td>
@@ -53,8 +56,11 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.ZoneNaam)
                 </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.TicketID)
+                    </td>
                 <td>
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        @Html.ActionLink("DeleteTicket", "DeleteTicket", new { ticketID = item.TicketID })
                 </td>
             </tr>
         }
@@ -76,10 +82,10 @@
                 @Html.DisplayNameFor(model => model.AbonnementVMs.First().GebruikerID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CartTicketVMs.First().ZoneID)
+                @Html.DisplayNameFor(model => model.TicketVMs.First().ZoneID)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CartTicketVMs.First().StoeltjeID)
+                @Html.DisplayNameFor(model => model.TicketVMs.First().StoeltjeID)
             </th>
             <th></th>
         </tr>
@@ -98,7 +104,7 @@
                     @Html.DisplayFor(modelItem => item.StoeltjeId)
                 </td>
                 <td>
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                    @Html.ActionLink("Delete", "Delete", new { /*  id=item. */  })
                 </td>
             </tr>
         }

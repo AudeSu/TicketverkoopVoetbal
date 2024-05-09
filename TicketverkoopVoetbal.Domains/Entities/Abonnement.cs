@@ -13,7 +13,11 @@ public partial class Abonnement
 
     public int ClubId { get; set; }
 
+    public int SeizoenId { get; set; }
+
     public virtual Club Club { get; set; } = null!;
 
     public virtual AspNetUser Gebruiker { get; set; } = null!;
+
+    public virtual Seizoen Seizoen { get; set; } = null!;
 }
