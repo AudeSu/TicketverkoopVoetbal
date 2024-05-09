@@ -12,7 +12,7 @@ namespace TicketverkoopVoetbal.ViewModels
         [DataType(DataType.Date)]
         public DateTime? Datum {  get; set; }
         public TimeSpan? Startuur { get; set; }
-        public string? ThuisploegLogoPath { get; set; }
-        public string? UitploegLogoPath { get; set; }
+        public string ThuisploegLogoPath { get; set; }
+        public string UitploegLogoPath { get; set; }
     }
 }
