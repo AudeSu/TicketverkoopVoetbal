@@ -4,17 +4,34 @@
     ViewData["Title"] = "Ticketverkoop";
 }
 
-<body>
-    <header>
-        <h1>@Localizer["Welcome"].Value</h1>
-        <h4>@Localizer["Subtitel"].Value</h4>
-        <p>@Localizer["Inleiding"].Value</p>
-    </header>
+<link rel="stylesheet" href="~/css/homestyles.css" />
 
-    <section id="about">
+<body>
+    <div id="tabel">
         <div>
-            <h2>@Localizer["About us"].Value</h2>
-            <p>@Localizer["About tekst"].Value</p>
+            <section id="header">
+                <h1>@Localizer["Welcome"].Value</h1>
+                <h4>@Localizer["Subtitel"].Value</h4>
+                <p>@Localizer["Inleiding"].Value</p>
+            </section>
+
+            <section id="about">
+                <div>
+                    <h2>@Localizer["About us"].Value</h2>
+                    <p>@Localizer["About tekst"].Value</p>
+                </div>
+            </section>
+        </div>
+
+        <img src="~/images/beker.jpg" alt="Beker" />
+    </div>
+
+    <section id="purchase-options">
+        <div>
+            <h2>@Localizer["Start"].Value</h2>
+            <p>@Localizer["Start tekst"].Value</p>
+            <a asp-controller="Match" asp-action="Index" class="cta-button">@Localizer["Tickets"].Value</a>
+            <a asp-controller="Club" asp-action="Index" class="cta-button">@Localizer["Abonnement"].Value</a>
         </div>
     </section>
 
@@ -39,15 +56,6 @@
                 <li>@Localizer["Punt7"].Value</li>
                 <li>@Localizer["Punt8"].Value</li>
             </ul>
-        </div>
-    </section>
-
-    <section id="purchase-options">
-        <div>
-            <h2>@Localizer["Start"].Value</h2>
-            <p>@Localizer["Start tekst"].Value</p>
-            <a asp-controller="Match" asp-action="Index" class="cta-button">@Localizer["Tickets"].Value</a>
-            <a asp-controller="Club" asp-action="Index" class="cta-button">@Localizer["Abonnement"].Value</a>
         </div>
     </section>
 </body>

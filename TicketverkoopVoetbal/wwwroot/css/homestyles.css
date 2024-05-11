@@ -1,0 +1,64 @@
+﻿h1, h2 {
+    font-size: 36px;
+    margin-bottom: 20px;
+}
+
+h4 {
+    font-size: 24px;
+    margin-bottom: 30px;
+    font-style: italic;
+}
+
+section {
+    text-align: center;
+    padding: 25px 0;
+}
+
+#tabel {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+    align-items: center; 
+}
+
+#purchase-options {
+    padding: 40px;
+    background-color: #fff;
+    border-radius: 15px;
+}
+
+    #purchase-options p {
+        font-size: 18px;
+        margin-bottom: 30px;
+    }
+
+.cta-button {
+    display: inline-block;
+    padding: 14px 28px;
+    font-size: 18px;
+    color: #fff;
+    background-color: #333;
+    border: 2px solid #333;
+    border-radius: 5px;
+    text-decoration: none;
+    transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
+}
+
+    .cta-button:hover {
+        background-color: #fff;
+        color: #333;
+    }
+
+ul {
+    list-style-type: none;
+}
+
+    ul li {
+        margin-bottom: 10px;
+    }
+
+img {
+    max-width: 94%;
+    height: auto;
+    border-radius: 15px;
+    margin: 20px;
+}
