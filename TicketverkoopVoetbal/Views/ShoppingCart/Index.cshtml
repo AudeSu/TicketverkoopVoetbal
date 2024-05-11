@@ -44,12 +44,6 @@
                         </tr>
                     }
                 </tbody>
-                <tfoot>
-                    <tr>
-                        <td colspan="4" class="total">Total: @Model.ComputeTotalValue().ToString("C")</td>
-                        <td colspan="2"></td>
-                    </tr>
-                </tfoot>
             </table>
         }
 
@@ -81,6 +75,15 @@
                 </tbody>
             </table>
         }
+        <table class="cart-table">
+            <tfoot>
+                <tr>
+                    <td colspan="6" class="total">
+                        Totaal: <span>@Model.ComputeTotalValue().ToString("C")</span>
+                    </td>
+                </tr>
+            </tfoot>
+        </table>
 
         <button type="submit" id="purchase">Checkout</button>
     }

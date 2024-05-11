@@ -39,10 +39,12 @@ a {
     border-collapse: collapse;
 }
 
-    .cart-table th, .cart-table td {
+    .cart-table th,
+    .cart-table td {
         padding: 12px;
         text-align: left;
         border-bottom: 1px solid #ddd;
+        position: relative; /* Maak positie relatief voor positionering van absoluut element */
     }
 
     .cart-table th {
@@ -58,8 +60,23 @@ a {
 .total {
     font-size: 18px;
     font-weight: bold;
-    margin-top: 20px;
+    text-align: right; /* Uitlijnen van tekst naar rechts */
+    position: relative; /* Maak positie relatief voor positionering van absoluut element */
 }
+
+    .total::before {
+        position: absolute;
+        top: 50%; /* Verticaal midden uitlijnen */
+        transform: translateY(-50%); /* Aanpassen voor verticale centrering */
+        left: 0; /* Plaats links van de cel */
+    }
+
+    .total span {
+        position: absolute;
+        top: 50%; /* Verticaal midden uitlijnen */
+        transform: translateY(-50%); /* Aanpassen voor verticale centrering */
+        right: 12px; /* Afstand vanaf de rechterkant van de cel */
+    }
 
 #purchase {
     background-color: #333;
