@@ -2,10 +2,7 @@
 {
     public class HotelVM
     {
-        public int? place_id { get; set; }
-
-        public string? name { get; set; }
+        public int? Place_id { get; set; }
+        public string? Name { get; set; }
     }
-
-
 }
