@@ -58,6 +58,7 @@ a {
     }
 
 .total {
+    margin-bottom: 15px;
     font-size: 18px;
     font-weight: bold;
     text-align: right; /* Uitlijnen van tekst naar rechts */
@@ -76,22 +77,4 @@ a {
         top: 50%; /* Verticaal midden uitlijnen */
         transform: translateY(-50%); /* Aanpassen voor verticale centrering */
         right: 12px; /* Afstand vanaf de rechterkant van de cel */
-    }
-
-#purchase {
-    background-color: #333;
-    color: #fff;
-    border: 2px solid #333;
-    padding: 12px 20px;
-    border-radius: 4px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 20px;
-    transition: background-color 0.3s ease-in-out;
-}
-
-    #purchase:hover {
-        background-color: #fff;
-        color: #333;
-        border-color: #333;
     }
