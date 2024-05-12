@@ -62,6 +62,7 @@ namespace TicketverkoopVoetbal.Controllers
             ticketVM.MatchId = match.MatchId;
             ticketVM.matchVM = matchVM;
             ticketVM.Zones = new SelectList(await _zoneService.FilterById(match.StadionId), "ZoneId", "Naam");
+            ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
 
             return View(ticketVM);
         }
@@ -84,19 +85,20 @@ namespace TicketverkoopVoetbal.Controllers
                 ticketVM.Zones =
                 new SelectList(await _zoneService.FilterById(Convert.ToInt16(match.StadionId)), "ZoneId", "Naam", ticketVM.ZoneId);
                 HttpContext.Session.SetObject("TicketVM", ticketVM);
-                ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
 
-                ticketVM.VrijePlaatsen = VrijePlaatsen(ticketVM); ;
+                ticketVM.VrijePlaatsen = VrijePlaatsen(ticketVM);
                 if (CheckTicketHistory(ticketVM))
                 {
                     return View("DoubleBooked");
                 }
                 else
                 {
+                    if(ticketVM.Aantal != 0)
+                    {
+                        return RedirectToAction("Names");
+                    }
                     return View(ticketVM);
                 }
-
-
             }
             catch (Exception ex)
             {
