@@ -171,23 +171,6 @@ namespace TicketverkoopVoetbal.Controllers
             return View(nameVMs);
         }
 
-        //[HttpPost]
-        //[Authorize]
-        //[ValidateAntiForgeryToken]
-        //public IActionResult Names(List<TicketNameVM> model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        // Your logic when ModelState is valid
-        //        return RedirectToAction("Index");
-        //    }
-        //    else
-        //    {
-        //        // If ModelState is not valid, return the view with validation errors
-        //        return View(model);
-        //    }
-        //}
-
 
 
         [HttpPost]
