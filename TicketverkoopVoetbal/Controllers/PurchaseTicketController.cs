@@ -171,53 +171,81 @@ namespace TicketverkoopVoetbal.Controllers
             return View(nameVMs);
         }
 
+        //[HttpPost]
+        //[Authorize]
+        //[ValidateAntiForgeryToken]
+        //public IActionResult Names(List<TicketNameVM> model)
+        //{
+        //    if (ModelState.IsValid)
+        //    {
+        //        // Your logic when ModelState is valid
+        //        return RedirectToAction("Index");
+        //    }
+        //    else
+        //    {
+        //        // If ModelState is not valid, return the view with validation errors
+        //        return View(model);
+        //    }
+        //}
+
+
+
         [HttpPost]
-        public async Task<IActionResult> Select(List<TicketNameVM> nameVMs)
+        [Authorize]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Names(List<TicketNameVM> nameVMs)
         {
-            var ticketVM = HttpContext.Session.GetObject<SelectTicketVM>("TicketVM");
-            if (ticketVM == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
-            }
+                var ticketVM = HttpContext.Session.GetObject<SelectTicketVM>("TicketVM");
+                if (ticketVM == null)
+                {
+                    return NotFound();
+                }
 
-            Match? match = await _matchService.FindById(Convert.ToInt32(ticketVM.MatchId));
-            Zone? zone = await _zoneService.FindById(Convert.ToInt32(ticketVM.ZoneId));
-            ShoppingCartVM? shopping;
+                Match? match = await _matchService.FindById(Convert.ToInt32(ticketVM.MatchId));
+                Zone? zone = await _zoneService.FindById(Convert.ToInt32(ticketVM.ZoneId));
+                ShoppingCartVM? shopping;
 
-            // var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
-            if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
-            {
-                shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+                // var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
+                if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
+                {
+                    shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+                }
+                else
+                {
+                    shopping = new ShoppingCartVM();
+                }
+                if (shopping.Carts == null)
+                {
+                    shopping.Carts = new List<CartTicketVM>();
+                }
+
+                if (match != null)
+                {
+                    for (int i = 0; i < ticketVM.Aantal; i++)
+                    {
+                        CartTicketVM item = new CartTicketVM
+                        {
+                            MatchID = ticketVM.MatchId,
+                            matchVM = _mapper.Map<MatchVM>(match),
+                            ZoneID = ticketVM.ZoneId,
+                            ZoneNaam = zone.Naam,
+                            Eigenaar = nameVMs[i].Name,
+                            Prijs = ticketVM.Prijs,
+                            DateCreated = DateTime.Now
+
+                        };
+                        shopping?.Carts?.Add(item);
+                    }
+                    HttpContext.Session.SetObject("ShoppingCart", shopping);
+                }
+                return RedirectToAction("Index", "ShoppingCart");
             }
             else
             {
-                shopping = new ShoppingCartVM();
+                return View("Names", nameVMs);
             }
-            if (shopping.Carts == null)
-            {
-                shopping.Carts = new List<CartTicketVM>();
-            }
-
-            if (match != null)
-            {
-                for (int i = 0; i < ticketVM.Aantal; i++)
-                {
-                    CartTicketVM item = new CartTicketVM
-                    {
-                        MatchID = ticketVM.MatchId,
-                        matchVM = _mapper.Map<MatchVM>(match),
-                        ZoneID = ticketVM.ZoneId,
-                        ZoneNaam = zone.Naam,
-                        Eigenaar = nameVMs[i].Name,
-                        Prijs = ticketVM.Prijs,
-                        DateCreated = DateTime.Now
-
-                    };
-                    shopping?.Carts?.Add(item);
-                }
-                HttpContext.Session.SetObject("ShoppingCart", shopping);
-            }
-            return RedirectToAction("Index", "ShoppingCart");
         }
     }
 }
