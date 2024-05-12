@@ -1,4 +1,6 @@
-﻿namespace TicketverkoopVoetbal.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TicketverkoopVoetbal.ViewModels
 {
     public class TicketNameVM
     {
