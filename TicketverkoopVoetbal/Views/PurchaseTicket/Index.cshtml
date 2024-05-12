@@ -55,22 +55,19 @@
                 <select asp-for="ZoneId" asp-items="@Model.Zones">
                     <option disabled selected value="">Kies een Zone</option>
                 </select>
-                @if (Model.VrijePlaatsen <= 0)
+                @if (Model.ZoneId != 0)
                 {
-                    <p>Kies een andere zone, Er is geen plaats meer</p>
-                }
-                else
-                {
-                    @if (Model.ZoneId != null)
+                    @if (Model.VrijePlaatsen <= 0)
+                    {
+                        <p>Kies een andere zone, Er is geen plaats meer</p>
+                    }
+                    else
                     {
                         <input asp-for="Aantal"
                                type="number"
                                min="1"
                                max="4"
                                id="Number" />
-
-
-
                         @if (Model.HotelLijst != null && Model.HotelLijst.Any())
                         {
 
