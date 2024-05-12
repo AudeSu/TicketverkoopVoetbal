@@ -13,4 +13,3 @@
             Carts?.Sum(e => e.Prijs) ?? 0;
     }
 }
-

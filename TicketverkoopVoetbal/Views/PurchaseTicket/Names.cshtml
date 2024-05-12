@@ -4,25 +4,36 @@
     ViewData["Title"] = "Tickets";
 }
 
-<form asp-controller="PurchaseTicket" asp-action="Select" method="post">
-    @foreach (var item in Model.Select((value, index) => new { Value = value, Index = index }))
-    {
-        <div class="form-group">
-            <div class="row">
-                <div class="col">
-                    <label for="Voornaam">Voornaam:</label>
-                    <input type="text" id="Name" name="nameVMs[@item.Index].Name" class="form-control" value="@item.Value.Name" />
-                    <span asp-validation-for="nameVMs[@item.Index].Name" class="text-danger"></span>
-                </div>
-@*                 <div class="col">
-                    <label for="Achternaam">Achternaam:</label>
-                    <input type="text" id="Achternaam" name="nameVMs[@item.Index].Achternaam" class="form-control" value="@item.Value.Achternaam" />
-                    <span asp-validation-for="nameVMs[@item.Index].Achternaam" class="text-danger"></span>
-                </div> *@
-            </div>
+<link rel="stylesheet" href="~/css/purchasestyles.css" />
+
+<div class="container">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <section class="p-4 bg-light rounded">
+                <form asp-controller="PurchaseTicket" asp-action="Select" method="post">
+                    <h4 class="mb-4">Gelieve hieronder de namen in te vullen van de gebruikers voor wie de tickets zullen worden aangeschaft, aangezien de tickets op naam zijn.</h4>
+                    @foreach (var item in Model.Select((value, index) => new { Value = value, Index = index }))
+                    {
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col">
+                                    <label for="Voornaam">Voornaam:</label>
+                                    <input type="text" id="Name" name="nameVMs[@item.Index].Name" class="form-control" value="@item.Value.Name" />
+                                    <span asp-validation-for="nameVMs[@item.Index].Name" class="text-danger"></span>
+                                </div>
+                                @*                 <div class="col">
+                            <label for="Achternaam">Achternaam:</label>
+                            <input type="text" id="Achternaam" name="nameVMs[@item.Index].Achternaam" class="form-control" value="@item.Value.Achternaam" />
+                            <span asp-validation-for="nameVMs[@item.Index].Achternaam" class="text-danger"></span>
+                            </div> *@
+                            </div>
+                        </div>
+                    }
+                    <div class="mb-3">
+                        <button type="submit" class="w-100 btn btn-primary">Submit</button>
+                    </div>
+                </form>
+            </section>
         </div>
-    }
-
-    <button type="submit" class="btn btn-primary">Submit</button>
-</form>
-
+    </div>
+</div>
