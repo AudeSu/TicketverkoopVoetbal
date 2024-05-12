@@ -1,4 +1,4 @@
-﻿#thanks {
+﻿#page {
     max-width: 600px;
     margin: 0 auto;
     background-color: #fff;
@@ -24,7 +24,7 @@ a {
         text-decoration: underline;
     }
 
-.shopping-cart {
+.table {
     margin: 0 auto;
     background-color: #fff;
     padding: 30px;
