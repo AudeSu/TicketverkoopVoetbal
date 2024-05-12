@@ -124,6 +124,21 @@ namespace TicketverkoopVoetbal.Controllers
         }
 
 
+        public Boolean CheckTicketAmount(SelectTicketVM ticketVM)
+        {
+            var hasMaxTickets = false;
+            var currentUserID = _userManager.GetUserId(User);
+            var ticketList = _ticketService.FindPerUser(currentUserID, ticketVM.MatchId);
+
+            if(ticketList.Result.Count() + ticketVM.Aantal > 4)
+            {
+                return true;
+            }
+
+            return hasMaxTickets;
+        }
+
+
         public int VrijePlaatsen(SelectTicketVM ticketVM)
         {
             var currentZone = _zoneService.FindById(Convert.ToInt32(ticketVM.ZoneId)).Result;

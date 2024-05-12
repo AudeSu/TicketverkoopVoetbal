@@ -44,7 +44,8 @@
             </div>
             @if (Model.ZoneId != 0)
             {
-                <a asp-controller="PurchaseAbonnement" asp-action="Select" class="purchase-btn-primary">Confirm</a>
+
+                <button asp-controller="PurchaseAbonnement" asp-action="Select" type="submit" class="btn btn-primary">Confirm</button>
             }
 
         </form>
@@ -57,9 +58,10 @@
 {
     <script>
         $(document).ready(function () {
-            $("#ZoneId, #Number").on("change", function () {
+            $("#ZoneId").on("change", function () {
                 $("form").trigger("submit");
             });
         });
+
     </script>
 }

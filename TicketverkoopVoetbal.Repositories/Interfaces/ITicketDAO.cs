@@ -9,5 +9,7 @@ namespace TicketverkoopVoetbal.Repositories.Interfaces
     public interface ITicketDAO<T> : IDAO<T> where T : class
     {
         Task<IEnumerable<T>?> FindByStringId(string? id);
+
+        Task<IEnumerable<T>?> FindPerUser(string? id, int matchID);
     }
 }

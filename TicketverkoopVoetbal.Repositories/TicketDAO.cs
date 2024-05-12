@@ -103,5 +103,26 @@ namespace TicketverkoopVoetbal.Repositories
                 throw;
             }
         }
+
+        public async Task<IEnumerable<Ticket>?>FindPerUser(string? id, int matchID)
+        {
+            try
+            {
+                return await _dbContext.Tickets
+                .Where(a => a.GebruikersId == id && a.MatchId == matchID)
+                .Include(a => a.Gebruikers)
+                .Include(a => a.Match)
+                .Include(b => b.Stoeltje)
+                .Include(b => b.Zone)
+
+
+                 .ToListAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("error in DAO");
+                throw;
+            }
+        }
     }
 }

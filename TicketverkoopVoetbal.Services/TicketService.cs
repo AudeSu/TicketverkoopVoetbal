@@ -54,5 +54,9 @@ namespace TicketverkoopVoetbal.Services
            return await _ticketDAO.FindByStringId(id);
         }
 
+        public async Task<IEnumerable<Ticket>?> FindPerUser(string? id, int matchID)
+        {
+            return await _ticketDAO.FindPerUser(id, matchID);
+        }
     }
 }
