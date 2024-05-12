@@ -58,7 +58,6 @@ a {
     }
 
 .total {
-    margin-bottom: 15px;
     font-size: 18px;
     font-weight: bold;
     text-align: right; /* Uitlijnen van tekst naar rechts */
@@ -78,3 +77,7 @@ a {
         transform: translateY(-50%); /* Aanpassen voor verticale centrering */
         right: 12px; /* Afstand vanaf de rechterkant van de cel */
     }
+
+#abonnementTitel {
+    margin-top: 25px;
+}

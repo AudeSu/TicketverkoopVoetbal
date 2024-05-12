@@ -7,10 +7,10 @@
 <link href="~/css/tablestyles.css" rel="stylesheet" />
 
 <div class="table">
-    <h2>Ticket History</h2>
+    <h3>Ticket History</h3>
     @if (Model.TicketVMs.Count() < 1)
     {
-        <p>Nog geen Tickets gekocht</p>
+        <p>U heeft nog geen ticket(s) gekocht</p>
     }
     else
     {
@@ -18,11 +18,11 @@
             <thead>
                 <tr>
                     <th>Match</th>
+                    <th>Datum</th>
+                    <th>Startuur</th>
                     <th>Zone</th>
                     <th>Seat</th>
-                    <th>Gebruiker</th>
-                    <th>Eigenaar</th>
-                    <th>Ticket ID</th>
+                    <th>Op naam van</th>
                     <th></th>
                 </tr>
             </thead>
@@ -30,12 +30,12 @@
                 @foreach (var ticket in Model.TicketVMs)
                 {
                     <tr>
-                        <td>@ticket.MatchID</td>
+                        <td>@ticket.MatchID</td> @* TODO *@
+                        <td>TODO</td>
+                        <td>TODO</td>
                         <td>@ticket.ZoneNaam</td>
                         <td>@ticket.StoeltjeID</td>
-                        <td>@ticket.GebruikersID</td>
-                        <td>@ticket.Eigenaar</td>
-                        <td>@ticket.TicketID</td>
+                        <td>@ticket.Eigenaar</td> @* TODO *@
                         <td>
                             <a asp-action="DeleteTicket" asp-route-ticketID="@ticket.TicketID">
                                 <img src="~/images/delete-icon.png" alt="Delete" />
@@ -47,20 +47,21 @@
         </table>
     }
 
-
-    <h2>Abonnement History</h2>
+    <h3 id="abonnementTitel">Abonnement History</h3>
     @if (Model.AbonnementVMs.Count() < 1)
     {
-        <p>Nog geen abonnementen gekocht</p>
+        <p>U heeft nog geen abonnement(en) gekocht</p>
     }
     else
     {
         <table class="cart-table">
             <thead>
                 <tr>
-                    <th>Gebruiker</th>
+                    <th>Club</th>
+                    <th>Loopt van</th>
+                    <th>tot</th>
                     <th>Zone</th>
-                    <th>Stoeltje</th>
+                    <th>Seat</th>
                     <th></th>
                 </tr>
             </thead>
@@ -68,15 +69,11 @@
                 @foreach (var abonnement in Model.AbonnementVMs)
                 {
                     <tr>
-                        <td>
-                            @Html.DisplayFor(modelItem => abonnement.GebruikerID)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => abonnement.ZoneId)
-                        </td>
-                        <td>
-                            @Html.DisplayFor(modelItem => abonnement.StoeltjeId)
-                        </td>
+                        <td>TODO</td>
+                        <td>TODO</td>
+                        <td>TODO</td>
+                        <td>@abonnement.ZoneNaam</td>
+                        <td>@abonnement.StoeltjeId</td>
                         <td>
                             <a asp-action="DeleteTicket" asp-route-ticketID="@abonnement.GebruikerID">
                                 <img src="~/images/delete-icon.png" alt="Delete" />

@@ -9,83 +9,92 @@
 <div class="table">
     <h3><em>Review</em> your cart:</h3>
 
-    @if (Model != null && (Model.Carts != null || Model.Abonnement != null))
+    @if (Model != null)
     {
-        @if (Model.Carts != null && Model.Carts.Any())
-        {
-            <h3>Tickets</h3>
-            <table class="cart-table">
-                <thead>
-                    <tr>
-                        <th>Match</th>
-                        <th>Datum</th>
-                        <th>Startuur</th>
-                        <th>Stadium</th>
-                        <th>Zone</th>
-                        <th>Prijs</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @foreach (var item in Model.Carts)
-                    {
+        <form asp-controller="ShoppingCart" asp-action="Purchase" method="post">
+            @if (Model.Carts == null && Model.Abonnement == null)
+            {
+                <p>Your shopping cart is empty at the moment.</p>
+            }
+            else
+            {
+                @if (Model.Carts != null && Model.Carts.Any())
+                {
+                    <h3>Tickets</h3>
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Match</th>
+                                <th>Datum</th>
+                                <th>Startuur</th>
+                                <th>Stadium</th>
+                                <th>Zone</th>
+                                <th>Prijs</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in Model.Carts)
+                            {
+                                <tr>
+                                    <td>@item.matchVM.ThuisploegNaam - @item.matchVM.UitploegNaam</td>
+                                    <td>@item.matchVM.Datum?.ToString("d MMMM yyyy")</td>
+                                    <td>@item.matchVM.Startuur?.ToString("hh\\:mm")</td>
+                                    <td>@item.matchVM.StadionNaam</td>
+                                    <td>@item.ZoneNaam</td>
+                                    <td>@item.Prijs.ToString("C")</td>
+                                    <td>
+                                        <a asp-action="DeleteTicket" asp-route-matchId="@item.MatchID">
+                                            <img src="~/images/delete-icon.png" alt="Delete" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
+                }
+
+                @if (Model.Abonnement != null)
+                {
+                    <h3 id="abonnementTitel">Abonnement</h3>
+                    <table class="cart-table">
+                        <thead>
+                            <tr>
+                                <th>Club Name</th>
+                                <th>Stadium</th>
+                                <th>Zone</th>
+                                <th>Prijs</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>@Model.Abonnement.clubVM.Naam</td>
+                                <td>@Model.Abonnement.clubVM.StadionNaam</td>
+                                <td>@Model.Abonnement.ZoneNaam</td>
+                                <td>@Model.Abonnement.Prijs.ToString("C")</td>
+                                <td>
+                                    <a asp-action="DeleteAbonnement">
+                                        <img src="~/images/delete-icon.png" alt="Delete" />
+                                    </a>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                }
+                <table class="cart-table">
+                    <tfoot>
                         <tr>
-                            <td>@item.matchVM.ThuisploegNaam - @item.matchVM.UitploegNaam</td>
-                            <td>@item.matchVM.Datum?.ToString("d MMMM yyyy")</td>
-                            <td>@item.matchVM.Startuur?.ToString("hh\\:mm")</td>
-                            <td>@item.matchVM.StadionNaam</td>
-                            <td>@item.ZoneNaam</td>
-                            <td>@item.Prijs.ToString("C")</td>
-                            <td>
-                                <a asp-action="DeleteTicket" asp-route-matchId="@item.MatchID">
-                                    <img src="~/images/delete-icon.png" alt="Delete" />
-                                </a>
+                            <td colspan="6" class="total">
+                                Totaal: <span>@Model.ComputeTotalValue().ToString("C")</span>
                             </td>
                         </tr>
-                    }
-                </tbody>
-            </table>
-        }
-
-        @if (Model.Abonnement != null)
-        {
-            <h3>Abonnement</h3>
-            <table class="cart-table">
-                <thead>
-                    <tr>
-                        <th>Club Name</th>
-                        <th>Stadium</th>
-                        <th>Zone</th>
-                        <th>Prijs</th>
-                        <th></th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>@Model.Abonnement.clubVM.Naam</td>
-                        <td>@Model.Abonnement.clubVM.StadionNaam</td>
-                        <td>@Model.Abonnement.ZoneNaam</td>
-                        <td>@Model.Abonnement.Prijs.ToString("C")</td>
-                        <td>
-                            <a asp-action="DeleteAbonnement">
-                                <img src="~/images/delete-icon.png" alt="Delete" />
-                            </a>
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
-        }
-        <table class="cart-table">
-            <tfoot>
-                <tr>
-                    <td colspan="6" class="total">
-                        Totaal: <span>@Model.ComputeTotalValue().ToString("C")</span>
-                    </td>
-                </tr>
-            </tfoot>
-        </table>
-
-        <button type="submit" class="btn btn-primary">Checkout</button>
+                    </tfoot>
+                </table>
+                <br />
+                <button type="submit" class="btn">Checkout</button>
+            }
+        </form>
     }
     else
     {
