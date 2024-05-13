@@ -64,6 +64,15 @@ namespace TicketverkoopVoetbal.Controllers
             ticketVM.Zones = new SelectList(await _zoneService.FilterById(match.StadionId), "ZoneId", "Naam");
             ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
 
+            if (CheckTicketHistory(ticketVM))
+            {
+                return View("DoubleBooked");
+            }
+            if (GetTicketAmount(ticketVM) == 4)
+            {
+                return View("MaxTickets");
+            }
+
             return View(ticketVM);
         }
 
@@ -87,18 +96,31 @@ namespace TicketverkoopVoetbal.Controllers
                 HttpContext.Session.SetObject("TicketVM", ticketVM);
 
                 ticketVM.VrijePlaatsen = VrijePlaatsen(ticketVM);
-                if (CheckTicketHistory(ticketVM))
+                if (ticketVM.Aantal != 0)
                 {
-                    return View("DoubleBooked");
-                }
-                else
-                {
-                    if(ticketVM.Aantal != 0)
+                    if(VrijePlaatsen(ticketVM) < ticketVM.Aantal)
                     {
-                        return RedirectToAction("Names");
+                        TempData["ErrorVolzetMessage"] = $"Er zijn nog maar {ticketVM.VrijePlaatsen} beschikbaar in deze zone";
+
+                        return View(ticketVM);
                     }
-                    return View(ticketVM);
+
+                    if (CheckTicketAmount(ticketVM))
+                    {
+
+                        return RedirectToAction("Names");
+
+                    }
+                    else
+                    {
+                        var ticketAmount = GetTicketAmount(ticketVM);
+                        TempData["ErrorMessage"] = $"Momenteel heb je al {ticketAmount} ticket(s) voor deze wedstrijd. U kan nog maar {ticketAmount - 4} ticket(s) voor deze wedstrijd boeken";
+
+                        return View(ticketVM);
+                    }
                 }
+                return View(ticketVM);
+
             }
             catch (Exception ex)
             {
@@ -106,6 +128,21 @@ namespace TicketverkoopVoetbal.Controllers
             }
 
             return View(ticketVM);
+        }
+
+        public int GetTicketAmount(SelectTicketVM ticketVM)
+        {
+            var aantalTickets = 0;
+            var currentUserID = _userManager.GetUserId(User);
+            var ticketList = _ticketService.FindByStringId(currentUserID);
+            foreach (var ticket in ticketList.Result)
+            {
+                if (ticket.MatchId == ticketVM.MatchId)
+                {
+                    aantalTickets++;
+                }
+            }
+            return aantalTickets;
         }
 
         public Boolean CheckTicketHistory(SelectTicketVM ticketVM)
@@ -116,7 +153,7 @@ namespace TicketverkoopVoetbal.Controllers
 
             foreach (var ticket in ticketList.Result)
             {
-                if (ticket.Match.Datum == ticketVM.matchVM.Datum)
+                if (ticket.Match.Datum == ticketVM.matchVM.Datum && ticket.MatchId != ticketVM.MatchId)
                 {
                     hasTicket = true;
                 }
@@ -128,16 +165,16 @@ namespace TicketverkoopVoetbal.Controllers
 
         public Boolean CheckTicketAmount(SelectTicketVM ticketVM)
         {
-            var hasMaxTickets = false;
+            var underMaxTickets = true;
             var currentUserID = _userManager.GetUserId(User);
             var ticketList = _ticketService.FindPerUser(currentUserID, ticketVM.MatchId);
 
-            if(ticketList.Result.Count() + ticketVM.Aantal > 4)
+            if (ticketList.Result.Count() + ticketVM.Aantal > 4)
             {
-                return true;
+                return false;
             }
 
-            return hasMaxTickets;
+            return underMaxTickets;
         }
 
 

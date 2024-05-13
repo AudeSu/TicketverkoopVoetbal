@@ -13,7 +13,6 @@ using TicketVerkoopVoetbal.Util.Mail.Interfaces;
 using TicketVerkoopVoetbal.Util.PDF.Interfaces;
 using TicketVerkoopVoetbal.Util.PDF;
 using Microsoft.AspNetCore.Mvc.Razor;
-using Microsoft.AspNetCore.Localization;
 
 var builder = WebApplication.CreateBuilder(args);
 

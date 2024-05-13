@@ -63,9 +63,17 @@
                         <option value="">Kies een Zone</option>
                     </select>
                 </div>
-                <div id="vrijePlaatsenMessage" class="form-group" style="display: none;">
+                @if (TempData["ErrorVolzetMessage"] != null)
+                {
+                    <div class="alert alert-danger mt-2" role="alert">
+                        @TempData["ErrorVolzetMessage"]
+                    </div>
+                }
+@*                 <div id="vrijePlaatsenMessage" class="form-group" style="display: none;">
                     <p class="text-danger">Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.</p>
-                </div>
+
+        
+                </div> *@
 
                 <div class="form-group">
                     <label for="Aantal">Selecteer het aantal tickets (max 4):</label>
@@ -73,6 +81,12 @@
                     <span asp-validation-for="Aantal" class="text-danger"></span>
                 </div>
 
+                @if (TempData["ErrorMessage"] != null)
+                {
+                    <div class="alert alert-danger mt-2" role="alert">
+                        @TempData["ErrorMessage"]
+                    </div>
+                }
                 <br/>
                 <button type="submit" class="btn btn-primary">Bevestig</button>
             </form>
@@ -92,16 +106,16 @@
             }
 
             // Controleer of er vrije plaatsen beschikbaar zijn in de geselecteerde zone
-            var vrijePlaatsen = parseInt(document.getElementById("VrijePlaatsen").value);
-            if (vrijePlaatsen <= 0) {
-                // Toon de foutmelding alleen als een zone is geselecteerd
-                document.getElementById("vrijePlaatsenMessage").style.display = "block";
-                alert("Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.");
-                return false;
-            }
+            // var vrijePlaatsen = parseInt(document.getElementById("VrijePlaatsen").value);
+            // if (vrijePlaatsen <= 0) {
+            //     // Toon de foutmelding alleen als een zone is geselecteerd
+            //     document.getElementById("vrijePlaatsenMessage").style.display = "block";
+            //     alert("Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.");
+            //     return false;
+            // }
 
             // Verberg de foutmelding als er wel vrije plaatsen zijn
-            document.getElementById("vrijePlaatsenMessage").style.display = "none";
+            // document.getElementById("vrijePlaatsenMessage").style.display = "none";
 
             // Als alle validaties slagen, ga door naar de volgende pagina
             return true;
