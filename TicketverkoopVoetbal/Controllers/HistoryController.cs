@@ -43,7 +43,11 @@ namespace TicketverkoopVoetbal.Controllers
                 var AbonnementList = await _abonnementService.FindByStringId(currentUserID);
                 HistoryVM historyVM = new HistoryVM();
                 historyVM.TicketVMs = _mapper.Map<List<TicketVM>>(ticketList);
-                historyVM.AbonnementVMs = _mapper.Map<List<CartAbonnementVM>>(AbonnementList);
+                historyVM.AbonnementVMs = _mapper.Map<List<HistoryAbonnementVM>>(AbonnementList);
+                foreach (var item in historyVM.AbonnementVMs)
+                {
+                    item.ZoneNaam = _stoelService.FindById(item.StoeltjeID).Result.Zone.Naam;
+                }
 
                 return View(historyVM);
             }

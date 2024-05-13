@@ -54,6 +54,8 @@ public partial class FootballDbContext : DbContext
         {
             entity.ToTable("Abonnement");
 
+            entity.HasIndex(e => e.StoeltjeId, "Uniek_Stoel").IsUnique();
+
             entity.Property(e => e.AbonnementId)
                 .ValueGeneratedNever()
                 .HasColumnName("AbonnementID");
@@ -78,6 +80,11 @@ public partial class FootballDbContext : DbContext
                 .HasForeignKey(d => d.SeizoenId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Abonnement_Seizoen");
+
+            entity.HasOne(d => d.Stoeltje).WithOne(p => p.Abonnement)
+                .HasForeignKey<Abonnement>(d => d.StoeltjeId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
+                .HasConstraintName("FK_Abonnement_Stoeltje");
         });
 
         modelBuilder.Entity<AspNetRole>(entity =>

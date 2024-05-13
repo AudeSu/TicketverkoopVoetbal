@@ -27,7 +27,6 @@
                 </table>
             }
         </div>
-
         <div class="col-md-4">
             <h2>Abonnement Selectie</h2>
             <form asp-action="Index" method="post" onsubmit="return validateForm()">
@@ -44,14 +43,17 @@
                     <p class="text-danger">Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.</p>
                 </div>
 
-                <br/>
-                @* <button type="submit" class="btn btn-primary">Bevestig</button> *@
-                <a asp-controller="PurchaseAbonnement" asp-action="Select" class="purchase-btn-primary">Confirm</a>
+                <br />
+
+
+                    <button asp-controller="PurchaseAbonnement" asp-action="index" type="submit" class="btn btn-primary">Confirm</button>
+                
+@*                 Ik krijg nog de error ma kpeis da da is omdak weer etwuk vergeet mee te geven in de VM net zoals bij purchase ticket me dak da script weer eb verwijderd
+                <button asp-controller="PurchaseAbonnement" asp-action="Select" type="submit" class="btn btn-primary">Bevestig</button> *@
             </form>
         </div>
     </div>
 </div>
-
 
 @section Scripts {
     <script>

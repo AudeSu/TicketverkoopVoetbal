@@ -17,6 +17,8 @@ public partial class Stoeltje
 
     public bool Bezet { get; set; }
 
+    public virtual Abonnement? Abonnement { get; set; }
+
     public virtual Club? Club { get; set; }
 
     public virtual Match? Match { get; set; }

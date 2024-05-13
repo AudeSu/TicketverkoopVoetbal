@@ -20,4 +20,6 @@ public partial class Abonnement
     public virtual AspNetUser Gebruiker { get; set; } = null!;
 
     public virtual Seizoen Seizoen { get; set; } = null!;
+
+    public virtual Stoeltje Stoeltje { get; set; } = null!;
 }
