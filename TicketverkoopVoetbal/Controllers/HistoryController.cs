@@ -3,10 +3,8 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using TicketverkoopVoetbal.Domains.Entities;
-using TicketverkoopVoetbal.Extensions;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
-using static iText.StyledXmlParser.Jsoup.Select.Evaluator;
 
 namespace TicketverkoopVoetbal.Controllers
 {
@@ -44,6 +42,8 @@ namespace TicketverkoopVoetbal.Controllers
                 HistoryVM historyVM = new HistoryVM();
                 historyVM.TicketVMs = _mapper.Map<List<TicketVM>>(ticketList);
                 historyVM.AbonnementVMs = _mapper.Map<List<HistoryAbonnementVM>>(AbonnementList);
+                // Sorteer TicketVMs op basis van de Datum van de wedstrijd
+                historyVM.TicketVMs.Sort((t1, t2) => DateTime.Compare(t1.Datum.GetValueOrDefault(), t2.Datum.GetValueOrDefault()));
                 foreach (var item in historyVM.AbonnementVMs)
                 {
                     item.ZoneNaam = _stoelService.FindById(item.StoeltjeID).Result.Zone.Naam;
@@ -56,7 +56,6 @@ namespace TicketverkoopVoetbal.Controllers
                 return View(ex);
             }
         }
-
 
         public async Task<IActionResult> DeleteTicket(int ticketID)
         {

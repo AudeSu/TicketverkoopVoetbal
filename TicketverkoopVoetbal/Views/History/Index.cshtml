@@ -21,7 +21,7 @@
                     <th>Datum</th>
                     <th>Startuur</th>
                     <th>Zone</th>
-                    <th>Seat</th>
+                    <th>Stoeltje</th>
                     <th>Op naam van</th>
                     <th></th>
                 </tr>
@@ -37,9 +37,12 @@
                         <td>@ticket.StoeltjeID</td>
                         <td>@ticket.Eigenaar</td> @* TODO *@
                         <td>
-                            <a asp-action="DeleteTicket" asp-route-ticketID="@ticket.TicketID">
-                                <img src="~/images/delete-icon.png" alt="Delete" />
-                            </a>
+                            @if (ticket.Datum != null && ticket.Datum > DateTime.Today.AddDays(7))
+                            {
+                                <a asp-action="DeleteTicket" asp-route-ticketID="@ticket.TicketID">
+                                    <img src="~/images/delete-icon.png" alt="Delete" />
+                                </a>
+                            }
                         </td>
                     </tr>
                 }
@@ -47,13 +50,10 @@
         </table>
     }
 
-    <h3 id="abonnementTitel">Abonnement History</h3>
+
     @if (Model.AbonnementVMs.Count() < 1)
     {
-        <p>U heeft nog geen abonnement(en) gekocht</p>
-    }
-    else
-    {
+        <h3 id="abonnementTitel">Abonnement History</h3>
         <table class="cart-table">
             <thead>
                 <tr>
@@ -61,8 +61,7 @@
                     <th>Loopt van</th>
                     <th>tot</th>
                     <th>Zone</th>
-                    <th>Seat</th>
-                    <th></th>
+                    <th>Stoeltje</th>
                 </tr>
             </thead>
             <tbody>
@@ -74,12 +73,6 @@
                         <td>TODO</td>
                         <td>@abonnement.ZoneNaam</td>
                         <td>@abonnement.StoeltjeID</td>
-                        <td>
-                            <a asp-action="DeleteTicket" asp-route-ticketID="@abonnement.GebruikerID">
-                                <img src="~/images/delete-icon.png" alt="Delete" />
-                            </a>
-                            @* @Html.ActionLink("Delete", "Delete", new { /*  id=abonnement. */  }) *@
-                        </td>
                     </tr>
                 }
             </tbody>

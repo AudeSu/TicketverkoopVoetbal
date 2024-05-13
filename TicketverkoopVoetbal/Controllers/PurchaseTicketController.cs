@@ -8,7 +8,6 @@ using System.Diagnostics;
 using TicketverkoopVoetbal.Domains;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
-using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
 
