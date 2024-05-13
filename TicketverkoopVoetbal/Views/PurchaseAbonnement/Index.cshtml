@@ -2,66 +2,84 @@
 @{
     ViewData["Title"] = "Index";
 }
-@if (Model != null)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.StadionNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.Naam)
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => Model.StadionNaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => Model.Naam)
-                </td>
-                <td>
-                </td>
-            </tr>
-        </tbody>
-    </table>
-}
 
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Index" method="post">
-            <div class="form-group">
-                <input type="hidden" asp-for="ClubId" />
-                <input type="hidden" asp-for="StadionNaam" />
-                <input type="hidden" asp-for="Naam" />
-                <label for="ZoneId" class="control-label">Select Zone:</label>
-                <select asp-for="ZoneId" asp-items="@Model.Zones">
-                    <option disabled selected value="">Kies een Zone</option>
-                </select>
-            </div>
-            @if (Model.ZoneId != 0)
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            @if (Model != null)
             {
-
-                <button asp-controller="PurchaseAbonnement" asp-action="Select" type="submit" class="btn btn-primary">Confirm</button>
+                <h2>Abonnement details</h2>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Stadion</td>
+                            <td>@Html.DisplayFor(modelItem => Model.StadionNaam)</td>
+                        </tr>
+                        <tr>
+                            <td>Club</td>
+                            <td>@Html.DisplayFor(modelItem => Model.Naam)</td>
+                        </tr>
+                        <tr>
+                            <td>Seizoen</td>
+                            <td>TODO?</td>
+                        </tr>
+                    </tbody>
+                </table>
             }
+        </div>
+        <div class="col-md-4">
+            <h2>Abonnement Selectie</h2>
+            <form asp-action="Index" method="post" onsubmit="return validateForm()">
+                <div class="form-group">
+                    <input type="hidden" asp-for="ClubId" />
+                    <input type="hidden" asp-for="StadionNaam" />
+                    <input type="hidden" asp-for="Naam" />
+                    <label for="ZoneId">Selecteer stadion zone:</label>
+                    <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control">
+                        <option value="">Kies een Zone</option>
+                    </select>
+                </div>
+                <div id="vrijePlaatsenMessage" class="form-group" style="display: none;">
+                    <p class="text-danger">Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.</p>
+                </div>
 
-        </form>
+                <br />
 
+
+                    <button asp-controller="PurchaseAbonnement" asp-action="index" type="submit" class="btn btn-primary">Confirm</button>
+                
+@*                 Ik krijg nog de error ma kpeis da da is omdak weer etwuk vergeet mee te geven in de VM net zoals bij purchase ticket me dak da script weer eb verwijderd
+                <button asp-controller="PurchaseAbonnement" asp-action="Select" type="submit" class="btn btn-primary">Bevestig</button> *@
+            </form>
+        </div>
     </div>
 </div>
 
-
-@section Scripts
-{
+@section Scripts {
     <script>
-        $(document).ready(function () {
-            $("#ZoneId").on("change", function () {
-                $("form").trigger("submit");
-            });
-        });
+        function validateForm() {
+            var zoneId = document.getElementById("ZoneId").value;
 
+            // Controleer of een zone is geselecteerd
+            if (zoneId === "") {
+                alert("Selecteer alstublieft een zone.");
+                return false;
+            }
+
+            // Controleer of er vrije plaatsen beschikbaar zijn in de geselecteerde zone
+            var vrijePlaatsen = parseInt(document.getElementById("VrijePlaatsen").value);
+            if (vrijePlaatsen <= 0) {
+                // Toon de foutmelding alleen als een zone is geselecteerd
+                document.getElementById("vrijePlaatsenMessage").style.display = "block";
+                alert("Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.");
+                return false;
+            }
+
+            // Verberg de foutmelding als er wel vrije plaatsen zijn
+            document.getElementById("vrijePlaatsenMessage").style.display = "none";
+
+            // Als alle validaties slagen, ga door naar de volgende pagina
+            return true;
+        }
     </script>
 }

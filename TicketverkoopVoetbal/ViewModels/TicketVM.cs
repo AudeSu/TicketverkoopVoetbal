@@ -1,4 +1,6 @@
-﻿namespace TicketverkoopVoetbal.ViewModels
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace TicketverkoopVoetbal.ViewModels
 {
     public class TicketVM
     {
@@ -9,6 +11,10 @@
         public int ZoneID { get; set; }
 
         public int StoeltjeID { get; set; }
+
+        [DataType(DataType.Date)]
+        public DateTime? Datum { get; set; }
+        public TimeSpan? Startuur { get; set; }
 
         public string GebruikersID { get; set; }
 

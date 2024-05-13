@@ -1,294 +1,109 @@
-﻿@* @model TicketverkoopVoetbal.ViewModels.SelectTicketVM
-@{
-    ViewData["Title"] = "Index";
-}
-@if (Model.matchVM != null)
-{
-    <table class="table">
-        <thead>
-            <tr>
-                <th>
-                    @Html.DisplayNameFor(model => model.matchVM.StadionNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.matchVM.ThuisploegNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.matchVM.UitploegNaam)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.matchVM.Datum)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.matchVM.Startuur)
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => Model.matchVM.StadionNaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => Model.matchVM.ThuisploegNaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => Model.matchVM.UitploegNaam)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => Model.matchVM.Datum)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => Model.matchVM.Startuur)
-                </td>
-            </tr>
-        </tbody>
-    </table>
-}
-
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Index" method="post">
-            <div class="form-group">
-                <input type="hidden" asp-for="MatchId" />
-                <label for="ZoneId" class="control-label">Select Zone:</label>
-                <select asp-for="ZoneId" asp-items="@Model.Zones">
-                    <option disabled selected value="">Kies een Zone</option>
-                </select>
-                @if (Model.ZoneId != 0)
-                {
-                    @if (Model.VrijePlaatsen <= 0)
-                    {
-                        <p>Kies een andere zone, Er is geen plaats meer</p>
-                    }
-                    else
-                    {
-                        <input asp-for="Aantal"
-                               type="number"
-                               min="1"
-                               max="4"
-                               id="Number" />
-                        @if (Model.HotelLijst != null && Model.HotelLijst.Any())
-                        {
-
-                            <h2>Hotels dicht bij @Model.matchVM.StadionNaam </h2>
-                            <ul id="hotelList">
-                                @foreach (var hotel in Model.HotelLijst)
-                                {
-                                    <li>@hotel.name</li>
-                                }
-                            </ul>
-
-                        }
-
-
-
-                        @if (Model.Aantal != null)
-                        {
-                            <a asp-controller="PurchaseTicket" asp-action="Names" class="purchase-btn-primary">Confirm</a>
-                        }
-
-                    }
-                }
-            </div>
-            <div>
-            </div>
-        </form>
-    </div>
-</div>
-
-
-@section Scripts
-{
-    <script>
-        $(document).ready(function () {
-            $("#ZoneId, #Number").on("change", function () {
-                $("form").trigger("submit");
-            });
-        });
-    </script>
-}
-
- *@
-
-@* @model TicketverkoopVoetbal.ViewModels.SelectTicketVM
-
-@{
-    ViewData["Title"] = "Select Ticket";
-}
-
-@if (Model.matchVM != null)
-{
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8">
-                <h2>Match Details</h2>
-                <table class="table">
-                    <tbody>
-                        <tr>
-                            <td>Stadion</td>
-                            <td>@Html.DisplayFor(model => model.matchVM.StadionNaam)</td>
-                        </tr>
-                        <tr>
-                            <td>Thuisploeg</td>
-                            <td>@Html.DisplayFor(model => model.matchVM.ThuisploegNaam)</td>
-                        </tr>
-                        <tr>
-                            <td>Uitploeg</td>
-                            <td>@Html.DisplayFor(model => model.matchVM.UitploegNaam)</td>
-                        </tr>
-                        <tr>
-                            <td>Datum</td>
-                            <td>@Html.DisplayFor(model => model.matchVM.Datum)</td>
-                        </tr>
-                        <tr>
-                            <td>Startuur</td>
-                            <td>@Html.DisplayFor(model => model.matchVM.Startuur)</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="col-md-4">
-                <h2>Ticket Selection</h2>
-                <form asp-action="Index" method="post">
-                    <input type="hidden" asp-for="MatchId" />
-
-                    <div class="form-group">
-                        <label for="ZoneId">Select Zone:</label>
-                        <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control">
-                            <option value="">Choose a Zone</option>
-                        </select>
-                        @if (Model.VrijePlaatsen <= 0)
-                        {
-                            <p class="text-danger">No available seats in this zone. Please choose another zone.</p>
-                        }
-                    </div>
-
-                    <div class="form-group">
-                        <label for="Aantal">Select Number of Tickets (1-4):</label>
-                        <input asp-for="Aantal" type="number" min="1" max="4" class="form-control" />
-                        <span asp-validation-for="Aantal" class="text-danger"></span>
-                    </div>
-
-                    <button type="submit" class="btn btn-primary" onclick="return validateForm()">Confirm</button>
-                </form>
-
-                @if (Model.HotelLijst != null && Model.HotelLijst.Any())
-                {
-                    <h2>Hotels near @Model.matchVM.StadionNaam</h2>
-                    <ul id="hotelList" class="list-group">
-                        @foreach (var hotel in Model.HotelLijst)
-                        {
-                            <li class="list-group-item">@hotel.Name</li>
-                        }
-                    </ul>
-                }
-            </div>
-        </div>
-    </div>
-}
-
-@section Scripts {
-    <script>
-        function validateForm() {
-            var aantal = parseInt(document.getElementById("Aantal").value);
-
-            if (isNaN(aantal) || aantal < 1 || aantal > 4) {
-                alert("Please select a number of tickets between 1 and 4.");
-                return false;
-            }
-
-            return true;
-        }
-    </script>
-} *@
-
-
 @model TicketverkoopVoetbal.ViewModels.SelectTicketVM
 
 @{
     ViewData["Title"] = "Select Ticket";
 }
 
-@if (Model.matchVM != null)
-{
-    <div class="container">
-        <h2>Match Details</h2>
-        <table class="table">
-            <tbody>
-                <tr>
-                    <th>Stadion</th>
-                    <td>@Html.DisplayFor(model => model.matchVM.StadionNaam)</td>
-                </tr>
-                <tr>
-                    <th>Thuisploeg</th>
-                    <td>@Html.DisplayFor(model => model.matchVM.ThuisploegNaam)</td>
-                </tr>
-                <tr>
-                    <th>Uitploeg</th>
-                    <td>@Html.DisplayFor(model => model.matchVM.UitploegNaam)</td>
-                </tr>
-                <tr>
-                    <th>Datum</th>
-                    <td>@Html.DisplayFor(model => model.matchVM.Datum)</td>
-                </tr>
-                <tr>
-                    <th>Startuur</th>
-                    <td>@Html.DisplayFor(model => model.matchVM.Startuur)</td>
-                </tr>
+<div class="container">
+    <div class="row">
+        <div class="col-md-8">
+            @if (Model.matchVM != null)
+            {
+                <h2>Match Details</h2>
+                <table class="table">
+                    <tbody>
+                        <tr>
+                            <td>Stadion</td>
+                            <td>@Model.matchVM.StadionNaam</td>
+                        </tr>
+                        <tr>
+                            <td>Thuisploeg</td>
+                            <td>@Model.matchVM.ThuisploegNaam</td>
+                        </tr>
+                        <tr>
+                            <td>Uitploeg</td>
+                            <td>@Model.matchVM.UitploegNaam</td>
+                        </tr>
+                        <tr>
+                            <td>Datum</td>
+                            <td>@Model.matchVM.Datum?.ToString("d MMMM yyyy")</td>                          
+                        </tr>
+                        <tr>
+                            <td>Startuur</td>
+                            <td>@Model.matchVM.Startuur?.ToString("hh\\:mm")</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+
                 @if (Model.HotelLijst != null && Model.HotelLijst.Any())
                 {
-                    <tr>
-                        <th>Hotels near @Model.matchVM.StadionNaam</th>
-                        <td>
-                            <ul class="list-group">
-                                @foreach (var hotel in Model.HotelLijst)
-                                {
-                                    <li class="list-group-item">@hotel.Name</li>
-                                }
-                            </ul>
-                        </td>
-                    </tr>
+                    <h2>Hotels Dichtbij</h2>
+                    <table class="table">
+                        <tbody>
+                            @foreach (var hotel in Model.HotelLijst)
+                            {
+                                <tr>
+                                    <td>@hotel.Name</td>
+                                </tr>
+                            }
+                        </tbody>
+                    </table>
                 }
-            </tbody>
-        </table>
+            }
+        </div>
+        <div class="col-md-4">
+            <h2>Ticket Selectie</h2>
+            <form id="ticketForm" asp-action="Index" method="post" onsubmit="return validateForm()">
+                <input type="hidden" asp-for="MatchId" />
 
-        <h2>Ticket Selection</h2>
-        <form asp-action="Index" method="post">
-            <input type="hidden" asp-for="MatchId" />
+                <div class="form-group">
+                    <label for="ZoneId">Selecteer stadion zone:</label>
+                    <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control">
+                        <option value="">Kies een Zone</option>
+                    </select>
+                </div>
+                <div id="vrijePlaatsenMessage" class="form-group" style="display: none;">
+                    <p class="text-danger">Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.</p>
+                </div>
 
-            <div class="form-group">
-                <label for="ZoneId">Select Zone:</label>
-                <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control">
-                    <option value="">Choose a Zone</option>
-                </select>
-                @if (Model.VrijePlaatsen <= 0)
-                {
-                    <p class="text-danger">No available seats in this zone. Please choose another zone.</p>
-                }
-            </div>
+                <div class="form-group">
+                    <label for="Aantal">Selecteer het aantal tickets (max 4):</label>
+                    <input asp-for="Aantal" type="number" min="1" max="4" class="form-control" />
+                    <span asp-validation-for="Aantal" class="text-danger"></span>
+                </div>
 
-            <div class="form-group">
-                <label for="Aantal">Select Number of Tickets (1-4):</label>
-                <input asp-for="Aantal" type="number" min="1" max="4" class="form-control" />
-                <span asp-validation-for="Aantal" class="text-danger"></span>
-            </div>
-
-            <button type="submit" class="btn btn-primary" onclick="return validateForm()">Confirm</button>
-        </form>
+                <br/>
+                <button type="submit" class="btn btn-primary">Bevestig</button>
+            </form>
+        </div>
     </div>
-}
+</div>
 
 @section Scripts {
     <script>
         function validateForm() {
-            var aantal = parseInt(document.getElementById("Aantal").value);
+            var zoneId = document.getElementById("ZoneId").value;
 
-            if (isNaN(aantal) || aantal < 1 || aantal > 4) {
-                alert("Please select a number of tickets between 1 and 4.");
+            // Controleer of een zone is geselecteerd
+            if (zoneId === "") {
+                alert("Selecteer alstublieft een zone.");
                 return false;
             }
 
+            // Controleer of er vrije plaatsen beschikbaar zijn in de geselecteerde zone
+            var vrijePlaatsen = parseInt(document.getElementById("VrijePlaatsen").value);
+            if (vrijePlaatsen <= 0) {
+                // Toon de foutmelding alleen als een zone is geselecteerd
+                document.getElementById("vrijePlaatsenMessage").style.display = "block";
+                alert("Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.");
+                return false;
+            }
+
+            // Verberg de foutmelding als er wel vrije plaatsen zijn
+            document.getElementById("vrijePlaatsenMessage").style.display = "none";
+
+            // Als alle validaties slagen, ga door naar de volgende pagina
             return true;
         }
     </script>

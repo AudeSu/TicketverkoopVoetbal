@@ -49,32 +49,6 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return NotFound();
             }
-            try
-            {
-                var zone = await _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId));
-                var club = await _clubService.FindById(Convert.ToInt32(abonnementVM.ClubId));
-                abonnementVM.Prijs = zone.Prijs;
-                abonnementVM.Zones =
-                new SelectList(await _zoneService.FilterById(Convert.ToInt16(club.ThuisstadionId)), "ZoneId", "Naam", abonnementVM.ZoneId);
-                HttpContext.Session.SetObject("AbonnementVM", abonnementVM);
-
-                return View(abonnementVM);
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("errorlog" + ex.Message);
-            }
-
-            return View(abonnementVM);
-        }
-
-        public async Task<IActionResult> Select()
-        {
-            var abonnementVM = HttpContext.Session.GetObject<AbonnementVM>("AbonnementVM");
-            if (abonnementVM == null)
-            {
-                return NotFound();
-            }
 
             var club = await _clubService.FindById(Convert.ToInt32(abonnementVM.ClubId));
             var zone = await _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId));
@@ -88,7 +62,7 @@ namespace TicketverkoopVoetbal.Controllers
                     ZoneId = abonnementVM.ZoneId,
                     clubVM = _mapper.Map<ClubVM>(club),
                     ZoneNaam = zone.Naam,
-                    Prijs = abonnementVM.Prijs,
+                    Prijs = zone.Prijs,
                     DateCreated = DateTime.Now
                 };
 

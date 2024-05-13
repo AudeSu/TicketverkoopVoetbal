@@ -31,8 +31,8 @@
                 {
                     <tr>
                         <td>@ticket.MatchID</td> @* TODO *@
-                        <td>TODO</td>
-                        <td>TODO</td>
+                        <td>@ticket.Datum?.ToString("d MMMM yyyy")</td>
+                        <td>@ticket.Startuur?.ToString("hh\\:mm")</td>
                         <td>@ticket.ZoneNaam</td>
                         <td>@ticket.StoeltjeID</td>
                         <td>@ticket.Eigenaar</td> @* TODO *@
@@ -69,11 +69,11 @@
                 @foreach (var abonnement in Model.AbonnementVMs)
                 {
                     <tr>
-                        <td>TODO</td>
+                        <td>@abonnement.clubNaam</td>
                         <td>TODO</td>
                         <td>TODO</td>
                         <td>@abonnement.ZoneNaam</td>
-                        <td>@abonnement.StoeltjeId</td>
+                        <td>@abonnement.StoeltjeID</td>
                         <td>
                             <a asp-action="DeleteTicket" asp-route-ticketID="@abonnement.GebruikerID">
                                 <img src="~/images/delete-icon.png" alt="Delete" />
