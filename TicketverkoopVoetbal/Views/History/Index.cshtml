@@ -39,7 +39,8 @@
                         <td>
                             @if (ticket.Datum != null && ticket.Datum > DateTime.Today.AddDays(7))
                             {
-                                <a asp-action="DeleteTicket" asp-route-ticketID="@ticket.TicketID">
+                                <a asp-action="DeleteTicket" asp-route-ticketID="@ticket.TicketID"
+                                   onclick="return confirm('Weet u zeker dat u dit ticket wilt annuleren?')">
                                     <img src="~/images/delete-icon.png" alt="Delete" />
                                 </a>
                             }
