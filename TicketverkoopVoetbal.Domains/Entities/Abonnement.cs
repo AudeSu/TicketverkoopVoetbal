@@ -15,6 +15,8 @@ public partial class Abonnement
 
     public int SeizoenId { get; set; }
 
+    public decimal? Prijs { get; set; }
+
     public virtual Club Club { get; set; } = null!;
 
     public virtual AspNetUser Gebruiker { get; set; } = null!;

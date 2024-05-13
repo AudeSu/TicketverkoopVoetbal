@@ -54,8 +54,6 @@ public partial class FootballDbContext : DbContext
         {
             entity.ToTable("Abonnement");
 
-            entity.HasIndex(e => e.StoeltjeId, "Uniek_Stoel").IsUnique();
-
             entity.Property(e => e.AbonnementId)
                 .ValueGeneratedNever()
                 .HasColumnName("AbonnementID");
@@ -63,6 +61,7 @@ public partial class FootballDbContext : DbContext
             entity.Property(e => e.GebruikerId)
                 .HasMaxLength(450)
                 .HasColumnName("GebruikerID");
+            entity.Property(e => e.Prijs).HasColumnType("money");
             entity.Property(e => e.SeizoenId).HasColumnName("SeizoenID");
             entity.Property(e => e.StoeltjeId).HasColumnName("StoeltjeID");
 
@@ -81,8 +80,8 @@ public partial class FootballDbContext : DbContext
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Abonnement_Seizoen");
 
-            entity.HasOne(d => d.Stoeltje).WithOne(p => p.Abonnement)
-                .HasForeignKey<Abonnement>(d => d.StoeltjeId)
+            entity.HasOne(d => d.Stoeltje).WithMany(p => p.Abonnements)
+                .HasForeignKey(d => d.StoeltjeId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Abonnement_Stoeltje");
         });

@@ -100,7 +100,7 @@ namespace TicketverkoopVoetbal.Controllers
                 {
                     if(VrijePlaatsen(ticketVM) < ticketVM.Aantal)
                     {
-                        TempData["ErrorVolzetMessage"] = $"Er zijn nog maar {ticketVM.VrijePlaatsen} beschikbaar in deze zone";
+                        TempData["ErrorVolzetMessage"] = $"Er zijn nog maar {ticketVM.VrijePlaatsen} plaatsen beschikbaar in deze zone";
 
                         return View(ticketVM);
                     }
@@ -114,7 +114,7 @@ namespace TicketverkoopVoetbal.Controllers
                     else
                     {
                         var ticketAmount = GetTicketAmount(ticketVM);
-                        TempData["ErrorMessage"] = $"Momenteel heb je al {ticketAmount} ticket(s) voor deze wedstrijd. U kan nog maar {ticketAmount - 4} ticket(s) voor deze wedstrijd boeken";
+                        TempData["ErrorMessage"] = $"Momenteel heb je al {ticketAmount} ticket(s) voor deze wedstrijd. U kan nog maar {4 - ticketAmount} ticket(s) voor deze wedstrijd boeken";
 
                         return View(ticketVM);
                     }

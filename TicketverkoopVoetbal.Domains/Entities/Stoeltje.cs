@@ -17,7 +17,7 @@ public partial class Stoeltje
 
     public bool Bezet { get; set; }
 
-    public virtual Abonnement? Abonnement { get; set; }
+    public virtual ICollection<Abonnement> Abonnements { get; set; } = new List<Abonnement>();
 
     public virtual Club? Club { get; set; }
 
