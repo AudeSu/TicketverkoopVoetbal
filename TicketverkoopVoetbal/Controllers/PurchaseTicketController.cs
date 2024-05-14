@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Newtonsoft.Json;
 using System.Diagnostics;
+using TicketverkoopVoetbal.Areas.Data;
 using TicketverkoopVoetbal.Domains;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
@@ -19,7 +20,7 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IService<Zone> _zoneService;
         private readonly IStoelService<Stoeltje> _stoelService;
         private readonly ITicketService<Ticket> _ticketService;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IConfiguration _Configure;
         private string? BaseUrl;
@@ -29,7 +30,7 @@ namespace TicketverkoopVoetbal.Controllers
             IService<Zone> zoneService,
             IStoelService<Stoeltje> stoelService,
             ITicketService<Ticket> ticketService,
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             IMapper mapper,
             IConfiguration configuration)
         {

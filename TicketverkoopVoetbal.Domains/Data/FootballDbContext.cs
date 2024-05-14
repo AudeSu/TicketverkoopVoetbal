@@ -61,7 +61,6 @@ public partial class FootballDbContext : DbContext
             entity.Property(e => e.GebruikerId)
                 .HasMaxLength(450)
                 .HasColumnName("GebruikerID");
-            entity.Property(e => e.Prijs).HasColumnType("money");
             entity.Property(e => e.SeizoenId).HasColumnName("SeizoenID");
             entity.Property(e => e.StoeltjeId).HasColumnName("StoeltjeID");
 
@@ -283,7 +282,7 @@ public partial class FootballDbContext : DbContext
             entity.HasOne(d => d.Zone).WithMany(p => p.Tickets)
                 .HasForeignKey(d => d.ZoneId)
                 .OnDelete(DeleteBehavior.ClientSetNull)
-                .HasConstraintName("FK_Ticket_Zone");
+                .HasConstraintName("FK_Ticket_Zone1");
         });
 
         modelBuilder.Entity<Zone>(entity =>
@@ -294,7 +293,8 @@ public partial class FootballDbContext : DbContext
             entity.Property(e => e.Naam)
                 .HasMaxLength(50)
                 .IsUnicode(false);
-            entity.Property(e => e.Prijs).HasColumnType("money");
+            entity.Property(e => e.PrijsAbonnement).HasColumnType("money");
+            entity.Property(e => e.PrijsTicket).HasColumnType("money");
             entity.Property(e => e.StadionId).HasColumnName("StadionID");
 
             entity.HasOne(d => d.Stadion).WithMany(p => p.Zones)

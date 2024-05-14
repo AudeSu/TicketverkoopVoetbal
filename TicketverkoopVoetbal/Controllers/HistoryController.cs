@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TicketverkoopVoetbal.Areas.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
@@ -14,14 +15,14 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IAbonnementService<Abonnement> _abonnementService;
         private readonly IStoelService<Stoeltje> _stoelService;
         private readonly IMapper _mapper;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
 
         public HistoryController(
             ITicketService<Ticket> ticketservice,
             IAbonnementService<Abonnement> abonnementservice,
             IStoelService<Stoeltje> stoelservice,
             IMapper mapper,
-            UserManager<IdentityUser> userManager
+            UserManager<ApplicationUser> userManager
             )
         {
             _ticketService = ticketservice;

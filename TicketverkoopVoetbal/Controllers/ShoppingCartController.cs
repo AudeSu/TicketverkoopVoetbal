@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using TicketverkoopVoetbal.Areas.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
 using TicketverkoopVoetbal.Services.Interfaces;
@@ -20,7 +21,7 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly ITicketService<Ticket> _ticketService;
         private readonly IMatchService<Match> _matchService;
         private readonly IService<Zone> _zoneService;
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMapper _mapper;
 
@@ -32,7 +33,7 @@ namespace TicketverkoopVoetbal.Controllers
             ITicketService<Ticket> ticketService,
             IMatchService<Match> matchService,
             IService<Zone> zoneService,
-            UserManager<IdentityUser> userManager,
+            UserManager<ApplicationUser> userManager,
             IWebHostEnvironment hostingEnvironment,
             IMapper mapper)
         {

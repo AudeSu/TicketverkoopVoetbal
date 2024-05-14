@@ -9,7 +9,9 @@ public partial class Zone
 
     public string Naam { get; set; } = null!;
 
-    public decimal Prijs { get; set; }
+    public decimal PrijsTicket { get; set; }
+
+    public decimal? PrijsAbonnement { get; set; }
 
     public int Capaciteit { get; set; }
 
