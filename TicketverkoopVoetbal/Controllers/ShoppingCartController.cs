@@ -18,6 +18,8 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IAbonnementService<Abonnement> _abonnementService;
         private readonly IStoelService<Stoeltje> _stoelService;
         private readonly ITicketService<Ticket> _ticketService;
+        private readonly IMatchService<Match> _matchService;
+        private readonly IService<Zone> _zoneService;
         private readonly UserManager<IdentityUser> _userManager;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMapper _mapper;
@@ -28,6 +30,8 @@ namespace TicketverkoopVoetbal.Controllers
             IAbonnementService<Abonnement> abonnementService,
             IStoelService<Stoeltje> stoelService,
             ITicketService<Ticket> ticketService,
+            IMatchService<Match> matchService,
+            IService<Zone> zoneService,
             UserManager<IdentityUser> userManager,
             IWebHostEnvironment hostingEnvironment,
             IMapper mapper)
@@ -37,6 +41,8 @@ namespace TicketverkoopVoetbal.Controllers
             _abonnementService = abonnementService;
             _stoelService = stoelService;
             _ticketService = ticketService;
+            _matchService = matchService;
+            _zoneService = zoneService;
             _userManager = userManager;
             _hostingEnvironment = hostingEnvironment;
             _mapper = mapper;
@@ -83,6 +89,8 @@ namespace TicketverkoopVoetbal.Controllers
                     foreach (var item in tickets)
                     {
                         Ticket ticket = _mapper.Map<Ticket>(item);
+                        ticket.Match = _matchService.FindById(item.MatchID).Result;
+                        ticket.Zone = _zoneService.FindById(item.ZoneID).Result;
                         ticketList.Add(ticket);
                     }
                     // Het pad naar de map waarin het logo zich bevindt

@@ -50,26 +50,24 @@ namespace TicketVerkoopVoetbal.Util.PDF
             // Body
             document.Add(new Paragraph()
                 .Add("\n")
-                .Add(new Text(GetCustomerNameFromEmail(email)).SetBold().SetFontSize(20))
+                .Add("Naar: " + GetCustomerNameFromEmail(email)).SetBold().SetFontSize(20)
                 .Add("\nFactuurdatum: " + DateTime.Now.ToShortDateString())
                 .Add("\nFactuurnummer: " + DateTime.Now.ToString("MMddHHmmss"))
                 .Add(new Text("\n\nInformatie over de tickets:").SetBold())
                 .Add("\nBedankt voor uw aankoop van de tickets! Om toegang te krijgen tot het stadion, raden we u aan om dit document af te drukken. Bij uw bezoek aan het stadion, laat de QR-code samen met uw identiteitsbewijs zien aan het toegangspersoneel. Op deze manier wordt u probleemloos toegelaten tot de wedstrijd.\n\n"));
 
             // Tabel
-            Table table = new Table(UnitValue.CreatePercentArray(4)).UseAllAvailableWidth();
-            table.AddHeaderCell("Match");
-            table.AddHeaderCell("Aantal");
+            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+            table.AddHeaderCell("Thuisploeg");
+            table.AddHeaderCell("Uitploeg");
             table.AddHeaderCell("Tarief");
-            table.AddHeaderCell("Totaal");
             decimal totalPrice = 0;
             foreach (var ticket in tickets)
             {
-                //table.AddCell(ticket.Match.Thuisploeg + " VS " + ticket.Match.Uitploeg);
-                //table.AddCell(ticket aantal);
-                //table.AddCell(ticket.Zone.Prijs.ToString("C"));
-                //table.AddCell(ticket.Zone.Prijs.ToString("C") * aantal);
-                //totalPrice += ticket.Zone.Prijs * aantal;
+                table.AddCell(ticket.Match.Thuisploeg.Naam.Trim());
+                table.AddCell(ticket.Match.Uitploeg.Naam.Trim());
+                table.AddCell(ticket.Zone.Prijs.ToString("C"));
+                totalPrice += ticket.Zone.Prijs;
             }
             document.Add(table);
 
@@ -87,8 +85,8 @@ namespace TicketVerkoopVoetbal.Util.PDF
 
                 document.Add(new Paragraph($"Ticket ID: {ticket.TicketId}"));
                 document.Add(new Paragraph($"Match: {ticket.MatchId}"));
-                //document.Add(new Paragraph($"Datum: {ticket.Match.Startuur:dd-MM-yyyy HH:mm}"));
-                //document.Add(new Paragraph($"Zone: {ticket.Zone.Naam}"));
+                document.Add(new Paragraph($"Datum: {ticket.Match.Startuur:dd-MM-yyyy HH:mm}"));
+                document.Add(new Paragraph($"Zone: {ticket.Zone.Naam}"));
                 document.Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"));
 
                 // Voeg QR-code toe met ticketinformatie
