@@ -1,6 +1,10 @@
-﻿namespace TicketverkoopVoetbal.Areas.Data
+﻿using Microsoft.AspNetCore.Identity;
+
+namespace TicketverkoopVoetbal.Areas.Data
 {
-    public class ApplicationUser
+    public class ApplicationUser : IdentityUser
     {
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
     }
 }

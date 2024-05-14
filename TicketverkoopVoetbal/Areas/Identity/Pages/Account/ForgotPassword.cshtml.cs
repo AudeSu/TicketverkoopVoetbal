@@ -13,16 +13,17 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
+using TicketverkoopVoetbal.Areas.Data;
 using TicketVerkoopVoetbal.Util.Mail.Interfaces;
 
 namespace TicketverkoopVoetbal.Areas.Identity.Pages.Account
 {
     public class ForgotPasswordModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailSend _emailSender;
 
-        public ForgotPasswordModel(UserManager<IdentityUser> userManager, IEmailSend emailSender)
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSend emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;

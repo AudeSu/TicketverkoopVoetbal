@@ -111,6 +111,7 @@ public partial class FootballDbContext : DbContext
                 .IsUnique()
                 .HasFilter("([NormalizedUserName] IS NOT NULL)");
 
+            entity.Property(e => e.Discriminator).HasDefaultValueSql("(N'')");
             entity.Property(e => e.Email).HasMaxLength(256);
             entity.Property(e => e.NormalizedEmail).HasMaxLength(256);
             entity.Property(e => e.NormalizedUserName).HasMaxLength(256);
