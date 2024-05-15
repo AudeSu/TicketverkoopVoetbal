@@ -4,6 +4,6 @@ namespace TicketVerkoopVoetbal.Util.PDF.Interfaces
 {
     public interface ICreatePDF
     {
-        MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, string logoPath, string email);
+        MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, string logoPath, AspNetUser user);
     }
 }

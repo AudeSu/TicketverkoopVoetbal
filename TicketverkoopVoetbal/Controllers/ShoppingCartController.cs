@@ -21,6 +21,7 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly ITicketService<Ticket> _ticketService;
         private readonly IMatchService<Match> _matchService;
         private readonly IService<Zone> _zoneService;
+        private readonly IUserService<AspNetUser> _UserService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _hostingEnvironment;
         private readonly IMapper _mapper;
@@ -33,6 +34,7 @@ namespace TicketverkoopVoetbal.Controllers
             ITicketService<Ticket> ticketService,
             IMatchService<Match> matchService,
             IService<Zone> zoneService,
+            IUserService<AspNetUser> userService,
             UserManager<ApplicationUser> userManager,
             IWebHostEnvironment hostingEnvironment,
             IMapper mapper)
@@ -44,6 +46,7 @@ namespace TicketverkoopVoetbal.Controllers
             _ticketService = ticketService;
             _matchService = matchService;
             _zoneService = zoneService;
+            _UserService = userService;
             _userManager = userManager;
             _hostingEnvironment = hostingEnvironment;
             _mapper = mapper;
@@ -62,7 +65,7 @@ namespace TicketverkoopVoetbal.Controllers
         public async Task<IActionResult> Purchase()
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            var email = currentUser!.Email;
+            var ASPcurrentUser = await _UserService.FindByStringId(currentUser.Id);
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             if (cartList == null || currentUser == null)
             {
@@ -96,7 +99,7 @@ namespace TicketverkoopVoetbal.Controllers
                     }
                     // Het pad naar de map waarin het logo zich bevindt
                     string logoPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "Website_logo.png");
-                    var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, logoPath, email!);
+                    var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, logoPath, ASPcurrentUser);
 
                     // Als de map pdf nog niet bestaat in de wwwroot map,
                     // maak deze dan aan voordat je het PDF-document opslaat.

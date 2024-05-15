@@ -16,7 +16,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
 {
     public class CreatePDF : ICreatePDF
     {
-        public MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, string logoPath, string email)
+        public MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, string logoPath, AspNetUser user)
         {
             MemoryStream stream = new MemoryStream();
             PdfWriter writer = new PdfWriter(stream);
@@ -50,7 +50,8 @@ namespace TicketVerkoopVoetbal.Util.PDF
             // Body
             document.Add(new Paragraph()
                 .Add("\n")
-                .Add(new Text("Naar: " + GetCustomerNameFromEmail(email)).SetBold().SetFontSize(20))
+                .Add(new Text("Naar: " + user.FirstName + " " + user.LastName).SetBold().SetFontSize(20))
+                .Add("\nEmail: " + user.Email)
                 .Add("\nFactuurdatum: " + DateTime.Now.ToShortDateString())
                 .Add("\nFactuurnummer: " + DateTime.Now.ToString("MMddHHmmss"))
                 .Add(new Text("\n\nInformatie over de tickets:").SetBold())
@@ -102,31 +103,6 @@ namespace TicketVerkoopVoetbal.Util.PDF
 
             document.Close();
             return new MemoryStream(stream.ToArray());
-        }
-
-        private static string GetCustomerNameFromEmail(string email)
-        {
-            int atIndex = email.IndexOf('@');
-            if (atIndex != -1)
-            {
-                string customerName = email.Substring(0, atIndex);
-                string[] words = customerName.Replace('.', ' ').Split(' ', StringSplitOptions.RemoveEmptyEntries);
-
-                for (int i = 0; i < words.Length; i++)
-                {
-                    if (!string.IsNullOrEmpty(words[i]))
-                    {
-                        words[i] = char.ToUpper(words[i][0]) + words[i].Substring(1).ToLower();
-                    }
-                }
-                customerName = string.Join(" ", words);
-
-                return customerName;
-            }
-            else
-            {
-                return email;
-            }
         }
 
         private static byte[] BitmapToBytes(Bitmap img)
