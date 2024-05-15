@@ -5,7 +5,7 @@
 @inject IOptions<RequestLocalizationOptions> locOptions
 
 @{
-    // Represents the feature that provides the current request's culture information. (zie cookie culture wordt uitgelezen als deze aanwwezig) is)
+    // Represents the feature that provides the current request's culture information. (zie cookie culture wordt uitgelezen als deze aanwezig) is)
     var currentRequestCulture = Context.Features.Get<IRequestCultureFeature>();
     var cultureItems = locOptions.Value.SupportedUICultures
         .Select(c => new SelectListItem { Value = c.Name, Text = c.DisplayName })

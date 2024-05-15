@@ -62,12 +62,13 @@
     <script src="~/js/site.js" asp-append-version="true"></script>
     @await RenderSectionAsync("Scripts", required: false)
     <script>
-        console.log("OK");
+        console.log("ok");
         $(document).ready(() => {
             $(".setLang").on("change", () => {
-                $('form').submit();
+                $('#selectLanguage').submit();
             });
         });
+    </script>
     </script>
 </body>
 </html>
