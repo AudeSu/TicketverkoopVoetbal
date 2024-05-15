@@ -7,6 +7,7 @@
         public string GebruikerID { get; set; }
         public int StoeltjeID { get; set; }
         public int SeizoenID { get; set; }
+        public SeizoenVM seizoenVM { get; set; }
         public int ZoneId { get; set; }
         public string ZoneNaam { get; set; }
         public string clubNaam { get; set; }

@@ -14,6 +14,8 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly ITicketService<Ticket> _ticketService;
         private readonly IAbonnementService<Abonnement> _abonnementService;
         private readonly IStoelService<Stoeltje> _stoelService;
+        private readonly IMatchService<Match> _matchService;
+        private readonly ISeizoenService<Seizoen> _seizoenService;
         private readonly IMapper _mapper;
         private readonly UserManager<ApplicationUser> _userManager;
 
@@ -21,6 +23,8 @@ namespace TicketverkoopVoetbal.Controllers
             ITicketService<Ticket> ticketservice,
             IAbonnementService<Abonnement> abonnementservice,
             IStoelService<Stoeltje> stoelservice,
+            IMatchService<Match> matchservice,
+            ISeizoenService<Seizoen> seizoenservice,
             IMapper mapper,
             UserManager<ApplicationUser> userManager
             )
@@ -28,6 +32,8 @@ namespace TicketverkoopVoetbal.Controllers
             _ticketService = ticketservice;
             _abonnementService = abonnementservice;
             _stoelService = stoelservice;
+            _matchService = matchservice;
+            _seizoenService = seizoenservice;
             _mapper = mapper;
             _userManager = userManager;
         }
@@ -47,9 +53,16 @@ namespace TicketverkoopVoetbal.Controllers
                 historyVM.TicketVMs.Sort((t1, t2) => DateTime.Compare(t1.Datum.GetValueOrDefault(), t2.Datum.GetValueOrDefault()));
                 foreach (var item in historyVM.AbonnementVMs)
                 {
+                    var seizoen = await _seizoenService.FindById(item.SeizoenID);
+                    item.seizoenVM = _mapper.Map<SeizoenVM>(seizoen);
                     item.ZoneNaam = _stoelService.FindById(item.StoeltjeID).Result.Zone.Naam;
-                }
 
+                }
+                foreach (var item in historyVM.TicketVMs)
+                {
+                    var match = await _matchService.FindById(item.MatchID);
+                    item.matchVM = _mapper.Map<MatchVM>(match);
+                }
                 return View(historyVM);
             }
             catch (Exception ex)

@@ -12,5 +12,8 @@ namespace TicketverkoopVoetbal.ViewModels
         public DateTime? Datum { get; set; }
         public TimeSpan? Startuur { get; set; }
         public string ZoneNaam { get; set; }
+        public string FirstName { get; set; }
+        public string LastName { get; set; }
+        public MatchVM matchVM { get; set; }
     }
 }
