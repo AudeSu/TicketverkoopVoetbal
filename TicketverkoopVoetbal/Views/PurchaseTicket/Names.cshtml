@@ -17,9 +17,17 @@
                         <div class="form-group">
                             <div class="row">
                                 <div class="col">
-                                    <label asp-for="@Model[i].Name">Voornaam:</label>
-                                    <input asp-for="@Model[i].Name" class="form-control" />
-                                    <span asp-validation-for="@Model[i].Name" class="text-danger"></span>
+                                    <label asp-for="@Model[i].FirstName">Voornaam:</label>
+                                    <input asp-for="@Model[i].FirstName" class="form-control" />
+                                    <span asp-validation-for="@Model[i].FirstName" class="text-danger"></span>
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col">
+                                    <label asp-for="@Model[i].LastName">Achternaam:</label>
+                                    <input asp-for="@Model[i].LastName" class="form-control" />
+                                    <span asp-validation-for="@Model[i].LastName" class="text-danger"></span>
                                 </div>
                             </div>
                         </div>

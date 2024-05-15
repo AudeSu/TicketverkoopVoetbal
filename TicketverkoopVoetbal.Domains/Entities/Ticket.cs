@@ -15,6 +15,10 @@ public partial class Ticket
 
     public int ZoneId { get; set; }
 
+    public string FirstName { get; set; } = null!;
+
+    public string LastName { get; set; } = null!;
+
     public virtual AspNetUser Gebruikers { get; set; } = null!;
 
     public virtual Match Match { get; set; } = null!;
