@@ -12,6 +12,5 @@ namespace TicketverkoopVoetbal.Repositories.Interfaces
         Task<IEnumerable<T>> GetTakenSeatsByMatchID(int MatchID, int ZoneID);
         Task<IEnumerable<T>> GetTakenSeatsByClubID(int ClubID, int ZoneID, int SeizoenID);
         Task<T?> GetEmptySeat(int MatchID, int ZoneID);
-
     }
 }

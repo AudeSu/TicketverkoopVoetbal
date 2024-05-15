@@ -11,7 +11,7 @@ public partial class Zone
 
     public decimal PrijsTicket { get; set; }
 
-    public decimal? PrijsAbonnement { get; set; }
+    public decimal PrijsAbonnement { get; set; }
 
     public int Capaciteit { get; set; }
 

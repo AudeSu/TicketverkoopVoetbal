@@ -75,6 +75,7 @@ namespace TicketverkoopVoetbal.Controllers
             return View(entity);
         }
 
+        // verzetten naar IMatchService
         private List<MatchVM> GetFutureMatches(IEnumerable<Match> matches)
         {
             var currentDate = DateTime.Today;
