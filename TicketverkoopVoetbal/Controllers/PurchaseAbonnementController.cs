@@ -16,6 +16,7 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IService<Zone> _zoneService;
         private readonly IStoelService<Stoeltje> _stoelService;
         private readonly IAbonnementService<Abonnement> _abonnementService;
+        private readonly IMatchService<Match> _matchService;
         private readonly ISeizoenService<Seizoen> _seizoenService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
@@ -25,6 +26,7 @@ namespace TicketverkoopVoetbal.Controllers
             IService<Zone> zoneService,
             IStoelService<Stoeltje> stoelservice,
             IAbonnementService<Abonnement> abonnementservice,
+            IMatchService<Match> matchservice,
             ISeizoenService<Seizoen> seizoenservice,
             UserManager<ApplicationUser> userManager,
             IMapper mapper)
@@ -33,6 +35,7 @@ namespace TicketverkoopVoetbal.Controllers
             _zoneService = zoneService;
             _stoelService = stoelservice;
             _abonnementService = abonnementservice;
+            _matchService = matchservice;
             _seizoenService = seizoenservice;
             _userManager = userManager;
             _mapper = mapper;
@@ -40,11 +43,16 @@ namespace TicketverkoopVoetbal.Controllers
         public async Task<IActionResult> Index(int? id)
         {
             var club = await _clubService.FindById(Convert.ToInt32(id));
+            var currentSeizoen = _seizoenService.GetNextSeizoen().Result;
             if (club == null)
             {
                 return NotFound();
             }
-            if (CheckAbonnement(club.ClubId))
+            if (currentSeizoen == null)
+            {
+                return View("NoSeizoen");
+            }
+            if (CheckAbonnement(club.ClubId, currentSeizoen))
             {
                 return View("HasAbonnement");
             }
@@ -52,6 +60,8 @@ namespace TicketverkoopVoetbal.Controllers
             abonnement.ClubId = club.ClubId;
             abonnement.StadionNaam = club.Thuisstadion.Naam;
             abonnement.Naam = club.Naam;
+            abonnement.SeizoenId = currentSeizoen.SeizoenId;
+            abonnement.Seizoen = _mapper.Map<SeizoenVM>(currentSeizoen);
             abonnement.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam");
             return View(abonnement);
         }
@@ -68,21 +78,26 @@ namespace TicketverkoopVoetbal.Controllers
             var zone = await _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId));
             if (club != null)
             {
-                CartAbonnementVM abonnement = new CartAbonnementVM
+                if (VrijePlaatsen(abonnementVM))
                 {
-                    ClubId = abonnementVM.ClubId,
-                    GebruikerID = abonnementVM.GebruikerID,
-                    StoeltjeId = abonnementVM.StoeltjeId,
-                    ZoneId = abonnementVM.ZoneId,
-                    clubVM = _mapper.Map<ClubVM>(club),
-                    ZoneNaam = zone.Naam,
-                    Prijs = zone.PrijsAbonnement,
-                    DateCreated = DateTime.Now
+                    abonnementVM.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam", abonnementVM.ZoneId);
+                    TempData["ErrorVolzetMessage"] = $"Er zijn geen plaatsen meer beschikbaar in deze zone";
+                    return View(abonnementVM);
+                }
+                CartAbonnementVM abonnement = _mapper.Map<CartAbonnementVM>(abonnementVM);
+                {
+                    abonnement.clubVM = _mapper.Map<ClubVM>(club);
+                    abonnement.ZoneNaam = zone.Naam;
+                    abonnement.Prijs = zone.PrijsAbonnement;
+                    abonnement.DateCreated = DateTime.Now;
                 };
 
+                if (checkShoppingCart(abonnement))
+                {
+                    return View("DoubleBooked");
+                }
                 ShoppingCartVM? shopping;
 
-                // var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
                 if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
                 {
                     shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
@@ -103,10 +118,9 @@ namespace TicketverkoopVoetbal.Controllers
             return RedirectToAction("Index", "ShoppingCart");
         }
 
-        public Boolean CheckAbonnement(int? id)
+        public Boolean CheckAbonnement(int? id, Seizoen currentSeizoen)
         {
             var hasAbonnement = false;
-            var currentSeizoen = _seizoenService.GetNextSeizoen().Result;
             var currentUserID = _userManager.GetUserId(User);
             var AbonnementList = _abonnementService.FindByStringId(currentUserID);
 
@@ -119,6 +133,43 @@ namespace TicketverkoopVoetbal.Controllers
             }
 
             return hasAbonnement;
+        }
+
+        public Boolean VrijePlaatsen(AbonnementVM abonnementVM)
+        {
+            Boolean isFull = false;
+            var currentZone = _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId)).Result;
+            int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(abonnementVM.ClubId, abonnementVM.ZoneId, abonnementVM.SeizoenId).Result.Count();
+            var matchList = _matchService.FindByHomeClub(abonnementVM.ClubId).Result;
+            foreach (var match in matchList)
+            {
+                if (match.SeizoenId == abonnementVM.SeizoenId)
+                {
+                    int aantalTicketPlaatsen = _stoelService.GetTakenSeatsByMatchID(match.MatchId, abonnementVM.ZoneId).Result.Count();
+                    if (currentZone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
+                    {
+                        isFull = true;
+                        return isFull;
+                    }
+                }
+            }
+
+
+            return isFull;
+        }
+
+        public Boolean checkShoppingCart(CartAbonnementVM abonnement)
+        {
+            var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            if (shoppingCart != null)
+            {
+                if (shoppingCart.Abonnementen.Any(a => a.ClubId == abonnement.ClubId))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
     }
 }

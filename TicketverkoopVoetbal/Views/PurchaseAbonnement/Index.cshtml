@@ -21,7 +21,7 @@
                         </tr>
                         <tr>
                             <td>Seizoen</td>
-                            <td>TODO?</td>
+                            <td>@Model.Seizoen.StartDatum.ToString("d MMMM yyyy") - @Model.Seizoen.EindDatum.ToString("d MMMM yyyy")</td>
                         </tr>
                     </tbody>
                 </table>
@@ -32,12 +32,19 @@
             <form asp-action="Index" method="post" onsubmit="return validateForm()">
                 <div class="form-group">
                     <input type="hidden" asp-for="ClubId" />
+                    <input type="hidden" asp-for="SeizoenId" />
                     <input type="hidden" asp-for="StadionNaam" />
                     <input type="hidden" asp-for="Naam" />
                     <label for="ZoneId">Selecteer stadion zone:</label>
                     <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control">
                         <option value="">Kies een Zone</option>
                     </select>
+                    @if (TempData["ErrorVolzetMessage"] != null)
+                    {
+                        <div class="alert alert-danger mt-2" role="alert">
+                            @TempData["ErrorVolzetMessage"]
+                        </div>
+                    }
                 </div>
                 <div id="vrijePlaatsenMessage" class="form-group" style="display: none;">
                     <p class="text-danger">Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.</p>

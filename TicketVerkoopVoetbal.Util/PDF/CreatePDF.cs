@@ -89,8 +89,8 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 foreach (var abonnement in abonnementen)
                 {
                     tableAbonnement.AddCell(abonnement.Club.Naam);
-                    //tableAbonnement.AddCell(abonnement.Seizoen.Startdatum.ToString("d MMMM yyyy"));
-                    //tableAbonnement.AddCell(abonnement.Seizoen.Einddatum.ToString("d MMMM yyyy"));
+                    tableAbonnement.AddCell(abonnement.Seizoen.Startdatum.ToString("d MMMM yyyy"));
+                    tableAbonnement.AddCell(abonnement.Seizoen.Einddatum.ToString("d MMMM yyyy"));
                     tableAbonnement.AddCell(abonnement.Stoeltje.Zone.PrijsAbonnement.ToString("C"));
                     totalPrice += abonnement.Stoeltje.Zone.PrijsAbonnement;
                 }

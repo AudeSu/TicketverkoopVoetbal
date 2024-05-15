@@ -62,7 +62,6 @@ namespace TicketverkoopVoetbal.Controllers
         public IActionResult Index()
         {
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-
             return View(cartList);
         }
 
@@ -73,15 +72,19 @@ namespace TicketverkoopVoetbal.Controllers
             var currentUser = await _userManager.GetUserAsync(User);
             var ASPcurrentUser = await _UserService.FindByStringId(currentUser.Id);
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            if (cartList == null || currentUser == null)
+            if (cartList == null|| currentUser == null)
             {
                 return RedirectToAction("Index", "Match");
             }
-            if (cartList.Abonnementen != null)
+            if ((cartList.Carts == null || !cartList.Carts.Any()) && (cartList.Abonnementen == null || !cartList.Abonnementen.Any()))
+            {
+                return RedirectToAction("Index", "Match");
+            }
+            if (cartList.Abonnementen != null && cartList.Abonnementen.Any())
             {
                 await CreateAbonnement(cartList.Abonnementen);
             }
-            if (cartList.Carts != null)
+            if (cartList.Carts != null && cartList.Carts.Any())
             {
                 await CreateTicket(cartList.Carts);
             }
@@ -114,14 +117,7 @@ namespace TicketverkoopVoetbal.Controllers
                         Abonnement abonnement = _mapper.Map<Abonnement>(item);
                         abonnement.Club = _clubService.FindById(item.ClubId).Result;
                         abonnement.Stoeltje = _stoelService.FindById(item.StoeltjeId).Result;
-                        if (_seizoenService.FindById(item.SeizoenID).Result != null)
-                        {
-                            abonnement.Seizoen = _seizoenService.FindById(item.SeizoenID).Result;
-                        } else
-                        {
-                            abonnement.Seizoen = _seizoenService.FindById(1).Result;
-                        }
-
+                        abonnement.Seizoen = _seizoenService.FindById(item.SeizoenID).Result;
                         abonnementList.Add(abonnement);
                     }
                 }
@@ -174,7 +170,7 @@ namespace TicketverkoopVoetbal.Controllers
                 currentAbonnement.StoeltjeId = stoel.StoeltjeId;
                 //voorlopig hardcoded want ik weet niet hoe
                 currentAbonnement.SeizoenID = _seizoenService.GetNextSeizoen().Result.SeizoenId;
-          
+
 
                 Abonnement abonnement = _mapper.Map<Abonnement>(currentAbonnement);
                 await _abonnementService.Add(abonnement);
@@ -232,12 +228,16 @@ namespace TicketverkoopVoetbal.Controllers
 
         public IActionResult DeleteAbonnement(int? clubId)
         {
+            if (clubId == null)
+            {
+                return NotFound();
+            }
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             CartAbonnementVM? itemToRemove = cartList?.Abonnementen?.FirstOrDefault(r => r.ClubId == clubId);
 
             if (itemToRemove != null)
             {
-                cartList.Abonnementen = null;
+                cartList?.Abonnementen?.Remove(itemToRemove);
                 HttpContext.Session.SetObject("ShoppingCart", cartList);
             }
             return RedirectToAction("Index");

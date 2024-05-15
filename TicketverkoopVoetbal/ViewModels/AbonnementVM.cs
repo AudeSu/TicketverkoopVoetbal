@@ -16,8 +16,10 @@ namespace TicketverkoopVoetbal.ViewModels
 
         public string StadionNaam { get; set; }
 
-        public decimal Prijs {  get; set; }
-        public int AantalVrijePlaatsen { get; set; }
+        public int SeizoenId { get; set; }
+
+        public SeizoenVM Seizoen { get; set; }
+
 
         public IEnumerable<SelectListItem>? Zones { get; set; }
 
