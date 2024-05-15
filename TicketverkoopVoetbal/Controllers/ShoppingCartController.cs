@@ -22,6 +22,7 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IMatchService<Match> _matchService;
         private readonly IService<Club> _clubService;
         private readonly IService<Zone> _zoneService;
+        private readonly ISeizoenService<Seizoen> _seizoenService;
         private readonly IUserService<AspNetUser> _UserService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IWebHostEnvironment _hostingEnvironment;
@@ -36,6 +37,7 @@ namespace TicketverkoopVoetbal.Controllers
             IMatchService<Match> matchService,
             IService<Club> clubService,
             IService<Zone> zoneService,
+            ISeizoenService<Seizoen> seizoenService,
             IUserService<AspNetUser> userService,
             UserManager<ApplicationUser> userManager,
             IWebHostEnvironment hostingEnvironment,
@@ -48,6 +50,7 @@ namespace TicketverkoopVoetbal.Controllers
             _ticketService = ticketService;
             _matchService = matchService;
             _clubService = clubService;
+            _seizoenService = seizoenService;
             _zoneService = zoneService;
             _UserService = userService;
             _userManager = userManager;
@@ -111,6 +114,14 @@ namespace TicketverkoopVoetbal.Controllers
                         Abonnement abonnement = _mapper.Map<Abonnement>(item);
                         abonnement.Club = _clubService.FindById(item.ClubId).Result;
                         abonnement.Stoeltje = _stoelService.FindById(item.StoeltjeId).Result;
+                        if (_seizoenService.FindById(item.SeizoenID).Result != null)
+                        {
+                            abonnement.Seizoen = _seizoenService.FindById(item.SeizoenID).Result;
+                        } else
+                        {
+                            abonnement.Seizoen = _seizoenService.FindById(1).Result;
+                        }
+
                         abonnementList.Add(abonnement);
                     }
                 }
@@ -166,7 +177,9 @@ namespace TicketverkoopVoetbal.Controllers
                 currentAbonnement.GebruikerID = _userManager.GetUserId(User);
                 currentAbonnement.StoeltjeId = stoel.StoeltjeId;
                 //voorlopig hardcoded want ik weet niet hoe
-                currentAbonnement.SeizoenID = 1;
+                currentAbonnement.SeizoenID = _seizoenService.GetNextSeizoen().Result.SeizoenId;
+          
+
                 Abonnement abonnement = _mapper.Map<Abonnement>(currentAbonnement);
                 await _abonnementService.Add(abonnement);
             }

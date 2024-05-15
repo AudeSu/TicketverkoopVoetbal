@@ -96,6 +96,9 @@ builder.Services.AddTransient<IStoelDAO<Stoeltje>, StoeltjeDAO>();
 builder.Services.AddTransient<IAbonnementService<Abonnement>, AbonnementService>();
 builder.Services.AddTransient<IAbonnementDAO<Abonnement>, AbonnementDAO>();
 
+builder.Services.AddTransient<ISeizoenService<Seizoen>, SeizoenService>();
+builder.Services.AddTransient<ISeizoenDAO<Seizoen>, SeizoenDAO>();
+
 builder.Services.AddTransient<ITicketService<Ticket>, TicketService>();
 builder.Services.AddTransient<ITicketDAO<Ticket>, TicketDAO>();
 

@@ -66,6 +66,8 @@ namespace TicketverkoopVoetbal.AutoMapper
             CreateMap<CreateStoelVM, Stoeltje>();
             CreateMap<Stoeltje, CreateStoelVM>();
 
+            CreateMap<Seizoen, SeizoenVM>();
+
             //API
             CreateMap<Hotel, HotelVM>();
         }

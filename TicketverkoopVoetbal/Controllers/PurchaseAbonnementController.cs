@@ -16,6 +16,7 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IService<Zone> _zoneService;
         private readonly IStoelService<Stoeltje> _stoelService;
         private readonly IAbonnementService<Abonnement> _abonnementService;
+        private readonly ISeizoenService<Seizoen> _seizoenService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
@@ -24,6 +25,7 @@ namespace TicketverkoopVoetbal.Controllers
             IService<Zone> zoneService,
             IStoelService<Stoeltje> stoelservice,
             IAbonnementService<Abonnement> abonnementservice,
+            ISeizoenService<Seizoen> seizoenservice,
             UserManager<ApplicationUser> userManager,
             IMapper mapper)
         {
@@ -31,6 +33,7 @@ namespace TicketverkoopVoetbal.Controllers
             _zoneService = zoneService;
             _stoelService = stoelservice;
             _abonnementService = abonnementservice;
+            _seizoenService = seizoenservice;
             _userManager = userManager;
             _mapper = mapper;
         }
@@ -103,12 +106,13 @@ namespace TicketverkoopVoetbal.Controllers
         public Boolean CheckAbonnement(int? id)
         {
             var hasAbonnement = false;
+            var currentSeizoen = _seizoenService.GetNextSeizoen().Result;
             var currentUserID = _userManager.GetUserId(User);
             var AbonnementList = _abonnementService.FindByStringId(currentUserID);
 
             foreach (var abonnement in AbonnementList.Result)
             {
-                if (abonnement.ClubId == id)
+                if (abonnement.ClubId == id && abonnement.SeizoenId == currentSeizoen.SeizoenId)
                 {
                     hasAbonnement = true;
                 }
