@@ -90,8 +90,8 @@ namespace TicketverkoopVoetbal.Controllers
                     foreach (var item in tickets)
                     {
                         Ticket ticket = _mapper.Map<Ticket>(item);
-                        //ticket.Match = _matchService.FindById(item.MatchID).Result;
-                        //ticket.Zone = _zoneService.FindById(item.ZoneID).Result;
+                        ticket.Match = _matchService.FindById(item.MatchID).Result;
+                        ticket.Zone = _zoneService.FindById(item.ZoneID).Result;
                         ticketList.Add(ticket);
                     }
                     // Het pad naar de map waarin het logo zich bevindt

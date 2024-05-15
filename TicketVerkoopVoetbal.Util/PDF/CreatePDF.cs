@@ -50,7 +50,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
             // Body
             document.Add(new Paragraph()
                 .Add("\n")
-                .Add("Naar: " + GetCustomerNameFromEmail(email)).SetBold().SetFontSize(20)
+                .Add(new Text("Naar: " + GetCustomerNameFromEmail(email)).SetBold().SetFontSize(20))
                 .Add("\nFactuurdatum: " + DateTime.Now.ToShortDateString())
                 .Add("\nFactuurnummer: " + DateTime.Now.ToString("MMddHHmmss"))
                 .Add(new Text("\n\nInformatie over de tickets:").SetBold())
@@ -64,17 +64,17 @@ namespace TicketVerkoopVoetbal.Util.PDF
             decimal totalPrice = 0;
             foreach (var ticket in tickets)
             {
-                //table.AddCell(ticket.Match.Thuisploeg.Naam);
-                //table.AddCell(ticket.Match.Uitploeg.Naam);
-                //table.AddCell(ticket.Zone.Prijs.ToString("C"));
-                //totalPrice += ticket.Zone.Prijs;
+                table.AddCell(ticket.Match.Thuisploeg.Naam);
+                table.AddCell(ticket.Match.Uitploeg.Naam);
+                table.AddCell(ticket.Zone.PrijsTicket.ToString("C"));
+                totalPrice += ticket.Zone.PrijsTicket;
             }
             document.Add(table);
 
             // Praragraaf met totaal
             Paragraph paragraph = new Paragraph("Totaal: " + totalPrice.ToString("C"))
                  .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA))
-                 .SetFontSize(12)
+                 .SetFontSize(20)
                  .SetFontColor(ColorConstants.BLACK)
                  .SetTextAlignment(TextAlignment.RIGHT);
             document.Add(paragraph);
@@ -83,10 +83,11 @@ namespace TicketVerkoopVoetbal.Util.PDF
             {
                 document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
-                document.Add(new Paragraph($"Ticket ID: {ticket.TicketId}"));
-                document.Add(new Paragraph($"Match: {ticket.MatchId}"));
-                //document.Add(new Paragraph($"Datum: {ticket.Match.Startuur:dd-MM-yyyy HH:mm}"));
-                //document.Add(new Paragraph($"Zone: {ticket.Zone.Naam}"));
+                document.Add(new Paragraph($"Match: {ticket.Match.Thuisploeg.Naam.Trim()} - {ticket.Match.Uitploeg.Naam.Trim()}"));
+                document.Add(new Paragraph($"Datum: {ticket.Match.Datum:d MMMM yyyy}"));
+                document.Add(new Paragraph($"Startuur: {ticket.Match.Startuur:hh\\:mm}"));
+                document.Add(new Paragraph($"Stadion: {ticket.Match.Stadion.Naam}"));
+                document.Add(new Paragraph($"Zone: {ticket.Zone.Naam}"));
                 document.Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"));
 
                 // Voeg QR-code toe met ticketinformatie

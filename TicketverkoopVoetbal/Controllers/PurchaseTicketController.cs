@@ -20,6 +20,7 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IService<Zone> _zoneService;
         private readonly IStoelService<Stoeltje> _stoelService;
         private readonly ITicketService<Ticket> _ticketService;
+        private readonly IAbonnementService<Abonnement> _abonnementService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IConfiguration _Configure;
@@ -30,6 +31,7 @@ namespace TicketverkoopVoetbal.Controllers
             IService<Zone> zoneService,
             IStoelService<Stoeltje> stoelService,
             ITicketService<Ticket> ticketService,
+            IAbonnementService<Abonnement> abonnementService,
             UserManager<ApplicationUser> userManager,
             IMapper mapper,
             IConfiguration configuration)
@@ -38,6 +40,7 @@ namespace TicketverkoopVoetbal.Controllers
             _zoneService = zoneService;
             _stoelService = stoelService;
             _ticketService = ticketService;
+            _abonnementService = abonnementService;
             _userManager = userManager;
             _mapper = mapper;
             _Configure = configuration;
@@ -71,6 +74,10 @@ namespace TicketverkoopVoetbal.Controllers
             if (GetTicketAmount(ticketVM) == 4)
             {
                 return View("MaxTickets");
+            }
+            if (CheckAbonnement(ticketVM))
+            {
+                return View("HasAbonnement");
             }
 
             return View(ticketVM);
@@ -161,6 +168,24 @@ namespace TicketverkoopVoetbal.Controllers
             }
 
             return hasTicket;
+        }
+
+
+        public Boolean CheckAbonnement(SelectTicketVM ticketVM)
+        {
+            var hasAbonnement = false;
+            var currentUserID = _userManager.GetUserId(User);
+            var AbonnementList = _abonnementService.FindByStringId(currentUserID);
+
+            foreach (var abonnement in AbonnementList.Result)
+            {
+                if (abonnement.ClubId == ticketVM.matchVM.ClubId)
+                {
+                    hasAbonnement = true;
+                }
+            }
+
+            return hasAbonnement;
         }
 
 
