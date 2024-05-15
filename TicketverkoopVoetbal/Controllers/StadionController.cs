@@ -1,5 +1,4 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;

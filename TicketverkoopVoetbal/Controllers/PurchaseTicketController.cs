@@ -23,8 +23,9 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IAbonnementService<Abonnement> _abonnementService;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
-        private readonly IConfiguration _Configure;
-        private string? BaseUrl;
+        private readonly IConfiguration _configuration;
+        private readonly string? BaseUrl;
+        private readonly int? MaxTickets;
 
         public PurchaseTicketController(
             IMatchService<Match> matchservice,
@@ -43,8 +44,9 @@ namespace TicketverkoopVoetbal.Controllers
             _abonnementService = abonnementService;
             _userManager = userManager;
             _mapper = mapper;
-            _Configure = configuration;
-            BaseUrl = _Configure.GetValue<string>("APIURL");
+            _configuration = configuration;
+            BaseUrl = _configuration.GetValue<string>("APIURL");
+            MaxTickets = _configuration.GetValue<int>("MaxTickets");
         }
 
         [Authorize]
@@ -80,7 +82,7 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return View("DoubleBooked");
             }
-            if (GetTicketAmount(ticketVM) == 4)
+            if (GetTicketAmount(ticketVM) == MaxTickets)
             {
                 return View("MaxTickets");
             }
@@ -131,7 +133,7 @@ namespace TicketverkoopVoetbal.Controllers
                     else
                     {
                         var ticketAmount = GetTicketAmount(ticketVM);
-                        TempData["ErrorMessage"] = $"Momenteel heb je al {ticketAmount} ticket(s) voor deze wedstrijd. U kan nog maar {4 - ticketAmount} ticket(s) voor deze wedstrijd boeken";
+                        TempData["ErrorMessage"] = $"Momenteel heb je al {ticketAmount} ticket(s) voor deze wedstrijd. U kan nog maar {MaxTickets - ticketAmount} ticket(s) voor deze wedstrijd boeken";
 
                         return View(ticketVM);
                     }
@@ -204,7 +206,7 @@ namespace TicketverkoopVoetbal.Controllers
             var currentUserID = _userManager.GetUserId(User);
             var ticketList = _ticketService.FindPerUser(currentUserID, ticketVM.MatchId);
 
-            if (ticketList.Result.Count() + ticketVM.Aantal > 4)
+            if (ticketList.Result.Count() + ticketVM.Aantal > MaxTickets)
             {
                 return false;
             }
@@ -260,12 +262,11 @@ namespace TicketverkoopVoetbal.Controllers
                 }
                 else
                 {
-                    nameVMs.Add(
-                                 new TicketNameVM
-                                 {
-                                     FirstName = _userManager.GetUserAsync(User).Result.FirstName,
-                                     LastName = _userManager.GetUserAsync(User).Result.LastName
-                                 });
+                    nameVMs.Add(new TicketNameVM 
+                    {
+                        FirstName = _userManager.GetUserAsync(User).Result.FirstName,
+                        LastName = _userManager.GetUserAsync(User).Result.LastName
+                    });
                 }
             }
 
