@@ -137,7 +137,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
 {
     public class CreatePDF : ICreatePDF
     {
-        public MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, string logoPath, string headerPath, AspNetUser user)
+        public MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, List<Abonnement> abonnementen, string logoPath, string headerPath, AspNetUser user)
         {
             MemoryStream stream = new MemoryStream();
             PdfWriter writer = new PdfWriter(stream);
@@ -180,20 +180,40 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 .Add(new Text("\n\nInformatie over de tickets:").SetBold())
                 .Add("\nBedankt voor uw aankoop van de tickets! Om toegang te krijgen tot het stadion, raden we u aan om dit document af te drukken. Bij uw bezoek aan het stadion, laat de QR-code samen met uw identiteitsbewijs zien aan het toegangspersoneel. Op deze manier wordt u probleemloos toegelaten tot de wedstrijd.\n\n"));
 
-            // Tabel
-            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
-            table.AddHeaderCell("Thuisploeg");
-            table.AddHeaderCell("Uitploeg");
-            table.AddHeaderCell("Tarief");
             decimal totalPrice = 0;
+
+            // Tabel tickets
+            Table tableTickets = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+            tableTickets.AddHeaderCell("Thuisploeg");
+            tableTickets.AddHeaderCell("Uitploeg");
+            tableTickets.AddHeaderCell("Prijs");
             foreach (var ticket in tickets)
             {
-                table.AddCell(ticket.Match.Thuisploeg.Naam);
-                table.AddCell(ticket.Match.Uitploeg.Naam);
-                table.AddCell(ticket.Zone.PrijsTicket.ToString("C"));
+                tableTickets.AddCell(ticket.Match.Thuisploeg.Naam);
+                tableTickets.AddCell(ticket.Match.Uitploeg.Naam);
+                tableTickets.AddCell(ticket.Zone.PrijsTicket.ToString("C"));
                 totalPrice += ticket.Zone.PrijsTicket;
             }
-            document.Add(table);
+            document.Add(tableTickets);
+
+            if (abonnementen != null)
+            {
+                // Tabel abonnementen
+                Table tableAbonnement = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+                tableAbonnement.AddHeaderCell("Club");
+                tableAbonnement.AddHeaderCell("Loopt van");
+                tableAbonnement.AddHeaderCell("Tot");
+                tableAbonnement.AddHeaderCell("Prijs");
+                foreach (var abonnement in abonnementen)
+                {
+                    tableAbonnement.AddCell(abonnement.Club.Naam);
+                    tableAbonnement.AddCell(abonnement.Seizoen.Startdatum.ToString("d MMMM yyyy"));
+                    tableAbonnement.AddCell(abonnement.Seizoen.Einddatum.ToString("d MMMM yyyy"));
+                    //tableAbonnement.AddCell(abonnement.Zone.PrijsAbonnement.ToString("C"));
+                    //totalPrice += abonnement.Zone.PrijsAbonnement;
+                }
+                document.Add(tableAbonnement);
+            }
 
             // Praragraaf met totaal
             Paragraph paragraph = new Paragraph("Totaal: " + totalPrice.ToString("C"))
