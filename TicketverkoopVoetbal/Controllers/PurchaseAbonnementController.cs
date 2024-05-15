@@ -1,9 +1,12 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
+using TicketverkoopVoetbal.Areas.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
+using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
 
@@ -14,26 +17,36 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IService<Club> _clubService;
         private readonly IService<Zone> _zoneService;
         private readonly IStoelService<Stoeltje> _stoelService;
+        private readonly IAbonnementService<Abonnement> _abonnementService;
+        private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
 
         public PurchaseAbonnementController(
             IService<Club> clubservice,
             IService<Zone> zoneService,
             IStoelService<Stoeltje> stoelservice,
+            IAbonnementService<Abonnement> abonnementservice,
+            UserManager<ApplicationUser> userManager,
             IMapper mapper)
         {
             _clubService = clubservice;
             _zoneService = zoneService;
             _stoelService = stoelservice;
+            _abonnementService = abonnementservice;
+            _userManager = userManager;
             _mapper = mapper;
         }
         public async Task<IActionResult> Index(int? id)
         {
-            if (id == null)
+            var club = await _clubService.FindById(Convert.ToInt32(id));
+            if (club == null)
             {
                 return NotFound();
             }
-            var club = await _clubService.FindById(Convert.ToInt32(id));
+            if (CheckAbonnement(club.ClubId))
+            {
+                return View("HasAbonnement");
+            }
             AbonnementVM abonnement = new AbonnementVM();
             abonnement.ClubId = club.ClubId;
             abonnement.StadionNaam = club.Thuisstadion.Naam;
@@ -82,6 +95,23 @@ namespace TicketverkoopVoetbal.Controllers
                 HttpContext.Session.SetObject("ShoppingCart", shopping);
             }
             return RedirectToAction("Index", "ShoppingCart");
+        }
+
+        public Boolean CheckAbonnement(int? id)
+        {
+            var hasAbonnement = false;
+            var currentUserID = _userManager.GetUserId(User);
+            var AbonnementList = _abonnementService.FindByStringId(currentUserID);
+
+            foreach (var abonnement in AbonnementList.Result)
+            {
+                if (abonnement.ClubId == id)
+                {
+                    hasAbonnement = true;
+                }
+            }
+
+            return hasAbonnement;
         }
     }
 }
