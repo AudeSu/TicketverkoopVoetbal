@@ -12,7 +12,7 @@
     @if (Model != null)
     {
         <form asp-controller="ShoppingCart" asp-action="Purchase" method="post">
-            @if (Model.Carts == null && Model.Abonnement == null)
+            @if (Model.Carts == null && Model.Abonnementen == null)
             {
                 <p>Your shopping cart is empty at the moment.</p>
             }
@@ -54,7 +54,7 @@
                     </table>
                 }
 
-                @if (Model.Abonnement != null)
+                @if (Model.Abonnementen != null)
                 {
                     <h3 id="abonnementTitel">Abonnement</h3>
                     <table class="cart-table">
@@ -68,17 +68,21 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>@Model.Abonnement.clubVM.Naam</td>
-                                <td>@Model.Abonnement.clubVM.StadionNaam</td>
-                                <td>@Model.Abonnement.ZoneNaam</td>
-                                <td>@Model.Abonnement.Prijs.ToString("C")</td>
-                                <td>
-                                    <a asp-action="DeleteAbonnement">
-                                        <img src="~/images/delete-icon.png" alt="Delete" />
-                                    </a>
-                                </td>
-                            </tr>
+                            @foreach (var item in Model.Abonnementen)
+                            {
+                                <tr>
+                                    <td>@item.clubVM.Naam</td>
+                                    <td>@item.clubVM.StadionNaam</td>
+                                    <td>@item.ZoneNaam</td>
+                                    <td>@item.Prijs.ToString("C")</td>
+                                    <td>
+                                        <a asp-action="DeleteAbonnement" asp-route-matchId="@item.ClubId">
+                                            <img src="~/images/delete-icon.png" alt="Delete" />
+                                        </a>
+                                    </td>
+                                </tr>
+                            }
+                         
                         </tbody>
                     </table>
                 }
