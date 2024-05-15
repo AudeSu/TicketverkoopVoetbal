@@ -125,6 +125,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using QRCoder;
@@ -136,7 +137,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
 {
     public class CreatePDF : ICreatePDF
     {
-        public MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, string logoPath, string headerPath, AspNetUser user)
+        public MemoryStream CreatePDFDocumentAsync(List<Ticket> tickets, List<Abonnement> abonnementen, string logoPath, string headerPath, AspNetUser user)
         {
             MemoryStream stream = new MemoryStream();
             PdfWriter writer = new PdfWriter(stream);
@@ -179,20 +180,40 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 .Add(new Text("\n\nInformatie over de tickets:").SetBold())
                 .Add("\nBedankt voor uw aankoop van de tickets! Om toegang te krijgen tot het stadion, raden we u aan om dit document af te drukken. Bij uw bezoek aan het stadion, laat de QR-code samen met uw identiteitsbewijs zien aan het toegangspersoneel. Op deze manier wordt u probleemloos toegelaten tot de wedstrijd.\n\n"));
 
-            // Tabel
-            Table table = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
-            table.AddHeaderCell("Thuisploeg");
-            table.AddHeaderCell("Uitploeg");
-            table.AddHeaderCell("Tarief");
             decimal totalPrice = 0;
+
+            // Tabel tickets
+            Table tableTickets = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+            tableTickets.AddHeaderCell("Thuisploeg");
+            tableTickets.AddHeaderCell("Uitploeg");
+            tableTickets.AddHeaderCell("Prijs");
             foreach (var ticket in tickets)
             {
-                table.AddCell(ticket.Match.Thuisploeg.Naam);
-                table.AddCell(ticket.Match.Uitploeg.Naam);
-                table.AddCell(ticket.Zone.PrijsTicket.ToString("C"));
+                tableTickets.AddCell(ticket.Match.Thuisploeg.Naam);
+                tableTickets.AddCell(ticket.Match.Uitploeg.Naam);
+                tableTickets.AddCell(ticket.Zone.PrijsTicket.ToString("C"));
                 totalPrice += ticket.Zone.PrijsTicket;
             }
-            document.Add(table);
+            document.Add(tableTickets);
+
+            if (abonnementen != null)
+            {
+                // Tabel abonnementen
+                Table tableAbonnement = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+                tableAbonnement.AddHeaderCell("Club");
+                tableAbonnement.AddHeaderCell("Loopt van");
+                tableAbonnement.AddHeaderCell("Tot");
+                tableAbonnement.AddHeaderCell("Prijs");
+                foreach (var abonnement in abonnementen)
+                {
+                    tableAbonnement.AddCell(abonnement.Club.Naam);
+                    tableAbonnement.AddCell(abonnement.Seizoen.Startdatum.ToString("d MMMM yyyy"));
+                    tableAbonnement.AddCell(abonnement.Seizoen.Einddatum.ToString("d MMMM yyyy"));
+                    //tableAbonnement.AddCell(abonnement.Zone.PrijsAbonnement.ToString("C"));
+                    //totalPrice += abonnement.Zone.PrijsAbonnement;
+                }
+                document.Add(tableAbonnement);
+            }
 
             // Praragraaf met totaal
             Paragraph paragraph = new Paragraph("Totaal: " + totalPrice.ToString("C"))
@@ -211,21 +232,33 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 img.SetHorizontalAlignment(HorizontalAlignment.CENTER);
                 document.Add(img);
 
-                document.Add(new Paragraph($"Match: {ticket.Match.Thuisploeg.Naam.Trim()} - {ticket.Match.Uitploeg.Naam.Trim()}"));
-                document.Add(new Paragraph($"Datum: {ticket.Match.Datum:d MMMM yyyy}"));
-                document.Add(new Paragraph($"Startuur: {ticket.Match.Startuur:hh\\:mm}"));
-                document.Add(new Paragraph($"Stadion: {ticket.Match.Stadion.Naam}"));
-                document.Add(new Paragraph($"Zone: {ticket.Zone.Naam}"));
-                document.Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"));
+                // Table for ticket details and QR code
+                Table ticketTable = new Table(UnitValue.CreatePercentArray(new float[] { 3, 1 })).UseAllAvailableWidth();
+
+                // Ticket details
+                Cell ticketDetailsCell = new Cell()
+                    .Add(new Paragraph($"Match: {ticket.Match.Thuisploeg.Naam.Trim()} - {ticket.Match.Uitploeg.Naam.Trim()}"))
+                    .Add(new Paragraph($"Datum: {ticket.Match.Datum:d MMMM yyyy}"))
+                    .Add(new Paragraph($"Startuur: {ticket.Match.Startuur:hh\\:mm}"))
+                    .Add(new Paragraph($"Stadion: {ticket.Match.Stadion.Naam}"))
+                    .Add(new Paragraph($"Zone: {ticket.Zone.Naam}"))
+                    .Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"))
+                    .SetBorder(Border.NO_BORDER);
+
+                ticketTable.AddCell(ticketDetailsCell);
 
                 // Voeg QR-code toe met ticketinformatie
-                string qrContent = "https://example.com";
+                string qrContent = "https://ticketverkoop.azurewebsites.net/";
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
                 Bitmap qrCodeImage = qrCode.GetGraphic(5);
                 iText.Layout.Element.Image qrCodeImageElement = new iText.Layout.Element.Image(ImageDataFactory.Create(BitmapToBytes(qrCodeImage))).SetHorizontalAlignment(HorizontalAlignment.CENTER);
-                document.Add(qrCodeImageElement);
+                Cell qrCodeCell = new Cell().Add(qrCodeImageElement).SetBorder(Border.NO_BORDER);
+
+                ticketTable.AddCell(qrCodeCell);
+
+                document.Add(ticketTable);
             }
 
             document.Close();
