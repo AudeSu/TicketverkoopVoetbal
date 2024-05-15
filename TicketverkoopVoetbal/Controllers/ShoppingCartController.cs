@@ -115,7 +115,7 @@ namespace TicketverkoopVoetbal.Controllers
                     }
 
                     _emailSend.SendEmailAttachmentAsync(currentUser.Email, pdfDocument, pdfFileName);
-                
+
                 }
                 HttpContext.Session.Remove("ShoppingCart");
                 return View("Thanks");
@@ -152,17 +152,25 @@ namespace TicketverkoopVoetbal.Controllers
             for (int i = 0; i < ticketLijst.Count; i++)
             {
                 var currentTicket = ticketLijst[i];
-                CreateStoelVM stoelVM = new CreateStoelVM();
-                stoelVM.ZoneID = currentTicket.ZoneID;
-                stoelVM.StadionID = currentTicket.matchVM.StadionId;
-                stoelVM.ClubID = currentTicket.matchVM.ClubId;
-                stoelVM.MatchID = currentTicket.MatchID;
-                stoelVM.Bezet = true;
-                Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
-                await _stoelService.Add(stoel);
-
+                var emptyStoel = await _stoelService.GetEmptySeat(currentTicket.MatchID, currentTicket.ZoneID);
+                if (emptyStoel != null)
+                {
+                    emptyStoel.Bezet = true;
+                    await _stoelService.Update(emptyStoel);
+                    currentTicket.StoeltjeID = emptyStoel.StoeltjeId;
+                } else
+                {
+                    CreateStoelVM stoelVM = new CreateStoelVM();
+                    stoelVM.ZoneID = currentTicket.ZoneID;
+                    stoelVM.StadionID = currentTicket.matchVM.StadionId;
+                    stoelVM.ClubID = currentTicket.matchVM.ClubId;
+                    stoelVM.MatchID = currentTicket.MatchID;
+                    stoelVM.Bezet = true;
+                    Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
+                    await _stoelService.Add(stoel);
+                    currentTicket.StoeltjeID = stoel.StoeltjeId;
+                }
                 currentTicket.GebruikersID = _userManager.GetUserId(User);
-                currentTicket.StoeltjeID = stoel.StoeltjeId;
                 Ticket ticket = _mapper.Map<Ticket>(currentTicket);
                 await _ticketService.Add(ticket);
             }

@@ -114,5 +114,21 @@ namespace TicketverkoopVoetbal.Repositories
                 throw;
             }
         }
+
+        public async Task<Stoeltje?>GetEmptySeat(int MatchID, int ZoneID)
+        {
+            try
+            {
+
+                return await _dbContext.Stoeltjes
+                    .Where(b => b.ZoneId == ZoneID && b.MatchId == MatchID && b.Bezet == false)
+                    .FirstOrDefaultAsync();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex);
+                throw;
+            }
+        }
     }
 }
