@@ -163,7 +163,7 @@ namespace TicketverkoopVoetbal.Controllers
             var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             if (shoppingCart != null)
             {
-                if (shoppingCart.Abonnementen.Any(a => a.ClubId == abonnement.ClubId))
+                if (shoppingCart.Abonnementen != null && shoppingCart.Abonnementen.Any(a => a.ClubId == abonnement.ClubId))
                 {
                     return true;
                 }

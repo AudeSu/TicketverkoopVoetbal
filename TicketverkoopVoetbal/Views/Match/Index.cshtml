@@ -10,7 +10,7 @@
         <form asp-action="Index" method="post">
             <div class="form-group">
                 <label for="ClubId" class="control-label">Selecteer een Club:</label>
-                <select asp-for="ClubNumber" asp-items="Model.Clubs">
+                <select asp-for="ClubID" asp-items="Model.Clubs">
                     <option disabled selected value="">Kies een Club</option>
                     <option selected value="0">Alle Clubs</option>
                 </select>
@@ -30,7 +30,7 @@
 @section scripts
 {
     <script>
-        $("#ClubNumber").on("change", () => {
+        $("#ClubID").on("change", () => {
             $("form").trigger("submit");
         });
 
