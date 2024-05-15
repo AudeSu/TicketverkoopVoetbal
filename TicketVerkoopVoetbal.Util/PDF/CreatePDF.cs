@@ -23,8 +23,6 @@ namespace TicketVerkoopVoetbal.Util.PDF
             PdfWriter writer = new PdfWriter(stream);
             PdfDocument pdf = new PdfDocument(writer);
             Document document = new Document(pdf);
-            // Get the page size
-            var pageSize = pdf.GetDefaultPageSize();
 
             // Header
             Paragraph logoParagraph = new Paragraph()
@@ -112,9 +110,9 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 document.Add(new AreaBreak(AreaBreakType.NEXT_PAGE));
 
                 var img = new iText.Layout.Element.Image(ImageDataFactory.Create(headerPath));
-                img.SetWidth(pageSize.GetWidth());
-                img.SetHorizontalAlignment(HorizontalAlignment.CENTER);
                 document.Add(img);
+
+                document.Add(new Paragraph("\n"));
 
                 // Table for ticket details and QR code
                 Table ticketTable = new Table(UnitValue.CreatePercentArray(new float[] { 3, 1 })).UseAllAvailableWidth();
