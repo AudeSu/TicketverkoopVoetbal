@@ -125,10 +125,6 @@ namespace TicketverkoopVoetbal.Controllers
                         abonnementList.Add(abonnement);
                     }
                 }
-
-
-
-
                 // Het pad naar de map waarin het logo zich bevindt
                 string logoPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "Website_logo.png");
                 string headerPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "PDF Header.jpg");
