@@ -13,6 +13,5 @@ namespace TicketverkoopVoetbal.ViewModels
         public int SeizoenId { get; set; }
         public SeizoenVM Seizoen { get; set; }
         public IEnumerable<SelectListItem>? Zones { get; set; }
-
     }
 }

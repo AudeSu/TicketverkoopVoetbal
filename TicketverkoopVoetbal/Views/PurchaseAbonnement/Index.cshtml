@@ -29,14 +29,14 @@
         </div>
         <div class="col-md-4">
             <h2>Abonnement Selectie</h2>
-            <form asp-action="Index" method="post" onsubmit="return validateForm()">
+            <form asp-action="Index" method="post" >
                 <div class="form-group">
                     <input type="hidden" asp-for="ClubId" />
                     <input type="hidden" asp-for="SeizoenId" />
                     <input type="hidden" asp-for="StadionNaam" />
                     <input type="hidden" asp-for="Naam" />
                     <label for="ZoneId">Selecteer stadion zone:</label>
-                    <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control">
+                    <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control" required data-validation-required-message="Selecteer een stadion zone">
                         <option value="">Kies een Zone</option>
                     </select>
                     @if (TempData["ErrorVolzetMessage"] != null)
@@ -46,47 +46,15 @@
                         </div>
                     }
                 </div>
-                <div id="vrijePlaatsenMessage" class="form-group" style="display: none;">
-                    <p class="text-danger">Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.</p>
-                </div>
-
+                @if (TempData["ErrorVolzetMessage"] != null)
+                {
+                    <div class="alert alert-danger mt-2" role="alert">
+                        @TempData["ErrorVolzetMessage"]
+                    </div>
+                }
                 <br />
-
-
-                    <button asp-controller="PurchaseAbonnement" asp-action="index" type="submit" class="btn btn-primary">Bevestig</button>
-                
-@*                 Ik krijg nog de error ma kpeis da da is omdak weer etwuk vergeet mee te geven in de VM net zoals bij purchase ticket me dak da script weer eb verwijderd
-                <button asp-controller="PurchaseAbonnement" asp-action="Select" type="submit" class="btn btn-primary">Bevestig</button> *@
+                <button asp-controller="PurchaseAbonnement" asp-action="index" type="submit" class="btn btn-primary">Bevestig</button>
             </form>
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        function validateForm() {
-            var zoneId = document.getElementById("ZoneId").value;
-
-            // Controleer of een zone is geselecteerd
-            if (zoneId === "") {
-                alert("Selecteer alstublieft een zone.");
-                return false;
-            }
-
-            // Controleer of er vrije plaatsen beschikbaar zijn in de geselecteerde zone
-            var vrijePlaatsen = parseInt(document.getElementById("VrijePlaatsen").value);
-            if (vrijePlaatsen <= 0) {
-                // Toon de foutmelding alleen als een zone is geselecteerd
-                document.getElementById("vrijePlaatsenMessage").style.display = "block";
-                alert("Er zijn geen vrije plaatsen in deze zone. Kies een andere zone.");
-                return false;
-            }
-
-            // Verberg de foutmelding als er wel vrije plaatsen zijn
-            document.getElementById("vrijePlaatsenMessage").style.display = "none";
-
-            // Als alle validaties slagen, ga door naar de volgende pagina
-            return true;
-        }
-    </script>
-}

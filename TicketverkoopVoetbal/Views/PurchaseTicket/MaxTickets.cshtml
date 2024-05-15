@@ -1,12 +1,17 @@
-﻿@{
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
     ViewData["Title"] = "MaxTickets";
+    string contactEmail = Configuration["Contact"]!;
+    int maxTickets = Configuration.GetValue<int>("MaxTickets");
 }
 
 <link href="~/css/tablestyles.css" rel="stylesheet" />
 
 <div id="page">
     <h1>U heeft al het maximum aantal tickets besteld voor deze match</h1>
-    <p>Beste klant, u heeft al reeds 4 tickets gekocht voor deze match</p>
+    <p>Beste klant, u heeft al reeds @maxTickets tickets gekocht voor deze match</p>
     <p>Controleer alstublieft uw history voor uw tickets. Veel plezier op het evenement!</p>
-    <p>Neem <a href="mailto:tickets.voetbal.league@gmail.com">contact met ons op</a> als u nog vragen heeft.</p>
+    <p>Neem <a href="mailto:@contactEmail">contact met ons op</a> als u nog vragen heeft.</p>
 </div>

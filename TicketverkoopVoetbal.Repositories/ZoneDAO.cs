@@ -33,9 +33,9 @@ namespace TicketverkoopVoetbal.Repositories
                  .Include(b => b.Stadion)
                  .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -50,9 +50,9 @@ namespace TicketverkoopVoetbal.Repositories
 
                 .FirstOrDefaultAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -65,9 +65,9 @@ namespace TicketverkoopVoetbal.Repositories
                     .Include(b => b.Stadion)
                     .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }

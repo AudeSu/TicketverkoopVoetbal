@@ -223,6 +223,7 @@ public partial class FootballDbContext : DbContext
             entity.Property(e => e.StadionId).HasColumnName("StadionID");
             entity.Property(e => e.Adres).HasMaxLength(50);
             entity.Property(e => e.Naam).HasMaxLength(50);
+            entity.Property(e => e.PhotoPath).HasMaxLength(50);
             entity.Property(e => e.Stad).HasMaxLength(50);
         });
 

@@ -14,12 +14,12 @@ namespace TicketverkoopVoetbal.Repositories
             _dbContext = context;
         }
 
-        public async Task Add(Match entity)
+        public Task Add(Match entity)
         {
             throw new NotImplementedException();
         }
 
-        public async Task Delete(Match entity)
+        public Task Delete(Match entity)
         {
             throw new NotImplementedException();
         }
@@ -29,16 +29,15 @@ namespace TicketverkoopVoetbal.Repositories
             try
             {
                 return await _dbContext.Matches
-                .Where(a => a.ThuisploegId == id || a.UitploegId == id)
-                .Include(a => a.Thuisploeg)
-                .Include(a => a.Uitploeg)
-                 .Include(b => b.Stadion)
-
-                 .ToListAsync();
+                    .Where(a => a.ThuisploegId == id || a.UitploegId == id)
+                    .Include(a => a.Thuisploeg)
+                    .Include(a => a.Uitploeg)
+                    .Include(b => b.Stadion)
+                    .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -48,16 +47,15 @@ namespace TicketverkoopVoetbal.Repositories
             try
             {
                 return await _dbContext.Matches
-                .Where(a => a.MatchId == id)
-                .Include(a => a.Thuisploeg)
-                .Include(a => a.Uitploeg)
-                 .Include(b => b.Stadion)
-
-                .FirstOrDefaultAsync();
+                    .Where(a => a.MatchId == id)
+                    .Include(a => a.Thuisploeg)
+                    .Include(a => a.Uitploeg)
+                    .Include(b => b.Stadion)
+                    .FirstOrDefaultAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -67,16 +65,15 @@ namespace TicketverkoopVoetbal.Repositories
             try
             {
                 return await _dbContext.Matches
-                .Where(a => a.ThuisploegId == thuisploegId && a.UitploegId == uitploegId  || a.UitploegId == thuisploegId && a.ThuisploegId == uitploegId)
-                .Include(a => a.Thuisploeg)
-                .Include(a => a.Uitploeg)
-                 .Include(b => b.Stadion)
-
-                 .ToListAsync();
+                    .Where(a => a.ThuisploegId == thuisploegId && a.UitploegId == uitploegId || a.UitploegId == thuisploegId && a.ThuisploegId == uitploegId)
+                    .Include(a => a.Thuisploeg)
+                    .Include(a => a.Uitploeg)
+                    .Include(b => b.Stadion)
+                    .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -91,33 +88,54 @@ namespace TicketverkoopVoetbal.Repositories
                     .Include(b => b.Stadion)
                     .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
 
-        public async Task Update(Match entity)
+        public Task Update(Match entity)
         {
             throw new NotImplementedException();
         }
 
-        public async Task<IEnumerable<Match>?>FindByHomeClub(int thuisploegId)
+        public async Task<IEnumerable<Match>?> FindByHomeClub(int thuisploegId)
         {
             try
             {
                 return await _dbContext.Matches
-                .Where(a => a.ThuisploegId == thuisploegId)
-                .Include(a => a.Thuisploeg)
-                .Include(a => a.Uitploeg)
-                 .Include(b => b.Stadion)
-
-                 .ToListAsync();
+                    .Where(a => a.ThuisploegId == thuisploegId)
+                    .Include(a => a.Thuisploeg)
+                    .Include(a => a.Uitploeg)
+                    .Include(b => b.Stadion)
+                    .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
+                throw;
+            }
+        }
+
+        public async Task<IEnumerable<Match>?> GetFutureMatches()
+        {
+            try
+            {
+                var currentDate = DateTime.Today;
+
+                return await _dbContext.Matches
+                    .Where(m => m.Datum >= currentDate)
+                    .OrderBy(m => m.Datum)
+                    .ThenBy(m => m.Startuur)
+                    .Include(m => m.Thuisploeg)
+                    .Include(m => m.Uitploeg)
+                    .Include(m => m.Stadion)
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }

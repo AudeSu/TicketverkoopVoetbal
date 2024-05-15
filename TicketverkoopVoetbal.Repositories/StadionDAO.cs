@@ -36,9 +36,9 @@ namespace TicketverkoopVoetbal.Repositories
                 return await _dbContext.Stadions
                     .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }

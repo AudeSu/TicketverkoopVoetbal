@@ -5,10 +5,10 @@ using TicketVerkoopVoetbal.Util.Mail.Interfaces;
 
 namespace TicketVerkoopVoetbal.Util.Mail
 {
-    public class EmailSend : IEmailSend
+    public class EmailSender : IEmailSender
     {
         private readonly EmailSettings _emailSettings;
-        public EmailSend(IOptions<EmailSettings> emailSettings)
+        public EmailSender(IOptions<EmailSettings> emailSettings)
         {
             _emailSettings = emailSettings.Value;
         }

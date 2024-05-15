@@ -1,7 +1,11 @@
 @model TicketverkoopVoetbal.ViewModels.SelectTicketVM
 
+@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
 @{
     ViewData["Title"] = "Select Ticket";
+    int maxTickets = Configuration.GetValue<int>("MaxTickets");
 }
 
 <div class="container">
@@ -54,12 +58,11 @@
         </div>
         <div class="col-md-4">
             <h2>Ticket Selectie</h2>
-            <form id="ticketForm" asp-action="Index" method="post" onsubmit="return validateForm()">
-                <input type="hidden" asp-for="MatchId" />
-
+            <form asp-action="Index" method="post">
                 <div class="form-group">
+                    <input type="hidden" asp-for="MatchId" />
                     <label for="ZoneId">Selecteer stadion zone:</label>
-                    <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control">
+                    <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control" required data-validation-required-message="Selecteer een stadion zone">
                         <option value="">Kies een Zone</option>
                     </select>
                 </div>
@@ -70,8 +73,8 @@
                     </div>
                 }
                 <div class="form-group">
-                    <label for="Aantal">Selecteer het aantal tickets (max 4):</label>
-                    <input asp-for="Aantal" type="number" min="1" max="4" class="form-control" />
+                    <label for="Aantal">Selecteer het aantal tickets (max @maxTickets):</label>
+                    <input asp-for="Aantal" type="number" min="1" max="@maxTickets" class="form-control" />
                     <span asp-validation-for="Aantal" class="text-danger"></span>
                 </div>
 
@@ -87,19 +90,3 @@
         </div>
     </div>
 </div>
-
-@section Scripts {
-    <script>
-        function validateForm() {
-            var zoneId = document.getElementById("ZoneId").value;
-
-            // Controleer of een zone is geselecteerd
-            if (zoneId === "") {
-                alert("Selecteer alstublieft een zone.");
-                return false;
-            }
-
-            return true;
-        }
-    </script>
-}

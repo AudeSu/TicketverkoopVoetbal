@@ -14,7 +14,7 @@ namespace TicketverkoopVoetbal.Controllers
 {
     public class ShoppingCartController : Controller
     {
-        private readonly IEmailSend _emailSend;
+        private readonly IEmailSender _emailSend;
         private readonly ICreatePDF _createPDF;
         private readonly IAbonnementService<Abonnement> _abonnementService;
         private readonly IStoelService<Stoeltje> _stoelService;
@@ -29,7 +29,7 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IMapper _mapper;
 
         public ShoppingCartController(
-            IEmailSend emailsend,
+            IEmailSender emailsend,
             ICreatePDF createPDF,
             IAbonnementService<Abonnement> abonnementService,
             IStoelService<Stoeltje> stoelService,

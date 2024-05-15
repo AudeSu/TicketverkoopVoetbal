@@ -1,4 +1,3 @@
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 using TicketverkoopVoetbal.Data;
@@ -47,7 +46,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options => {
 
 // Email
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddSingleton<IEmailSend, EmailSend>();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 // Swagger
 builder.Services.AddSwaggerGen(c =>

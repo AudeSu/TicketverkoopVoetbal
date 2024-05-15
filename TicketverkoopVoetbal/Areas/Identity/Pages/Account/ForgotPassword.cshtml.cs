@@ -21,9 +21,9 @@ namespace TicketverkoopVoetbal.Areas.Identity.Pages.Account
     public class ForgotPasswordModel : PageModel
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IEmailSend _emailSender;
+        private readonly TicketVerkoopVoetbal.Util.Mail.Interfaces.IEmailSender _emailSender;
 
-        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, IEmailSend emailSender)
+        public ForgotPasswordModel(UserManager<ApplicationUser> userManager, TicketVerkoopVoetbal.Util.Mail.Interfaces.IEmailSender emailSender)
         {
             _userManager = userManager;
             _emailSender = emailSender;

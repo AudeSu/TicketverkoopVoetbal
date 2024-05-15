@@ -1,9 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using TicketverkoopVoetbal.Domains.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Repositories.Interfaces;
@@ -26,9 +21,9 @@ namespace TicketverkoopVoetbal.Repositories
             {
                 await _dbContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -40,14 +35,14 @@ namespace TicketverkoopVoetbal.Repositories
             {
                 await _dbContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
 
-        public async Task<IEnumerable<Ticket>?> FilterById(int id)
+        public Task<IEnumerable<Ticket>?> FilterById(int id)
         {
             throw new NotImplementedException();
         }
@@ -66,9 +61,9 @@ namespace TicketverkoopVoetbal.Repositories
 
                 .FirstOrDefaultAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -97,9 +92,9 @@ namespace TicketverkoopVoetbal.Repositories
 
                  .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -118,9 +113,9 @@ namespace TicketverkoopVoetbal.Repositories
 
                  .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }

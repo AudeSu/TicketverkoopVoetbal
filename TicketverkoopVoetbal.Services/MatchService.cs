@@ -52,5 +52,10 @@ namespace TicketverkoopVoetbal.Services
         {
             return await _matchDAO.FindByHomeClub(thuisploegId);
         }
+
+        public async Task<IEnumerable<Match>?> GetFutureMatches()
+        {
+            return await _matchDAO.GetFutureMatches();
+        }
     }
 }
