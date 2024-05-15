@@ -2,8 +2,6 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Newtonsoft.Json;
-using System.Diagnostics;
 using TicketverkoopVoetbal.Areas.Data;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Extensions;
@@ -90,7 +88,11 @@ namespace TicketverkoopVoetbal.Controllers
                 {
                     shopping = new ShoppingCartVM();
                 }
-                shopping.Abonnement = abonnement;
+                if (shopping.Abonnementen == null)
+                {
+                    shopping.Abonnementen = new List<CartAbonnementVM>();
+                }
+                shopping.Abonnementen.Add(abonnement);
 
                 HttpContext.Session.SetObject("ShoppingCart", shopping);
 

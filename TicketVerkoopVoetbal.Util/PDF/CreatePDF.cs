@@ -180,26 +180,28 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 .Add(new Text("\n\nInformatie over de tickets:").SetBold())
                 .Add("\nBedankt voor uw aankoop van de tickets! Om toegang te krijgen tot het stadion, raden we u aan om dit document af te drukken. Bij uw bezoek aan het stadion, laat de QR-code samen met uw identiteitsbewijs zien aan het toegangspersoneel. Op deze manier wordt u probleemloos toegelaten tot de wedstrijd.\n\n"));
 
-            decimal totalPrice = 0;
-
-            // Tabel tickets
-            Table tableTickets = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
-            tableTickets.AddHeaderCell("Thuisploeg");
-            tableTickets.AddHeaderCell("Uitploeg");
-            tableTickets.AddHeaderCell("Prijs");
-            foreach (var ticket in tickets)
+            decimal? totalPrice = 0;
+            if (tickets.Count > 0)
             {
-                tableTickets.AddCell(ticket.Match.Thuisploeg.Naam);
-                tableTickets.AddCell(ticket.Match.Uitploeg.Naam);
-                tableTickets.AddCell(ticket.Zone.PrijsTicket.ToString("C"));
-                totalPrice += ticket.Zone.PrijsTicket;
+                // Tabel tickets
+                Table tableTickets = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+                tableTickets.AddHeaderCell("Thuisploeg");
+                tableTickets.AddHeaderCell("Uitploeg");
+                tableTickets.AddHeaderCell("Prijs");
+                foreach (var ticket in tickets)
+                {
+                    tableTickets.AddCell(ticket.Match.Thuisploeg.Naam);
+                    tableTickets.AddCell(ticket.Match.Uitploeg.Naam);
+                    tableTickets.AddCell(ticket.Zone.PrijsTicket.ToString("C"));
+                    totalPrice += ticket.Zone.PrijsTicket;
+                }
+                document.Add(tableTickets);
             }
-            document.Add(tableTickets);
 
-            if (abonnementen != null)
+            if (abonnementen.Count > 0)
             {
                 // Tabel abonnementen
-                Table tableAbonnement = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+                Table tableAbonnement = new Table(UnitValue.CreatePercentArray(4)).UseAllAvailableWidth();
                 tableAbonnement.AddHeaderCell("Club");
                 tableAbonnement.AddHeaderCell("Loopt van");
                 tableAbonnement.AddHeaderCell("Tot");
@@ -207,16 +209,16 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 foreach (var abonnement in abonnementen)
                 {
                     tableAbonnement.AddCell(abonnement.Club.Naam);
-                    tableAbonnement.AddCell(abonnement.Seizoen.Startdatum.ToString("d MMMM yyyy"));
-                    tableAbonnement.AddCell(abonnement.Seizoen.Einddatum.ToString("d MMMM yyyy"));
-                    //tableAbonnement.AddCell(abonnement.Zone.PrijsAbonnement.ToString("C"));
-                    //totalPrice += abonnement.Zone.PrijsAbonnement;
+                    //tableAbonnement.AddCell(abonnement.Seizoen.Startdatum.ToString("d MMMM yyyy"));
+                    //tableAbonnement.AddCell(abonnement.Seizoen.Einddatum.ToString("d MMMM yyyy"));
+                    tableAbonnement.AddCell(abonnement.Stoeltje.Zone.PrijsAbonnement?.ToString("C"));
+                    totalPrice += abonnement.Stoeltje.Zone.PrijsAbonnement;
                 }
                 document.Add(tableAbonnement);
             }
 
             // Praragraaf met totaal
-            Paragraph paragraph = new Paragraph("Totaal: " + totalPrice.ToString("C"))
+            Paragraph paragraph = new Paragraph("Totaal: " + totalPrice?.ToString("C"))
                  .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA))
                  .SetFontSize(20)
                  .SetFontColor(ColorConstants.BLACK)

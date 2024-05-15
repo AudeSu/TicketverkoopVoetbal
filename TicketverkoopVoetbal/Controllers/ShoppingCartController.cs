@@ -20,6 +20,7 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly IStoelService<Stoeltje> _stoelService;
         private readonly ITicketService<Ticket> _ticketService;
         private readonly IMatchService<Match> _matchService;
+        private readonly IService<Club> _clubService;
         private readonly IService<Zone> _zoneService;
         private readonly IUserService<AspNetUser> _UserService;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -33,6 +34,7 @@ namespace TicketverkoopVoetbal.Controllers
             IStoelService<Stoeltje> stoelService,
             ITicketService<Ticket> ticketService,
             IMatchService<Match> matchService,
+            IService<Club> clubService,
             IService<Zone> zoneService,
             IUserService<AspNetUser> userService,
             UserManager<ApplicationUser> userManager,
@@ -45,6 +47,7 @@ namespace TicketverkoopVoetbal.Controllers
             _stoelService = stoelService;
             _ticketService = ticketService;
             _matchService = matchService;
+            _clubService = clubService;
             _zoneService = zoneService;
             _UserService = userService;
             _userManager = userManager;
@@ -71,9 +74,9 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return RedirectToAction("Index", "Match");
             }
-            if (cartList.Abonnement != null)
+            if (cartList.Abonnementen != null)
             {
-                await CreateAbonnement(cartList.Abonnement);
+                await CreateAbonnement(cartList.Abonnementen);
             }
             if (cartList.Carts != null)
             {
@@ -85,11 +88,13 @@ namespace TicketverkoopVoetbal.Controllers
                 string pdfFile = "Factuur" + DateTime.Now.Year;
                 var pdfFileName = $"{pdfFile}_{Guid.NewGuid()}.pdf";
 
-                if (cartList.Carts != null)
-                {
-                    var tickets = cartList.Carts;
+                var tickets = cartList.Carts;
+                var ticketList = new List<Ticket>();
+                var abonnementen = cartList.Abonnementen;
+                var abonnementList = new List<Abonnement>();
 
-                    var ticketList = new List<Ticket>();
+                if (tickets != null)
+                {
                     foreach (var item in tickets)
                     {
                         Ticket ticket = _mapper.Map<Ticket>(item);
@@ -97,26 +102,42 @@ namespace TicketverkoopVoetbal.Controllers
                         ticket.Zone = _zoneService.FindById(item.ZoneID).Result;
                         ticketList.Add(ticket);
                     }
-                    // Het pad naar de map waarin het logo zich bevindt
-                    string logoPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "Website_logo.png");
-                    string headerPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "PDF Header.jpg");
-                    var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, logoPath, headerPath, ASPcurrentUser);
-
-                    // Als de map pdf nog niet bestaat in de wwwroot map,
-                    // maak deze dan aan voordat je het PDF-document opslaat.
-                    string pdfFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "pdf");
-                    Directory.CreateDirectory(pdfFolderPath);
-                    //Combineer het pad naar de wwwroot map met het gewenste subpad en bestandsnaam voor het PDF-document.
-                    string filePath = Path.Combine(pdfFolderPath, pdfFileName);
-                    // Opslaan van de MemoryStream naar een bestand
-                    using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
-                    {
-                        pdfDocument.WriteTo(fileStream);
-                    }
-
-                    _emailSend.SendEmailAttachmentAsync(currentUser.Email, pdfDocument, pdfFileName);
-
                 }
+
+                if (abonnementen != null)
+                {
+                    foreach (var item in abonnementen)
+                    {
+                        Abonnement abonnement = _mapper.Map<Abonnement>(item);
+                        abonnement.Club = _clubService.FindById(item.ClubId).Result;
+                        abonnement.Stoeltje = _stoelService.FindById(item.StoeltjeId).Result;
+                        abonnementList.Add(abonnement);
+                    }
+                }
+
+
+
+
+                // Het pad naar de map waarin het logo zich bevindt
+                string logoPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "Website_logo.png");
+                string headerPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "PDF Header.jpg");
+                var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, abonnementList, logoPath, headerPath, ASPcurrentUser);
+
+                // Als de map pdf nog niet bestaat in de wwwroot map,
+                // maak deze dan aan voordat je het PDF-document opslaat.
+                string pdfFolderPath = Path.Combine(_hostingEnvironment.WebRootPath, "pdf");
+                Directory.CreateDirectory(pdfFolderPath);
+                //Combineer het pad naar de wwwroot map met het gewenste subpad en bestandsnaam voor het PDF-document.
+                string filePath = Path.Combine(pdfFolderPath, pdfFileName);
+                // Opslaan van de MemoryStream naar een bestand
+                using (FileStream fileStream = new FileStream(filePath, FileMode.Create))
+                {
+                    pdfDocument.WriteTo(fileStream);
+                }
+
+                _emailSend.SendEmailAttachmentAsync(currentUser.Email, pdfDocument, pdfFileName);
+
+
                 HttpContext.Session.Remove("ShoppingCart");
                 return View("Thanks");
             }
@@ -127,23 +148,28 @@ namespace TicketverkoopVoetbal.Controllers
             return View();
         }
 
-        private async Task CreateAbonnement(CartAbonnementVM cartAbonnementVM)
+        private async Task CreateAbonnement(List<CartAbonnementVM> abonnementList)
         {
-            CreateStoelVM stoelVM = new CreateStoelVM();
-            stoelVM.ZoneID = cartAbonnementVM.ZoneId;
-            stoelVM.StadionID = cartAbonnementVM.clubVM.StadionID;
-            stoelVM.ClubID = cartAbonnementVM.ClubId;
-            stoelVM.MatchID = null;
-            stoelVM.Bezet = true;
-            Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
-            await _stoelService.Add(stoel);
 
-            cartAbonnementVM.GebruikerID = _userManager.GetUserId(User);
-            cartAbonnementVM.StoeltjeId = stoel.StoeltjeId;
-            //voorlopig hardcoded want ik weet niet hoe
-            cartAbonnementVM.SeizoenID = 1;
-            Abonnement abonnement = _mapper.Map<Abonnement>(cartAbonnementVM);
-            await _abonnementService.Add(abonnement);
+            for (int i = 0; i < abonnementList.Count; i++)
+            {
+                var currentAbonnement = abonnementList[i];
+                CreateStoelVM stoelVM = new CreateStoelVM();
+                stoelVM.ZoneID = currentAbonnement.ZoneId;
+                stoelVM.StadionID = currentAbonnement.clubVM.StadionID;
+                stoelVM.ClubID = currentAbonnement.ClubId;
+                stoelVM.MatchID = null;
+                stoelVM.Bezet = true;
+                Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
+                await _stoelService.Add(stoel);
+
+                currentAbonnement.GebruikerID = _userManager.GetUserId(User);
+                currentAbonnement.StoeltjeId = stoel.StoeltjeId;
+                //voorlopig hardcoded want ik weet niet hoe
+                currentAbonnement.SeizoenID = 1;
+                Abonnement abonnement = _mapper.Map<Abonnement>(currentAbonnement);
+                await _abonnementService.Add(abonnement);
+            }
         }
 
 
@@ -158,7 +184,8 @@ namespace TicketverkoopVoetbal.Controllers
                     emptyStoel.Bezet = true;
                     await _stoelService.Update(emptyStoel);
                     currentTicket.StoeltjeID = emptyStoel.StoeltjeId;
-                } else
+                }
+                else
                 {
                     CreateStoelVM stoelVM = new CreateStoelVM();
                     stoelVM.ZoneID = currentTicket.ZoneID;
@@ -194,14 +221,14 @@ namespace TicketverkoopVoetbal.Controllers
             return RedirectToAction("Index");
         }
 
-        public IActionResult DeleteAbonnement()
+        public IActionResult DeleteAbonnement(int? clubId)
         {
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            CartAbonnementVM? itemToRemove = cartList?.Abonnement;
+            CartAbonnementVM? itemToRemove = cartList?.Abonnementen?.FirstOrDefault(r => r.ClubId == clubId);
 
             if (itemToRemove != null)
             {
-                cartList.Abonnement = null;
+                cartList.Abonnementen = null;
                 HttpContext.Session.SetObject("ShoppingCart", cartList);
             }
             return RedirectToAction("Index");

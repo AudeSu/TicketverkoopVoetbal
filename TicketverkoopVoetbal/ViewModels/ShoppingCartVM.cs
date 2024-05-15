@@ -4,7 +4,7 @@
     {
         public List<CartTicketVM>? Carts { get; set; }
 
-        public CartAbonnementVM Abonnement { get; set; }
+        public List<CartAbonnementVM>? Abonnementen { get; set; }
 
         public decimal Total => ComputeTotalValue();
 
