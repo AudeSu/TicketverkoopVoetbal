@@ -21,9 +21,9 @@ namespace TicketverkoopVoetbal.Repositories
             {
                 await _dbContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -47,9 +47,9 @@ namespace TicketverkoopVoetbal.Repositories
                 .Include(a => a.Zone)
                 .FirstOrDefaultAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -62,9 +62,9 @@ namespace TicketverkoopVoetbal.Repositories
                     .Include(b => b.Zone)
                     .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine("error in DAO");
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -76,9 +76,9 @@ namespace TicketverkoopVoetbal.Repositories
             {
                 await _dbContext.SaveChangesAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -92,9 +92,9 @@ namespace TicketverkoopVoetbal.Repositories
                     .Where(b => b.ZoneId == ZoneID && b.ClubId== ClubID && b.MatchId == null)
                     .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -108,9 +108,9 @@ namespace TicketverkoopVoetbal.Repositories
                     .Where(b => b.ZoneId == ZoneID &&  b.MatchId == MatchID)
                     .ToListAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
@@ -124,9 +124,9 @@ namespace TicketverkoopVoetbal.Repositories
                     .Where(b => b.ZoneId == ZoneID && b.MatchId == MatchID && b.Bezet == false)
                     .FirstOrDefaultAsync();
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                Console.WriteLine(ex);
+                Console.WriteLine("Error in DAO");
                 throw;
             }
         }
