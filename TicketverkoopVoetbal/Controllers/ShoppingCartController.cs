@@ -99,7 +99,8 @@ namespace TicketverkoopVoetbal.Controllers
                     }
                     // Het pad naar de map waarin het logo zich bevindt
                     string logoPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "Website_logo.png");
-                    var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, logoPath, ASPcurrentUser);
+                    string headerPath = Path.Combine(_hostingEnvironment.WebRootPath, "images", "PDF Header.jpg");
+                    var pdfDocument = _createPDF.CreatePDFDocumentAsync(ticketList, logoPath, headerPath, ASPcurrentUser);
 
                     // Als de map pdf nog niet bestaat in de wwwroot map,
                     // maak deze dan aan voordat je het PDF-document opslaat.
