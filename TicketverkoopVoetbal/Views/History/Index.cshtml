@@ -30,12 +30,12 @@
                 @foreach (var ticket in Model.TicketVMs)
                 {
                     <tr>
-                        <td>@ticket.MatchID</td> @* TODO *@
+                        <td>@ticket.matchVM.ThuisploegNaam - @ticket.matchVM.UitploegNaam</td> 
                         <td>@ticket.Datum?.ToString("d MMMM yyyy")</td>
                         <td>@ticket.Startuur?.ToString("hh\\:mm")</td>
                         <td>@ticket.ZoneNaam</td>
                         <td>@ticket.StoeltjeID</td>
-                        <td>TODO</td> @* TODO *@
+                        <td>@ticket.FirstName @ticket.LastName</td> 
                         <td>
                             @if (ticket.Datum != null && ticket.Datum > DateTime.Today.AddDays(7))
                             {
@@ -70,8 +70,8 @@
                 {
                     <tr>
                         <td>@abonnement.clubNaam</td>
-                        <td>TODO</td>
-                        <td>TODO</td>
+                        <td>@abonnement.seizoenVM.StartDatum.ToString("d MMMM yyyy")</td>
+                        <td>@abonnement.seizoenVM.EindDatum.ToString("d MMMM yyyy")</td>
                         <td>@abonnement.ZoneNaam</td>
                         <td>@abonnement.StoeltjeID</td>
                     </tr>

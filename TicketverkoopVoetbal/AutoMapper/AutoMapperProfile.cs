@@ -44,11 +44,10 @@ namespace TicketverkoopVoetbal.AutoMapper
 
             CreateMap<AspNetUser, AspNetUserVM>();
 
-            CreateMap<CartTicketVM, Ticket>();
 
             CreateMap<CartAbonnementVM, Abonnement>();
             CreateMap<Abonnement, CartAbonnementVM>();
-
+            CreateMap<AbonnementVM, CartAbonnementVM>();
             CreateMap<Abonnement, HistoryAbonnementVM>()
                 .ForMember(dest => dest.clubNaam,
                     opts => opts.MapFrom(
@@ -65,6 +64,8 @@ namespace TicketverkoopVoetbal.AutoMapper
 
             CreateMap<CreateStoelVM, Stoeltje>();
             CreateMap<Stoeltje, CreateStoelVM>();
+
+            CreateMap<Seizoen, SeizoenVM>();
 
             //API
             CreateMap<Hotel, HotelVM>();

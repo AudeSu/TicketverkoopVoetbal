@@ -54,7 +54,7 @@
                     </table>
                 }
 
-                @if (Model.Abonnementen != null)
+                @if (Model.Abonnementen != null && Model.Abonnementen.Any())
                 {
                     <h3 id="abonnementTitel">Abonnement</h3>
                     <table class="cart-table">
@@ -76,7 +76,7 @@
                                     <td>@item.ZoneNaam</td>
                                     <td>@item.Prijs.ToString("C")</td>
                                     <td>
-                                        <a asp-action="DeleteAbonnement" asp-route-matchId="@item.ClubId">
+                                        <a asp-action="DeleteAbonnement" asp-route-clubId="@item.ClubId">
                                             <img src="~/images/delete-icon.png" alt="Delete" />
                                         </a>
                                     </td>
@@ -89,7 +89,7 @@
                     <tfoot>
                         <tr>
                             <td colspan="6" class="total">
-                                Totaal: <span>@Model.ComputeTotalValue().ToString("C")</span>
+                                Totaal: <span>@Model.Total.ToString("C")</span>
                             </td>
                         </tr>
                     </tfoot>

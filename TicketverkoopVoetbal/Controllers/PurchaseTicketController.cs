@@ -57,7 +57,7 @@ namespace TicketverkoopVoetbal.Controllers
                 return NotFound();
             }
             var match = await _matchService.FindById(Convert.ToInt32(id));
-            if(match.Datum >= DateTime.Now.AddMonths(1))
+            if (match.Datum >= DateTime.Now.AddMonths(1))
             {
                 return View("FutureMatch");
             }

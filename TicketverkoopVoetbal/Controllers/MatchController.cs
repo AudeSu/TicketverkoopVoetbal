@@ -55,7 +55,7 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 IEnumerable<Match> matchlist;
 
-                if (entity.ClubNumber == 0)
+                if (entity.ClubID == 0)
                 {
                     // Als "Alle Clubs" geselecteerd is (waarde 0), haal alle wedstrijden op
                     matchlist = await _matchService.GetAll();
@@ -63,7 +63,7 @@ namespace TicketverkoopVoetbal.Controllers
                 else
                 {
                     // Haal wedstrijden op voor de geselecteerde club
-                    matchlist = await _matchService.FilterById(Convert.ToInt32(entity.ClubNumber));
+                    matchlist = await _matchService.FilterById(Convert.ToInt32(entity.ClubID));
                 }
 
                 var futureMatches = await _matchService.GetFutureMatches();
@@ -71,7 +71,7 @@ namespace TicketverkoopVoetbal.Controllers
                 var clubmatchVM = new ClubMatchVM
                 {
                     Matches = matchVMs,
-                    Clubs = new SelectList(await _clubService.GetAll(), "ClubId", "Naam", entity.ClubNumber)
+                    Clubs = new SelectList(await _clubService.GetAll(), "ClubId", "Naam", entity.ClubID)
                 };
 
                 return View(clubmatchVM);

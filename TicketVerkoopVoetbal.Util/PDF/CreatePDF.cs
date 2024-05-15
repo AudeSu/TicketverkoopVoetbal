@@ -63,14 +63,16 @@ namespace TicketVerkoopVoetbal.Util.PDF
             {
                 document.Add(new Paragraph("\nTickets").SetFontSize(24));
                 // Tabel tickets
-                Table tableTickets = new Table(UnitValue.CreatePercentArray(3)).UseAllAvailableWidth();
+                Table tableTickets = new Table(UnitValue.CreatePercentArray(4)).UseAllAvailableWidth();
                 tableTickets.AddHeaderCell("Thuisploeg");
                 tableTickets.AddHeaderCell("Uitploeg");
+                tableTickets.AddHeaderCell("Eigenaar");
                 tableTickets.AddHeaderCell("Prijs");
                 foreach (var ticket in tickets)
                 {
                     tableTickets.AddCell(ticket.Match.Thuisploeg.Naam);
                     tableTickets.AddCell(ticket.Match.Uitploeg.Naam);
+                    tableTickets.AddCell(ticket.FirstName + " " + ticket.LastName);
                     tableTickets.AddCell(ticket.Zone.PrijsTicket.ToString("C"));
                     totalPrice += ticket.Zone.PrijsTicket;
                 }
@@ -89,8 +91,8 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 foreach (var abonnement in abonnementen)
                 {
                     tableAbonnement.AddCell(abonnement.Club.Naam);
-                    //tableAbonnement.AddCell(abonnement.Seizoen.Startdatum.ToString("d MMMM yyyy"));
-                    //tableAbonnement.AddCell(abonnement.Seizoen.Einddatum.ToString("d MMMM yyyy"));
+                    tableAbonnement.AddCell(abonnement.Seizoen.Startdatum.ToString("d MMMM yyyy"));
+                    tableAbonnement.AddCell(abonnement.Seizoen.Einddatum.ToString("d MMMM yyyy"));
                     tableAbonnement.AddCell(abonnement.Stoeltje.Zone.PrijsAbonnement.ToString("C"));
                     totalPrice += abonnement.Stoeltje.Zone.PrijsAbonnement;
                 }
@@ -100,7 +102,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
             // Praragraaf met totaal
             Paragraph paragraph = new Paragraph("Totaal: " + totalPrice.ToString("C"))
                  .SetFont(PdfFontFactory.CreateFont(StandardFonts.HELVETICA))
-                 .SetFontSize(20)
+                 .SetFontSize(15)
                  .SetFontColor(ColorConstants.BLACK)
                  .SetTextAlignment(TextAlignment.RIGHT);
             document.Add(paragraph);
@@ -119,6 +121,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
 
                 // Ticket details
                 Cell ticketDetailsCell = new Cell()
+                    .Add(new Paragraph($"{ticket.FirstName} {ticket.LastName}").SetBold().SetFontSize(20))
                     .Add(new Paragraph($"Match: {ticket.Match.Thuisploeg.Naam.Trim()} - {ticket.Match.Uitploeg.Naam.Trim()}"))
                     .Add(new Paragraph($"Datum: {ticket.Match.Datum:d MMMM yyyy}"))
                     .Add(new Paragraph($"Startuur: {ticket.Match.Startuur:hh\\:mm}"))
