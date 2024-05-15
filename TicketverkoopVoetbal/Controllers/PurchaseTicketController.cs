@@ -90,7 +90,7 @@ namespace TicketverkoopVoetbal.Controllers
                 MatchVM matchVM = new MatchVM();
                 matchVM = _mapper.Map<MatchVM>(match);
                 ticketVM.matchVM = matchVM;
-                ticketVM.Prijs = zone.Prijs;
+                ticketVM.Prijs = zone.PrijsTicket;
                 ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
                 ticketVM.Zones =
                 new SelectList(await _zoneService.FilterById(Convert.ToInt16(match.StadionId)), "ZoneId", "Naam", ticketVM.ZoneId);

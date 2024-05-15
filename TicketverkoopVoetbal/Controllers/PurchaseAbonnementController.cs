@@ -62,7 +62,7 @@ namespace TicketverkoopVoetbal.Controllers
                     ZoneId = abonnementVM.ZoneId,
                     clubVM = _mapper.Map<ClubVM>(club),
                     ZoneNaam = zone.Naam,
-                    Prijs = zone.Prijs,
+                    Prijs = zone.PrijsTicket,
                     DateCreated = DateTime.Now
                 };
 

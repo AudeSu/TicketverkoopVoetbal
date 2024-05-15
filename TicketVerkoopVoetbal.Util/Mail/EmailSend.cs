@@ -41,8 +41,8 @@ namespace TicketVerkoopVoetbal.Util.Mail
             mail.To.Add(new MailAddress(email));
             mail.From = new
             MailAddress("tickets.voetbal.league@gmail.com");
-            mail.Subject = "Tickets";
-            mail.Body = "Bedankt om te bestellen op onze website u vind de ticket(s) in de onderstaande bijlage(n)";
+            mail.Subject = "Factuur Ticketverkoop Pro League";
+            mail.Body = "Bedankt om te bestellen op onze website u vind de factuur en tickets in de onderstaande bijlage";
             mail.Attachments.Add(new Attachment(attachmentStream, attachmentName));
             mail.IsBodyHtml = true;
             try
