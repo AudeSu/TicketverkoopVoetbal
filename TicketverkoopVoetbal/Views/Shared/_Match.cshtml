@@ -22,7 +22,7 @@
             </div> 
         </div>
         <div class="col-md-2">
-            @if (Model.Datum.HasValue && (Model.Datum.Value - DateTime.Today).TotalDays <= 30)
+            @if (Model.Datum.HasValue && Model.Datum.Value <= DateTime.Today.AddMonths(1))
             {
                 <div class="add-to-cart">
                     <a asp-controller="PurchaseTicket" asp-action="Index" asp-route-id="@Model.MatchId">

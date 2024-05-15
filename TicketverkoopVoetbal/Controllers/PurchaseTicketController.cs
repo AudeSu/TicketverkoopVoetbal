@@ -55,6 +55,15 @@ namespace TicketverkoopVoetbal.Controllers
                 return NotFound();
             }
             var match = await _matchService.FindById(Convert.ToInt32(id));
+            if(match.Datum >= DateTime.Now.AddMonths(1))
+            {
+                return View("FutureMatch");
+            }
+
+            if (match.Datum < DateTime.Now)
+            {
+                return View("PastMatch");
+            }
             MatchVM matchVM = new MatchVM();
             matchVM = _mapper.Map<MatchVM>(match);
             if (match == null)
@@ -106,7 +115,7 @@ namespace TicketverkoopVoetbal.Controllers
                 ticketVM.VrijePlaatsen = VrijePlaatsen(ticketVM);
                 if (ticketVM.Aantal != 0)
                 {
-                    if(VrijePlaatsen(ticketVM) < ticketVM.Aantal)
+                    if (VrijePlaatsen(ticketVM) < ticketVM.Aantal)
                     {
                         TempData["ErrorVolzetMessage"] = $"Er zijn nog maar {ticketVM.VrijePlaatsen} plaatsen beschikbaar in deze zone";
 
@@ -245,7 +254,19 @@ namespace TicketverkoopVoetbal.Controllers
             List<TicketNameVM> nameVMs = new List<TicketNameVM>();
             for (int i = 0; i < aantal; i++)
             {
-                nameVMs.Add(new TicketNameVM());
+                if (i != 0)
+                {
+                    nameVMs.Add(new TicketNameVM());
+                }
+                else
+                {
+                    nameVMs.Add(
+                                 new TicketNameVM
+                                 {
+                                     FirstName = _userManager.GetUserAsync(User).Result.FirstName,
+                                     LastName = _userManager.GetUserAsync(User).Result.LastName
+                                 });
+                }
             }
 
             return View(nameVMs);
@@ -294,7 +315,8 @@ namespace TicketverkoopVoetbal.Controllers
                             matchVM = _mapper.Map<MatchVM>(match),
                             ZoneID = ticketVM.ZoneId,
                             ZoneNaam = zone.Naam,
-                            Eigenaar = nameVMs[i].Name,
+                            FirstName = nameVMs[i].FirstName,
+                            LastName = nameVMs[i].LastName,
                             Prijs = ticketVM.Prijs,
                             DateCreated = DateTime.Now
 

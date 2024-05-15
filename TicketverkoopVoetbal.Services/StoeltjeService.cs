@@ -53,5 +53,10 @@ namespace TicketverkoopVoetbal.Services
         {
             return await _stoeltjeDAO.GetTakenSeatsByMatchID(MatchID,ZoneID);
         }
+
+        public async Task<Stoeltje?> GetEmptySeat(int MatchID, int ZoneID)
+        {
+            return await _stoeltjeDAO.GetEmptySeat(MatchID, ZoneID);
+        }
     }
 }
