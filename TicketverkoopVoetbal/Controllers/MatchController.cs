@@ -24,16 +24,23 @@ namespace TicketverkoopVoetbal.Controllers
 
         public async Task<ActionResult> Index()
         {
-            var matchlist = await _matchService.GetAll();
-            var matchVMs = GetFutureMatches(matchlist);
-
-            var clubmatchVM = new ClubMatchVM
+            try
             {
-                Matches = matchVMs,
-                Clubs = new SelectList(await _clubService.GetAll(), "ClubId", "Naam")
-            };
+                var futureMatches = await _matchService.GetFutureMatches();
+                var matchVMs = _mapper.Map<List<MatchVM>>(futureMatches);
+                var clubmatchVM = new ClubMatchVM
+                {
+                    Matches = matchVMs,
+                    Clubs = new SelectList(await _clubService.GetAll(), "ClubId", "Naam")
+                };
 
-            return View(clubmatchVM);
+                return View(clubmatchVM);
+            }
+            catch (Exception ex)
+            {
+                Debug.WriteLine("Error: " + ex.Message);
+                return StatusCode(500);
+            }
         }
 
         [HttpPost]
@@ -43,9 +50,11 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return NotFound();
             }
+
             try
             {
                 IEnumerable<Match> matchlist;
+
                 if (entity.ClubNumber == 0)
                 {
                     // Als "Alle Clubs" geselecteerd is (waarde 0), haal alle wedstrijden op
@@ -57,8 +66,8 @@ namespace TicketverkoopVoetbal.Controllers
                     matchlist = await _matchService.FilterById(Convert.ToInt32(entity.ClubNumber));
                 }
 
-                var matchVMs = GetFutureMatches(matchlist);
-
+                var futureMatches = await _matchService.GetFutureMatches();
+                var matchVMs = _mapper.Map<List<MatchVM>>(futureMatches);
                 var clubmatchVM = new ClubMatchVM
                 {
                     Matches = matchVMs,
@@ -70,25 +79,8 @@ namespace TicketverkoopVoetbal.Controllers
             catch (Exception ex)
             {
                 Debug.WriteLine("Error: " + ex.Message);
+                return StatusCode(500);
             }
-
-            return View(entity);
-        }
-
-        // verzetten naar IMatchService
-        private List<MatchVM> GetFutureMatches(IEnumerable<Match> matches)
-        {
-            var currentDate = DateTime.Today;
-
-            var futureMatches = matches
-                .Where(m => m.Datum >= currentDate)
-                .OrderBy(m => m.Datum)
-                .ThenBy(m => m.Startuur)
-                .ToList();
-
-            var matchVMs = _mapper.Map<List<MatchVM>>(futureMatches);
-
-            return matchVMs;
         }
     }
 }
