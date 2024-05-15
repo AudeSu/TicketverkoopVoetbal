@@ -125,6 +125,7 @@ using iText.Kernel.Font;
 using iText.Kernel.Pdf;
 using iText.Kernel.Pdf.Canvas.Draw;
 using iText.Layout;
+using iText.Layout.Borders;
 using iText.Layout.Element;
 using iText.Layout.Properties;
 using QRCoder;
@@ -211,21 +212,33 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 img.SetHorizontalAlignment(HorizontalAlignment.CENTER);
                 document.Add(img);
 
-                document.Add(new Paragraph($"Match: {ticket.Match.Thuisploeg.Naam.Trim()} - {ticket.Match.Uitploeg.Naam.Trim()}"));
-                document.Add(new Paragraph($"Datum: {ticket.Match.Datum:d MMMM yyyy}"));
-                document.Add(new Paragraph($"Startuur: {ticket.Match.Startuur:hh\\:mm}"));
-                document.Add(new Paragraph($"Stadion: {ticket.Match.Stadion.Naam}"));
-                document.Add(new Paragraph($"Zone: {ticket.Zone.Naam}"));
-                document.Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"));
+                // Table for ticket details and QR code
+                Table ticketTable = new Table(UnitValue.CreatePercentArray(new float[] { 3, 1 })).UseAllAvailableWidth();
+
+                // Ticket details
+                Cell ticketDetailsCell = new Cell()
+                    .Add(new Paragraph($"Match: {ticket.Match.Thuisploeg.Naam.Trim()} - {ticket.Match.Uitploeg.Naam.Trim()}"))
+                    .Add(new Paragraph($"Datum: {ticket.Match.Datum:d MMMM yyyy}"))
+                    .Add(new Paragraph($"Startuur: {ticket.Match.Startuur:hh\\:mm}"))
+                    .Add(new Paragraph($"Stadion: {ticket.Match.Stadion.Naam}"))
+                    .Add(new Paragraph($"Zone: {ticket.Zone.Naam}"))
+                    .Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"))
+                    .SetBorder(Border.NO_BORDER);
+
+                ticketTable.AddCell(ticketDetailsCell);
 
                 // Voeg QR-code toe met ticketinformatie
-                string qrContent = "https://example.com";
+                string qrContent = "https://ticketverkoop.azurewebsites.net/";
                 QRCodeGenerator qrGenerator = new QRCodeGenerator();
                 QRCodeData qrCodeData = qrGenerator.CreateQrCode(qrContent, QRCodeGenerator.ECCLevel.Q);
                 QRCode qrCode = new QRCode(qrCodeData);
                 Bitmap qrCodeImage = qrCode.GetGraphic(5);
                 iText.Layout.Element.Image qrCodeImageElement = new iText.Layout.Element.Image(ImageDataFactory.Create(BitmapToBytes(qrCodeImage))).SetHorizontalAlignment(HorizontalAlignment.CENTER);
-                document.Add(qrCodeImageElement);
+                Cell qrCodeCell = new Cell().Add(qrCodeImageElement).SetBorder(Border.NO_BORDER);
+
+                ticketTable.AddCell(qrCodeCell);
+
+                document.Add(ticketTable);
             }
 
             document.Close();
