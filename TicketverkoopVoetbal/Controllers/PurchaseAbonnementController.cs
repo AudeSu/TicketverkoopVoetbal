@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 using System.Diagnostics;
 using TicketverkoopVoetbal.Areas.Data;
 using TicketverkoopVoetbal.Domains.Entities;
@@ -93,6 +94,7 @@ namespace TicketverkoopVoetbal.Controllers
                 shopping.Abonnement = abonnement;
 
                 HttpContext.Session.SetObject("ShoppingCart", shopping);
+
             }
             return RedirectToAction("Index", "ShoppingCart");
         }

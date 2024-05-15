@@ -115,8 +115,9 @@ namespace TicketverkoopVoetbal.Controllers
                     }
 
                     _emailSend.SendEmailAttachmentAsync(currentUser.Email, pdfDocument, pdfFileName);
-                    HttpContext.Session.Remove("ShoppingCart");
+                
                 }
+                HttpContext.Session.Remove("ShoppingCart");
                 return View("Thanks");
             }
             catch (Exception ex)
