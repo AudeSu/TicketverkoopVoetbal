@@ -1,5 +1,9 @@
-﻿@{
+﻿@using Microsoft.Extensions.Configuration
+@inject IConfiguration Configuration
+
+@{
     ViewData["Title"] = "Thanks";
+    string contactEmail = Configuration["Contact"]!;
 }
 
 <link href="~/css/tablestyles.css" rel="stylesheet" />
@@ -8,6 +12,6 @@
     <h1>Bedankt voor uw bestelling!</h1>
     <p>Beste klant, tickets zijn succesvol naar uw e-mailadres verzonden.</p>
     <p>Controleer alstublieft uw inbox (en eventueel spam-map) voor uw tickets. Veel plezier op het evenement!</p>
-    <p>Neem <a href="mailto:tickets.voetbal.league@gmail.com">contact met ons op</a> als u nog vragen heeft.</p>
+    <p>Neem <a href="mailto:@contactEmail">contact met ons op</a> als u nog vragen heeft.</p>
 </div>
 
