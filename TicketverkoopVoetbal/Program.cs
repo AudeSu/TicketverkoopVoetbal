@@ -13,6 +13,7 @@ using TicketVerkoopVoetbal.Util.PDF.Interfaces;
 using TicketVerkoopVoetbal.Util.PDF;
 using Microsoft.AspNetCore.Mvc.Razor;
 using TicketverkoopVoetbal.Areas.Data;
+using Microsoft.AspNetCore.Identity;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -46,7 +47,7 @@ builder.Services.Configure<RequestLocalizationOptions>(options => {
 
 // Email
 builder.Services.Configure<EmailSettings>(builder.Configuration.GetSection("EmailSettings"));
-builder.Services.AddSingleton<IEmailSend, EmailSend>();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 // Swagger
 builder.Services.AddSwaggerGen(c =>

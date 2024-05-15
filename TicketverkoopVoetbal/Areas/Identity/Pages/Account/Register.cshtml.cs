@@ -30,14 +30,14 @@ namespace TicketverkoopVoetbal.Areas.Identity.Pages.Account
         private readonly IUserStore<ApplicationUser> _userStore;
         private readonly IUserEmailStore<ApplicationUser> _emailStore;
         private readonly ILogger<RegisterModel> _logger;
-        private readonly IEmailSend _emailSender;
+        private readonly TicketVerkoopVoetbal.Util.Mail.Interfaces.IEmailSender _emailSender;
 
         public RegisterModel(
             UserManager<ApplicationUser> userManager,
             IUserStore<ApplicationUser> userStore,
             SignInManager<ApplicationUser> signInManager,
             ILogger<RegisterModel> logger,
-            IEmailSend emailSender)
+            TicketVerkoopVoetbal.Util.Mail.Interfaces.IEmailSender emailSender)
         {
             _userManager = userManager;
             _userStore = userStore;
