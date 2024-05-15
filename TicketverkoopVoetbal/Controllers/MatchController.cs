@@ -44,7 +44,7 @@ namespace TicketverkoopVoetbal.Controllers
             }
             try
             {
-                var matchlist = await _matchService.FilterById(Convert.ToInt32(entity.ClubNumber));
+                IEnumerable<Match> matchlist;
                 var matchVMs = GetFutureMatches(matchlist);
 
                 var clubmatchVM = new ClubMatchVM
