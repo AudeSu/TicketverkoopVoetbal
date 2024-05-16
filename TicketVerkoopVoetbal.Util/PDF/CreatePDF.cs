@@ -54,9 +54,21 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 .Add(new Text("Naar: " + user.FirstName + " " + user.LastName).SetBold().SetFontSize(20))
                 .Add("\nEmail: " + user.Email)
                 .Add("\nFactuurdatum: " + DateTime.Now.ToShortDateString())
-                .Add("\nFactuurnummer: " + DateTime.Now.ToString("MMddHHmmss"))
-                .Add(new Text("\n\nInformatie over de tickets:").SetBold())
-                .Add("\nBedankt voor uw aankoop van de tickets! Om toegang te krijgen tot het stadion, raden we u aan om dit document af te drukken. Bij uw bezoek aan het stadion, laat de QR-code samen met uw identiteitsbewijs zien aan het toegangspersoneel. Op deze manier wordt u probleemloos toegelaten tot de wedstrijd."));
+                .Add("\nFactuurnummer: " + DateTime.Now.ToString("MMddHHmmss"));
+
+            if (tickets.Count > 0)
+            {
+                document.Add(new Paragraph()
+                    .Add(new Text("\n\nInformatie over de ticket(s):").SetBold())
+                    .Add("\nBedankt voor uw aankoop van de ticket(s)! Om toegang te krijgen tot het stadion, raden we u aan om dit document af te drukken. Bij uw bezoek aan het stadion, laat de QR-code samen met uw identiteitsbewijs zien aan het toegangspersoneel. Op deze manier wordt u probleemloos toegelaten tot de wedstrijd."));
+            }
+
+            if (abonnementen.Count > 0)
+            {
+                document.Add(new Paragraph()
+                    .Add(new Text("\n\nInformatie over je abonnement(en):").SetBold())
+                    .Add("\nBedankt voor uw aankoop van je abonnement(en)! Door de aankoop van je abonnement van je club heb je toegang voor tot het stadion van alle thuismatchen."));
+            }
 
             decimal totalPrice = 0;
             if (tickets.Count > 0)
@@ -122,7 +134,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 // Ticket details
                 Cell ticketDetailsCell = new Cell()
                     .Add(new Paragraph($"{ticket.FirstName} {ticket.LastName}").SetBold().SetFontSize(20))
-                    .Add(new Paragraph($"Match: {ticket.Match.Thuisploeg.Naam.Trim()} - {ticket.Match.Uitploeg.Naam.Trim()}"))
+                    .Add(new Paragraph($"{ticket.Match.Thuisploeg.Naam.Trim()} - {ticket.Match.Uitploeg.Naam.Trim()}").SetFontSize(16).SetWordSpacing(2))
                     .Add(new Paragraph($"Datum: {ticket.Match.Datum:d MMMM yyyy}"))
                     .Add(new Paragraph($"Startuur: {ticket.Match.Startuur:hh\\:mm}"))
                     .Add(new Paragraph($"Stadion: {ticket.Match.Stadion.Naam}"))
@@ -142,6 +154,10 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 Cell qrCodeCell = new Cell().Add(qrCodeImageElement).SetBorder(Border.NO_BORDER);
 
                 ticketTable.AddCell(qrCodeCell);
+
+                document.Add(new Paragraph()
+                    .Add(new Text("\n\nInformatie over de tickets:").SetBold())
+                    .Add("\nBedankt voor uw aankoop van de tickets! Om toegang te krijgen tot het stadion, raden we u aan om dit document af te drukken. Bij uw bezoek aan het stadion, laat de QR-code samen met uw identiteitsbewijs zien aan het toegangspersoneel. Op deze manier wordt u probleemloos toegelaten tot de wedstrijd."));
 
                 document.Add(ticketTable);
             }
