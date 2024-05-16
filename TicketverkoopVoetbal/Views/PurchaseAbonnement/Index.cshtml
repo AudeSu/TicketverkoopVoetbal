@@ -46,12 +46,6 @@
                         </div>
                     }
                 </div>
-                @if (TempData["ErrorVolzetMessage"] != null)
-                {
-                    <div class="alert alert-danger mt-2" role="alert">
-                        @TempData["ErrorVolzetMessage"]
-                    </div>
-                }
                 <br />
                 <button asp-controller="PurchaseAbonnement" asp-action="index" type="submit" class="btn btn-primary">Bevestig</button>
             </form>

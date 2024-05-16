@@ -125,7 +125,7 @@ namespace TicketverkoopVoetbal.Repositories
                 var currentDate = DateTime.Today;
 
                 return await _dbContext.Matches
-                    .Where(m => m.Datum >= currentDate)
+                    .Where(m => (m.Datum >= currentDate && m.Startuur > currentDate.TimeOfDay))
                     .OrderBy(m => m.Datum)
                     .ThenBy(m => m.Startuur)
                     .Include(m => m.Thuisploeg)

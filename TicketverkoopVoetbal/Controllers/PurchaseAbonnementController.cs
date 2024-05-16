@@ -48,6 +48,10 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return NotFound();
             }
+            //if (CheckFullMatch(club.ClubId, currentSeizoen))
+            //{
+            //    return View("FullMatch");
+            //}
             if (currentSeizoen == null)
             {
                 return View("NoSeizoen");
@@ -81,6 +85,7 @@ namespace TicketverkoopVoetbal.Controllers
                 if (VrijePlaatsen(abonnementVM))
                 {
                     abonnementVM.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam", abonnementVM.ZoneId);
+                    abonnementVM.Seizoen = _mapper.Map<SeizoenVM>(_seizoenService.GetNextSeizoen().Result);
                     TempData["ErrorVolzetMessage"] = $"Er zijn geen plaatsen meer beschikbaar in deze zone";
                     return View(abonnementVM);
                 }
@@ -157,6 +162,44 @@ namespace TicketverkoopVoetbal.Controllers
 
             return isFull;
         }
+
+
+        //public Boolean CheckFullMatch(int id, Seizoen currentSeizoen)
+        //{
+        //    Boolean isFull = false;
+        //    var matchList = _matchService.FindByHomeClub(id).Result;
+        //    foreach (var match in matchList)
+        //    {
+        //        if (match.SeizoenId == currentSeizoen.SeizoenId)
+        //        {
+        //            int aantalVolleZones = 0;
+        //            var zones = _zoneService.FilterById(match.Stadion.StadionId).Result;
+        //            if (zones.Any())
+        //            {
+        //                foreach (var zone in zones)
+        //                {
+
+        //                    int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(id, zone.ZoneId, currentSeizoen.SeizoenId).Result.Count();
+        //                    int aantalTicketPlaatsen = _stoelService.GetTakenSeatsByMatchID(match.MatchId, zone.ZoneId).Result.Count();
+        //                    var tiket = _stoelService.GetTakenSeatsByMatchID(match.MatchId, zone.ZoneId).Result;
+        //                    if (zone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
+        //                    {
+        //                        aantalVolleZones++;
+        //                    }
+        //                }
+
+
+        //                if (aantalVolleZones == zones.Count())
+        //                {
+        //                    return isFull = true;
+        //                }
+        //            }
+
+
+        //        }
+        //    }
+        //    return isFull;
+        //}
 
         public Boolean checkShoppingCart(CartAbonnementVM abonnement)
         {
