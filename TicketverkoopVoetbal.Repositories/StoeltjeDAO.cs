@@ -89,7 +89,7 @@ namespace TicketverkoopVoetbal.Repositories
             {
 
                 return await _dbContext.Stoeltjes
-                    .Where(b => b.ZoneId == ZoneID && b.ClubId== ClubID && b.MatchId == null && b.Bezet == true )
+                    .Where(b => b.ZoneId == ZoneID && b.ClubId== ClubID && b.MatchId == null && b.Bezet == true)
                     .ToListAsync();
             }
             catch (Exception)
@@ -105,7 +105,7 @@ namespace TicketverkoopVoetbal.Repositories
             {
 
                 return await _dbContext.Stoeltjes
-                    .Where(b => b.ZoneId == ZoneID &&  b.MatchId == MatchID && b.Bezet == true )
+                    .Where(b => b.ZoneId == ZoneID &&  b.MatchId == MatchID && b.Bezet == true)
                     .ToListAsync();
             }
             catch (Exception)

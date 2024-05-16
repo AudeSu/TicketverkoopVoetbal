@@ -14,4 +14,6 @@ public partial class Seizoen
     public virtual ICollection<Abonnement> Abonnements { get; set; } = new List<Abonnement>();
 
     public virtual ICollection<Match> Matches { get; set; } = new List<Match>();
+
+    public virtual ICollection<Stoeltje> Stoeltjes { get; set; } = new List<Stoeltje>();
 }
