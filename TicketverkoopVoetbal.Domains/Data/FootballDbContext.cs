@@ -234,16 +234,22 @@ public partial class FootballDbContext : DbContext
             entity.Property(e => e.StoeltjeId).HasColumnName("StoeltjeID");
             entity.Property(e => e.ClubId).HasColumnName("ClubID");
             entity.Property(e => e.MatchId).HasColumnName("MatchID");
+            entity.Property(e => e.SeizoenId).HasColumnName("SeizoenID");
             entity.Property(e => e.StadionId).HasColumnName("StadionID");
             entity.Property(e => e.ZoneId).HasColumnName("ZoneID");
 
             entity.HasOne(d => d.Club).WithMany(p => p.Stoeltjes)
                 .HasForeignKey(d => d.ClubId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Stoeltje_Club");
 
             entity.HasOne(d => d.Match).WithMany(p => p.Stoeltjes)
                 .HasForeignKey(d => d.MatchId)
                 .HasConstraintName("FK_Stoeltje_Match");
+
+            entity.HasOne(d => d.Seizoen).WithMany(p => p.Stoeltjes)
+                .HasForeignKey(d => d.SeizoenId)
+                .HasConstraintName("FK_Stoeltje_Seizoen");
 
             entity.HasOne(d => d.Zone).WithMany(p => p.Stoeltjes)
                 .HasForeignKey(d => d.ZoneId)

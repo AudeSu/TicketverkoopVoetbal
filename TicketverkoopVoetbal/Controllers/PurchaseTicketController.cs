@@ -129,7 +129,7 @@ namespace TicketverkoopVoetbal.Controllers
 
                         return View(ticketVM);
                     }
-                    var aantalCartTickets = checkShoppingCart(ticketVM);
+                    var aantalCartTickets = CheckShoppingCart(ticketVM);
                     if (aantalCartTickets + ticketVM.Aantal > MaxTickets)
                     {
                         TempData["ErrorTeveelTickets"] = $"U heeft al {aantalCartTickets} in u shoppingCart en kunt dus nog maar {MaxTickets-aantalCartTickets} tickets kopen.";
@@ -253,7 +253,7 @@ namespace TicketverkoopVoetbal.Controllers
 
         }
 
-        public int checkShoppingCart(SelectTicketVM ticketVM)
+        public int CheckShoppingCart(SelectTicketVM ticketVM)
         {
             var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             int aantalTickets = 0;

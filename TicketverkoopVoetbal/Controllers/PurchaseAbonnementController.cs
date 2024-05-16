@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
@@ -41,6 +42,7 @@ namespace TicketverkoopVoetbal.Controllers
             _mapper = mapper;
         }
 
+        [Authorize]
         public async Task<IActionResult> Index(int? id)
         {
             var club = await _clubService.FindById(Convert.ToInt32(id));
@@ -203,7 +205,7 @@ namespace TicketverkoopVoetbal.Controllers
         //    return isFull;
         //}
 
-        public Boolean checkShoppingCart(CartAbonnementVM abonnement)
+        public Boolean CheckShoppingCart(CartAbonnementVM abonnement)
         {
             var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             if (shoppingCart != null)

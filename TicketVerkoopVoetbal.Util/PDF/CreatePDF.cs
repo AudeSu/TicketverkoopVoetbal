@@ -155,11 +155,11 @@ namespace TicketVerkoopVoetbal.Util.PDF
 
                 ticketTable.AddCell(qrCodeCell);
 
+                document.Add(ticketTable);
+
                 document.Add(new Paragraph()
                     .Add(new Text("\n\nInformatie over de tickets:").SetBold())
                     .Add("\nBedankt voor uw aankoop van de tickets! Om toegang te krijgen tot het stadion, raden we u aan om dit document af te drukken. Bij uw bezoek aan het stadion, laat de QR-code samen met uw identiteitsbewijs zien aan het toegangspersoneel. Op deze manier wordt u probleemloos toegelaten tot de wedstrijd."));
-
-                document.Add(ticketTable);
             }
 
             document.Close();
