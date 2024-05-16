@@ -62,11 +62,11 @@ namespace TicketverkoopVoetbal.Controllers
                 return View("FutureMatch");
             }
 
-            if (match.Datum < DateTime.Now)
+            if (match.Datum < DateTime.Now && match.Startuur < DateTime.Now.TimeOfDay)
             {
                 return View("PastMatch");
             }
-            MatchVM matchVM = new MatchVM();
+            MatchVM matchVM = new();
             matchVM = _mapper.Map<MatchVM>(match);
             if (match == null)
             {
@@ -94,6 +94,7 @@ namespace TicketverkoopVoetbal.Controllers
             return View(ticketVM);
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public async Task<IActionResult> Index(SelectTicketVM ticketVM)
         {

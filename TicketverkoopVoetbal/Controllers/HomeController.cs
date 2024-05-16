@@ -10,6 +10,7 @@ namespace TicketverkoopVoetbal.Controllers
             return View();
         }
 
+        [ValidateAntiForgeryToken]
         [HttpPost]
         public IActionResult SetAppLanguage(string lang, string returnUrl)
         {

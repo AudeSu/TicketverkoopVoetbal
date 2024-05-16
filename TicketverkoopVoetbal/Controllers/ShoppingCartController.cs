@@ -153,7 +153,6 @@ namespace TicketverkoopVoetbal.Controllers
 
         private async Task CreateAbonnement(List<CartAbonnementVM> abonnementList)
         {
-
             for (int i = 0; i < abonnementList.Count; i++)
             {
                 var currentAbonnement = abonnementList[i];
@@ -170,7 +169,6 @@ namespace TicketverkoopVoetbal.Controllers
                 currentAbonnement.StoeltjeId = stoel.StoeltjeId;
                 //voorlopig hardcoded want ik weet niet hoe
                 currentAbonnement.SeizoenID = _seizoenService.GetNextSeizoen().Result.SeizoenId;
-
 
                 Abonnement abonnement = _mapper.Map<Abonnement>(currentAbonnement);
                 await _abonnementService.Add(abonnement);
