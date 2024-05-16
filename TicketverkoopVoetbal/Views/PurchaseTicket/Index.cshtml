@@ -90,6 +90,12 @@
                         @TempData["ErrorTeveelTickets"]
                     </div>
                 }
+                @if (TempData["ErrorDoubleBooked"] != null)
+                {
+                    <div class="alert alert-danger mt-2" role="alert">
+                        @TempData["ErrorDoubleBooked"]
+                    </div>
+                }
                 <br/>
                 <button type="submit" class="btn btn-primary">Bevestig</button>
             </form>
