@@ -95,6 +95,11 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return View("HasAbonnement");
             }
+            if (CheckShoppingCartDate(ticketVM))
+            {
+                TempData["ErrorDoubleBooked"] = $"U heeft al tickets op deze match in u ShoppingCart staan, u kunt maar 1 match per dag";
+                return View(ticketVM);
+            }
 
             return View(ticketVM);
         }
@@ -129,10 +134,15 @@ namespace TicketverkoopVoetbal.Controllers
 
                         return View(ticketVM);
                     }
-                    var aantalCartTickets = checkShoppingCart(ticketVM);
+                    var aantalCartTickets = CheckShoppingCart(ticketVM);
                     if (aantalCartTickets + ticketVM.Aantal > MaxTickets)
                     {
                         TempData["ErrorTeveelTickets"] = $"U heeft al {aantalCartTickets} in u shoppingCart en kunt dus nog maar {MaxTickets-aantalCartTickets} tickets kopen.";
+                        return View(ticketVM);
+                    }
+                    if (CheckShoppingCartDate(ticketVM))
+                    {
+                        TempData["ErrorDoubleBooked"] = $"U heeft al tickets op deze dag in u ShoppingCart staan.";
                         return View(ticketVM);
                     }
 
@@ -194,6 +204,8 @@ namespace TicketverkoopVoetbal.Controllers
         }
 
 
+
+
         public Boolean CheckAbonnement(SelectTicketVM ticketVM)
         {
             var hasAbonnement = false;
@@ -253,7 +265,7 @@ namespace TicketverkoopVoetbal.Controllers
 
         }
 
-        public int checkShoppingCart(SelectTicketVM ticketVM)
+        public int CheckShoppingCart(SelectTicketVM ticketVM)
         {
             var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             int aantalTickets = 0;
@@ -274,6 +286,27 @@ namespace TicketverkoopVoetbal.Controllers
             return aantalTickets;
         }
 
+        public Boolean CheckShoppingCartDate(SelectTicketVM ticketVM)
+        {
+            var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            Boolean DoubleBooked = false;
+            if (shoppingCart != null)
+            {
+                if (shoppingCart.Carts != null)
+                {
+                    foreach (var item in shoppingCart.Carts)
+                    {
+                        var currentmatch = _matchService.FindById(item.MatchID).Result;
+                        if (item.MatchID != ticketVM.MatchId && currentmatch.Datum == ticketVM.matchVM.Datum)
+                        {
+                            return DoubleBooked = true;
+                        }
+                    }
+                }
+            }
+
+            return DoubleBooked;
+        }
 
         public int VrijePlaatsen(SelectTicketVM ticketVM)
         {
