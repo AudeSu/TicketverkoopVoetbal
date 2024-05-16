@@ -10,8 +10,8 @@ namespace TicketverkoopVoetbal.Controllers
             return View();
         }
 
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public IActionResult SetAppLanguage(string lang, string returnUrl)
         {
             Response.Cookies.Append(

@@ -69,8 +69,8 @@ namespace TicketverkoopVoetbal.Controllers
             return View(abonnement);
         }
 
-        [ValidateAntiForgeryToken]
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(AbonnementVM abonnementVM)
         {
             if (abonnementVM == null)
