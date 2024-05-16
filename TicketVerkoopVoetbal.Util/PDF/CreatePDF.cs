@@ -54,7 +54,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
                 .Add(new Text("Naar: " + user.FirstName + " " + user.LastName).SetBold().SetFontSize(20))
                 .Add("\nEmail: " + user.Email)
                 .Add("\nFactuurdatum: " + DateTime.Now.ToShortDateString())
-                .Add("\nFactuurnummer: " + DateTime.Now.ToString("MMddHHmmss"));
+                .Add("\nFactuurnummer: " + DateTime.Now.ToString("MMddHHmmss")));
 
             if (tickets.Count > 0)
             {
