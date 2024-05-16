@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
-using Microsoft.IdentityModel.Tokens;
 using System.Diagnostics;
 using TicketverkoopVoetbal.Domains.Entities;
 using TicketverkoopVoetbal.Services.Interfaces;
@@ -44,6 +43,7 @@ namespace TicketverkoopVoetbal.Controllers
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(ClubMatchVM entity)
         {
             if (entity == null)
@@ -57,14 +57,13 @@ namespace TicketverkoopVoetbal.Controllers
 
                 if (entity.ClubID == 0)
                 {
-                    // Als "Alle Clubs" geselecteerd is (waarde 0), haal alle wedstrijden op
                     matchlist = await _matchService.GetFutureMatches();
                 }
                 else
                 {
-                    // Haal wedstrijden op voor de geselecteerde club
                     matchlist = await _matchService.FilterById(Convert.ToInt32(entity.ClubID));
                 }
+
                 var matchVMs = _mapper.Map<List<MatchVM>>(matchlist);
                 var clubmatchVM = new ClubMatchVM
                 {

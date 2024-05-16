@@ -40,6 +40,7 @@ namespace TicketverkoopVoetbal.Controllers
             _userManager = userManager;
             _mapper = mapper;
         }
+
         public async Task<IActionResult> Index(int? id)
         {
             var club = await _clubService.FindById(Convert.ToInt32(id));
@@ -60,17 +61,20 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return View("HasAbonnement");
             }
-            AbonnementVM abonnement = new AbonnementVM();
-            abonnement.ClubId = club.ClubId;
-            abonnement.StadionNaam = club.Thuisstadion.Naam;
-            abonnement.Naam = club.Naam;
-            abonnement.SeizoenId = currentSeizoen.SeizoenId;
-            abonnement.Seizoen = _mapper.Map<SeizoenVM>(currentSeizoen);
-            abonnement.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam");
+            AbonnementVM abonnement = new()
+            {
+                ClubId = club.ClubId,
+                StadionNaam = club.Thuisstadion.Naam,
+                Naam = club.Naam,
+                SeizoenId = currentSeizoen.SeizoenId,
+                Seizoen = _mapper.Map<SeizoenVM>(currentSeizoen),
+                Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam")
+            };
             return View(abonnement);
         }
 
         [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Index(AbonnementVM abonnementVM)
         {
             if (abonnementVM == null)
@@ -97,7 +101,7 @@ namespace TicketverkoopVoetbal.Controllers
                     abonnement.DateCreated = DateTime.Now;
                 };
 
-                if (checkShoppingCart(abonnement))
+                if (CheckShoppingCart(abonnement))
                 {
                     return View("DoubleBooked");
                 }
@@ -159,10 +163,8 @@ namespace TicketverkoopVoetbal.Controllers
                 }
             }
 
-
             return isFull;
         }
-
 
         //public Boolean CheckFullMatch(int id, Seizoen currentSeizoen)
         //{

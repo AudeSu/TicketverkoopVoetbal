@@ -27,7 +27,7 @@ namespace TicketverkoopVoetbal.Controllers
             ISeizoenService<Seizoen> seizoenservice,
             IMapper mapper,
             UserManager<ApplicationUser> userManager
-            )
+        )
         {
             _ticketService = ticketservice;
             _abonnementService = abonnementservice;
@@ -46,17 +46,19 @@ namespace TicketverkoopVoetbal.Controllers
                 var currentUserID = _userManager.GetUserId(User);
                 var ticketList = await _ticketService.FindByStringId(currentUserID);
                 var AbonnementList = await _abonnementService.FindByStringId(currentUserID);
-                HistoryVM historyVM = new HistoryVM();
-                historyVM.TicketVMs = _mapper.Map<List<TicketVM>>(ticketList);
-                historyVM.AbonnementVMs = _mapper.Map<List<HistoryAbonnementVM>>(AbonnementList);
-                // Sorteer TicketVMs op basis van de Datum van de wedstrijd
+
+                HistoryVM historyVM = new()
+                {
+                    TicketVMs = _mapper.Map<List<TicketVM>>(ticketList),
+                    AbonnementVMs = _mapper.Map<List<HistoryAbonnementVM>>(AbonnementList)
+                };
                 historyVM.TicketVMs.Sort((t1, t2) => DateTime.Compare(t1.Datum.GetValueOrDefault(), t2.Datum.GetValueOrDefault()));
                 foreach (var item in historyVM.AbonnementVMs)
                 {
                     var seizoen = await _seizoenService.FindById(item.SeizoenID);
                     item.seizoenVM = _mapper.Map<SeizoenVM>(seizoen);
-                    item.ZoneNaam = _stoelService.FindById(item.StoeltjeID).Result.Zone.Naam;
-
+                    var stoel = await _stoelService.FindById(item.StoeltjeID);
+                    item.ZoneNaam = stoel!.Zone.Naam;
                 }
                 foreach (var item in historyVM.TicketVMs)
                 {
@@ -73,15 +75,15 @@ namespace TicketverkoopVoetbal.Controllers
 
         public async Task<IActionResult> DeleteTicket(int ticketID)
         {
-            if (ticketID == null)
+            var ticket = await _ticketService.FindById(Convert.ToInt32(ticketID));
+            if (ticketID == 0 || ticket == null)
             {
                 return NotFound();
             }
-            Ticket ticket = await _ticketService.FindById(Convert.ToInt32(ticketID));
 
-            if (ticket != null)
+            var stoel = await _stoelService.FindById(ticket.StoeltjeId);
+            if (stoel != null)
             {
-                Stoeltje stoel = await _stoelService.FindById(ticket.StoeltjeId);
                 stoel.Bezet = false;
                 await _stoelService.Update(stoel);
                 await _ticketService.Delete(ticket);
