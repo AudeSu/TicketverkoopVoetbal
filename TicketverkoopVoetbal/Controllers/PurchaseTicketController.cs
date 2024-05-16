@@ -52,11 +52,16 @@ namespace TicketverkoopVoetbal.Controllers
         [Authorize]
         public async Task<IActionResult> Index(int? id)
         {
-            if (id == null)
+            var match = await _matchService.FindById(Convert.ToInt32(id));
+            if (id == null || match == null)
             {
                 return NotFound();
             }
-            var match = await _matchService.FindById(Convert.ToInt32(id));
+            if(FullMatch(Convert.ToInt32(id)))
+            {
+                return View("FullMatch");
+            }
+           
             if (match.Datum >= DateTime.Now.AddMonths(1))
             {
                 return View("FutureMatch");
@@ -122,6 +127,12 @@ namespace TicketverkoopVoetbal.Controllers
                     {
                         TempData["ErrorVolzetMessage"] = $"Er zijn nog maar {ticketVM.VrijePlaatsen} plaatsen beschikbaar in deze zone";
 
+                        return View(ticketVM);
+                    }
+                    var aantalCartTickets = checkShoppingCart(ticketVM);
+                    if (aantalCartTickets + ticketVM.Aantal > MaxTickets)
+                    {
+                        TempData["ErrorTeveelTickets"] = $"U heeft al {aantalCartTickets} in u shoppingCart en kunt dus nog maar {MaxTickets-aantalCartTickets} tickets kopen.";
                         return View(ticketVM);
                     }
 
@@ -213,6 +224,54 @@ namespace TicketverkoopVoetbal.Controllers
             }
 
             return underMaxTickets;
+        }
+
+        public Boolean FullMatch(int id)
+        {
+            Boolean isFull = false;
+            var match = _matchService.FindById(id).Result;
+            if(match != null)
+            {
+                int aantalVolleZones = 0;
+                var zones = _zoneService.FilterById(match.Stadion.StadionId).Result;
+                foreach (var zone in zones)
+                {
+                    int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(id, zone.ZoneId, match.SeizoenId).Result.Count();
+                    int aantalTicketPlaatsen = _stoelService.GetTakenSeatsByMatchID(match.MatchId, zone.ZoneId).Result.Count();
+                    if (zone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
+                    {
+                        aantalVolleZones++;
+                    }
+                }
+
+                if (aantalVolleZones == zones.Count())
+                {
+                    return isFull = true;
+                }
+            }
+            return isFull;
+
+        }
+
+        public int checkShoppingCart(SelectTicketVM ticketVM)
+        {
+            var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            int aantalTickets = 0;
+            if (shoppingCart != null)
+            {
+                if (shoppingCart.Carts != null)
+                {
+                    foreach (var item in shoppingCart.Carts)
+                    {
+                        if (item.MatchID == ticketVM.MatchId)
+                        { 
+                            aantalTickets++;
+                        }
+                    }
+                }
+            }
+
+            return aantalTickets;
         }
 
 
