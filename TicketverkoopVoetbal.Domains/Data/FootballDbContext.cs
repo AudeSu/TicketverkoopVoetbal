@@ -249,6 +249,7 @@ public partial class FootballDbContext : DbContext
 
             entity.HasOne(d => d.Seizoen).WithMany(p => p.Stoeltjes)
                 .HasForeignKey(d => d.SeizoenId)
+                .OnDelete(DeleteBehavior.ClientSetNull)
                 .HasConstraintName("FK_Stoeltje_Seizoen");
 
             entity.HasOne(d => d.Zone).WithMany(p => p.Stoeltjes)

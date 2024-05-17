@@ -15,7 +15,7 @@ public partial class Stoeltje
 
     public int ClubId { get; set; }
 
-    public int? SeizoenId { get; set; }
+    public int SeizoenId { get; set; }
 
     public bool Bezet { get; set; }
 
@@ -25,7 +25,7 @@ public partial class Stoeltje
 
     public virtual Match? Match { get; set; }
 
-    public virtual Seizoen? Seizoen { get; set; }
+    public virtual Seizoen Seizoen { get; set; } = null!;
 
     public virtual ICollection<Ticket> Tickets { get; set; } = new List<Ticket>();
 
