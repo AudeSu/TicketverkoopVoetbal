@@ -141,13 +141,13 @@ namespace TicketverkoopVoetbal.Controllers
                     var aantalCartTickets = GetCartTicketCount(ticketVM);
                     if (aantalCartTickets + ticketVM.Aantal > _maxTickets)
                     {
-                        TempData["ErrorTeveelTickets"] = $"U heeft al {aantalCartTickets} tickets in u shoppingCart en kunt dus nog maar {_maxTickets - aantalCartTickets} tickets kopen.";
+                        TempData["ErrorTeveelTickets"] = $"U heeft al {aantalCartTickets} tickets in uw shoppingCart en kunt dus nog maar {_maxTickets - aantalCartTickets} tickets kopen.";
                         return View(ticketVM);
                     }
-                    // idk wa dak iermee moe doen
+
                     if (ticketVM.VrijePlaatsen - aantalCartTickets < ticketVM.Aantal)
                     {
-                        TempData["ErrorTeveelTickets"] = $" U heeft al {aantalCartTickets} tickets in u shoppingCart en kunt dus nog maar  {ticketVM.VrijePlaatsen - aantalCartTickets} tickets kopen.";
+                        TempData["ErrorTeveelTickets"] = $" U heeft al {aantalCartTickets} tickets in uw shoppingCart en kunt dus nog maar  {ticketVM.VrijePlaatsen - aantalCartTickets} tickets kopen.";
                         return View(ticketVM);
                     }
 
@@ -155,6 +155,7 @@ namespace TicketverkoopVoetbal.Controllers
                     {
                         return RedirectToAction("Names");
                     }
+
                     else
                     {
                         var ticketAmount = GetTicketAmount(ticketVM);
