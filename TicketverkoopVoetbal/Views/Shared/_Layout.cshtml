@@ -31,12 +31,10 @@
                             <a class="nav-link text-dark" asp-area="" asp-controller="Club" asp-action="Index">Clubs</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index">ShoppingCart</a>
-                        </li>
-                        <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="History" asp-action="Index">Geschiedenis</a>
                         </li>
                     </ul>
+                    <a class="nav-link text-dark" asp-area="" asp-controller="ShoppingCart" asp-action="Index"><img src="~/images/shoppingcart.png" /></a>
                     @if (@Context.Request.Path == "/")
                     {
                         @await Html.PartialAsync("_SelectCulture")
