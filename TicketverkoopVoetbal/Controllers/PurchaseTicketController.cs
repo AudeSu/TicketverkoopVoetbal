@@ -24,8 +24,8 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
-        private readonly string? BaseUrl;
-        private readonly int? MaxTickets;
+        private readonly string? _baseUrl;
+        private readonly int _maxTickets;
 
         public PurchaseTicketController(
             IMatchService<Match> matchservice,
@@ -45,19 +45,25 @@ namespace TicketverkoopVoetbal.Controllers
             _userManager = userManager;
             _mapper = mapper;
             _configuration = configuration;
-            BaseUrl = _configuration.GetValue<string>("APIURL");
-            MaxTickets = _configuration.GetValue<int>("MaxTickets");
+            _baseUrl = _configuration.GetValue<string>("APIURL");
+            _maxTickets = _configuration.GetValue<int>("MaxTickets");
         }
 
         [Authorize]
         public async Task<IActionResult> Index(int? id)
         {
-            var match = await _matchService.FindById(Convert.ToInt32(id));
-            if (id == null || match == null)
+            if (!id.HasValue)
             {
                 return NotFound();
             }
-            if (FullMatch(Convert.ToInt32(id)))
+
+            var match = await _matchService.FindById(id.Value);
+            if (match == null)
+            {
+                return NotFound();
+            }
+
+            if (IsMatchFull(id.Value))
             {
                 return View("FullMatch");
             }
@@ -71,34 +77,29 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return View("PastMatch");
             }
-            MatchVM matchVM = new();
-            matchVM = _mapper.Map<MatchVM>(match);
-            if (match == null)
-            {
-                return NotFound();
-            }
-            SelectTicketVM ticketVM = new SelectTicketVM();
-            ticketVM.MatchId = match.MatchId;
-            ticketVM.matchVM = matchVM;
-            ticketVM.Zones = new SelectList(await _zoneService.FilterById(match.StadionId), "ZoneId", "Naam");
-            ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
 
-            if (CheckTicketHistory(ticketVM))
+            var matchVM = _mapper.Map<MatchVM>(match);
+            var ticketVM = new SelectTicketVM
+            {
+                MatchId = match.MatchId,
+                matchVM = matchVM,
+                Zones = new SelectList(await _zoneService.FilterById(match.StadionId), "ZoneId", "Naam"),
+                HotelLijst = await GetHotelsAsync(match.Stadion.Stad)
+            };
+
+            if (IsDoubleBooked(ticketVM) || IsInShoppingCart(ticketVM))
             {
                 return View("DoubleBooked");
             }
-            if (GetTicketAmount(ticketVM) == MaxTickets)
+
+            if (GetTicketAmount(ticketVM) >= _maxTickets)
             {
                 return View("MaxTickets");
             }
-            if (CheckAbonnement(ticketVM))
+
+            if (HasAbonnement(ticketVM))
             {
                 return View("HasAbonnement");
-            }
-            if (CheckShoppingCartDate(ticketVM))
-            {
-                TempData["ErrorDoubleBooked"] = $"U heeft al tickets op deze match in u ShoppingCart staan, u kunt maar 1 match per dag";
-                return View(ticketVM);
             }
 
             return View(ticketVM);
@@ -112,53 +113,52 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return NotFound();
             }
+
             try
             {
-                var zone = await _zoneService.FindById(Convert.ToInt32(ticketVM.ZoneId));
-                var match = await _matchService.FindById(Convert.ToInt32(ticketVM.MatchId));
-                MatchVM matchVM = new MatchVM();
-                matchVM = _mapper.Map<MatchVM>(match);
-                ticketVM.matchVM = matchVM;
+                var zone = await _zoneService.FindById(ticketVM.ZoneId);
+                var match = await _matchService.FindById(ticketVM.MatchId);
+                if (zone == null || match == null)
+                {
+                    return NotFound();
+                }
+                ticketVM.matchVM = _mapper.Map<MatchVM>(match);
                 ticketVM.Prijs = zone.PrijsTicket;
                 ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
-                ticketVM.Zones =
-                new SelectList(await _zoneService.FilterById(Convert.ToInt16(match.StadionId)), "ZoneId", "Naam", ticketVM.ZoneId);
+                ticketVM.Zones = new SelectList(await _zoneService.FilterById(match.StadionId), "ZoneId", "Naam", ticketVM.ZoneId);
+                ticketVM.VrijePlaatsen = GetAvailableSeats(ticketVM);
+
                 HttpContext.Session.SetObject("TicketVM", ticketVM);
 
-                ticketVM.VrijePlaatsen = VrijePlaatsen(ticketVM);
                 if (ticketVM.Aantal != 0)
                 {
-                    if (VrijePlaatsen(ticketVM) < ticketVM.Aantal)
+                    if (GetAvailableSeats(ticketVM) < ticketVM.Aantal)
                     {
                         TempData["ErrorVolzetMessage"] = $"Er zijn nog maar {ticketVM.VrijePlaatsen} plaatsen beschikbaar in deze zone";
+                        return View(ticketVM);
+                    }
 
-                        return View(ticketVM);
-                    }
-                    var aantalCartTickets = CheckShoppingCart(ticketVM);
-                    if (aantalCartTickets + ticketVM.Aantal > MaxTickets)
+                    var aantalCartTickets = GetCartTicketCount(ticketVM);
+                    if (aantalCartTickets + ticketVM.Aantal > _maxTickets)
                     {
-                        TempData["ErrorTeveelTickets"] = $"U heeft al {aantalCartTickets} tickets in u shoppingCart en kunt dus nog maar {MaxTickets - aantalCartTickets} tickets kopen.";
+                        TempData["ErrorTeveelTickets"] = $"U heeft al {aantalCartTickets} tickets in u shoppingCart en kunt dus nog maar {_maxTickets - aantalCartTickets} tickets kopen.";
                         return View(ticketVM);
                     }
+                    // idk wa dak iermee moe doen
                     if (ticketVM.VrijePlaatsen - aantalCartTickets < ticketVM.Aantal)
                     {
                         TempData["ErrorTeveelTickets"] = $" U heeft al {aantalCartTickets} tickets in u shoppingCart en kunt dus nog maar  {ticketVM.VrijePlaatsen - aantalCartTickets} tickets kopen.";
                         return View(ticketVM);
                     }
-                    if (CheckShoppingCartDate(ticketVM))
-                    {
-                        TempData["ErrorDoubleBooked"] = $"U heeft al tickets op deze dag in u ShoppingCart staan.";
-                        return View(ticketVM);
-                    }
 
-                    if (CheckTicketAmount(ticketVM))
+                    if (HasReachedMaxTicketAmount(ticketVM))
                     {
                         return RedirectToAction("Names");
                     }
                     else
                     {
                         var ticketAmount = GetTicketAmount(ticketVM);
-                        TempData["ErrorMessage"] = $"Momenteel heb je al {ticketAmount} ticket(s) voor deze wedstrijd. U kan nog maar {MaxTickets - ticketAmount} ticket(s) voor deze wedstrijd boeken";
+                        TempData["ErrorMessage"] = $"Momenteel heb je al {ticketAmount} ticket(s) voor deze wedstrijd. U kan nog maar {_maxTickets - ticketAmount} ticket(s) voor deze wedstrijd boeken";
                         return View(ticketVM);
                     }
                 }
@@ -171,12 +171,25 @@ namespace TicketverkoopVoetbal.Controllers
             return View(ticketVM);
         }
 
+        private async Task<List<HotelVM>> GetHotelsAsync(string StadNaam)
+        {
+            using var httpClient = new HttpClient();
+            httpClient.DefaultRequestHeaders.Add("Referer", "FullStack_Opdracht");
+            var url = $"{_baseUrl}/search?q=hotels+in+{StadNaam},Belgium&format=json&limit=3";
+
+            var response = await httpClient.GetAsync(url);
+            var apiResponse = await response.Content.ReadAsStringAsync();
+            var hotels = JsonConvert.DeserializeObject<List<Hotel>>(apiResponse);
+
+            return _mapper.Map<List<HotelVM>>(hotels);
+        }
+
         public int GetTicketAmount(SelectTicketVM ticketVM)
         {
-            var aantalTickets = 0;
+            int aantalTickets = 0;
             var currentUserID = _userManager.GetUserId(User);
-            var ticketList = _ticketService.FindByStringId(currentUserID);
-            foreach (var ticket in ticketList.Result)
+            var tickets = _ticketService.FindByStringId(currentUserID).Result;
+            foreach (var ticket in tickets)
             {
                 if (ticket.MatchId == ticketVM.MatchId)
                 {
@@ -186,45 +199,127 @@ namespace TicketverkoopVoetbal.Controllers
             return aantalTickets;
         }
 
-
-
-        public int VrijePlaatsen(SelectTicketVM ticketVM)
+        public int GetAvailableSeats(SelectTicketVM ticketVM)
         {
-            var currentZone = _zoneService.FindById(Convert.ToInt32(ticketVM.ZoneId)).Result;
-            int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(ticketVM.matchVM.ClubId, ticketVM.ZoneId, ticketVM.matchVM.SeizoenID).Result.Count();
+            var currentZone = _zoneService.FindById(ticketVM.ZoneId).Result;
+            var aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(ticketVM.matchVM.ClubId, ticketVM.ZoneId, ticketVM.matchVM.SeizoenID).Result.Count();
             int aantalticketPlaatsen = _stoelService.GetTakenSeatsByMatchID(ticketVM.MatchId, ticketVM.ZoneId, ticketVM.matchVM.SeizoenID).Result.Count();
+
             return currentZone.Capaciteit - (aantalAbonnementPlaatsen + aantalticketPlaatsen);
         }
 
-        private async Task<List<HotelVM>> GetHotelsAsync(string StadNaam)
+        public bool IsDoubleBooked(SelectTicketVM ticketVM)
         {
-            using (var httpClient = new HttpClient())
+            var currentUserID = _userManager.GetUserId(User);
+            var ticketList = _ticketService.FindByStringId(currentUserID).Result;
+
+            foreach (var ticket in ticketList)
             {
-                httpClient.DefaultRequestHeaders.Add("Referer", "FullStack_Opdracht");
-                var search = $"/search?q=hotels+in+{StadNaam},Belgium";
-                var format = "json";
-                var limit = "3";
-
-                var url = $"{BaseUrl}{search}&format={format}&limit={limit}";
-
-                using (var response = await httpClient.GetAsync(url))
+                if (ticket.Match.Datum == ticketVM.matchVM.Datum && ticket.MatchId != ticketVM.MatchId)
                 {
-                    string apiResponse = await response.Content.ReadAsStringAsync();
-                    var hotels = JsonConvert.DeserializeObject<List<Hotel>>(apiResponse);
-
-                    // Map the Hotel objects to HotelVM objects
-                    return _mapper.Map<List<HotelVM>>(hotels);
+                    return true;
                 }
             }
+
+            return false;
+        }
+
+        public bool HasAbonnement(SelectTicketVM ticketVM)
+        {
+            var currentUserID = _userManager.GetUserId(User);
+            var abonnementen = _abonnementService.FindByStringId(currentUserID).Result;
+
+            foreach (var abonnement in abonnementen)
+            {
+                if (abonnement.ClubId == ticketVM.matchVM.ClubId)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        public bool HasReachedMaxTicketAmount(SelectTicketVM ticketVM)
+        {
+            var currentUserID = _userManager.GetUserId(User);
+            var tickets = _ticketService.FindPerUser(currentUserID, ticketVM.MatchId).Result;
+
+            return tickets.Count() + ticketVM.Aantal < _maxTickets;
+        }
+
+        private bool IsMatchFull(int id)
+        {
+            var match = _matchService.FindById(id).Result;
+            if (match != null)
+            {
+                int aantalVolleZones = 0;
+                var zones = _zoneService.FilterById(match.Stadion.StadionId).Result;
+                foreach (var zone in zones)
+                {
+                    int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(id, zone.ZoneId, match.SeizoenId).Result.Count();
+                    int aantalTicketPlaatsen = _stoelService.GetTakenSeatsByMatchID(match.MatchId, zone.ZoneId, match.SeizoenId).Result.Count();
+                    if (zone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
+                    {
+                        aantalVolleZones++;
+                    }
+                }
+
+                if (aantalVolleZones == zones.Count())
+                {
+                    return true;
+                }
+            }
+            return false;
+        }
+
+        public int GetCartTicketCount(SelectTicketVM ticketVM)
+        {
+            var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            int aantalTickets = 0;
+            if (shoppingCart != null && shoppingCart.Carts != null)
+            {
+                foreach (var item in shoppingCart.Carts)
+                {
+                    if (item.MatchID == ticketVM.MatchId)
+                    {
+                        aantalTickets++;
+                    }
+                }
+            }
+
+            return aantalTickets;
+        }
+
+        public bool IsInShoppingCart(SelectTicketVM ticketVM)
+        {
+            var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            if (shoppingCart != null && shoppingCart.Carts != null)
+            {
+                foreach (var item in shoppingCart.Carts)
+                {
+                    var currentmatch = _matchService.FindById(item.MatchID).Result;
+                    if (item.MatchID != ticketVM.MatchId && currentmatch.Datum == ticketVM.matchVM.Datum)
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
         }
 
         [Authorize]
         public IActionResult Names()
         {
-            int? aantal = HttpContext.Session.GetObject<SelectTicketVM>("TicketVM").Aantal;
+            var ticketVM = HttpContext.Session.GetObject<SelectTicketVM>("TicketVM");
+            if (ticketVM == null)
+            {
+                return NotFound();
+            }
 
-            List<TicketNameVM> nameVMs = new List<TicketNameVM>();
-            for (int i = 0; i < aantal; i++)
+            var nameVMs = new List<TicketNameVM>();
+            for (int i = 0; i < ticketVM.Aantal; i++)
             {
                 if (i != 0)
                 {
@@ -243,188 +338,57 @@ namespace TicketverkoopVoetbal.Controllers
             return View(nameVMs);
         }
 
-
-
         [HttpPost]
         [Authorize]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Names(List<TicketNameVM> nameVMs)
         {
-            if (ModelState.IsValid)
-            {
-                var ticketVM = HttpContext.Session.GetObject<SelectTicketVM>("TicketVM");
-                if (ticketVM == null)
-                {
-                    return NotFound();
-                }
-
-                Match? match = await _matchService.FindById(Convert.ToInt32(ticketVM.MatchId));
-                Zone? zone = await _zoneService.FindById(Convert.ToInt32(ticketVM.ZoneId));
-                ShoppingCartVM? shopping;
-
-                // var objComplex = HttpContext.Session.GetObject<ShoppingCartVM>("ComplexObject");
-                if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
-                {
-                    shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-                }
-                else
-                {
-                    shopping = new ShoppingCartVM();
-                }
-                if (shopping.Carts == null)
-                {
-                    shopping.Carts = new List<CartTicketVM>();
-                }
-
-                if (match != null)
-                {
-                    for (int i = 0; i < ticketVM.Aantal; i++)
-                    {
-                        CartTicketVM item = new CartTicketVM
-                        {
-                            MatchID = ticketVM.MatchId,
-                            matchVM = _mapper.Map<MatchVM>(match),
-                            ZoneID = ticketVM.ZoneId,
-                            ZoneNaam = zone.Naam,
-                            FirstName = nameVMs[i].FirstName,
-                            LastName = nameVMs[i].LastName,
-                            Prijs = ticketVM.Prijs,
-                            DateCreated = DateTime.Now
-
-                        };
-                        shopping?.Carts?.Add(item);
-                    }
-                    HttpContext.Session.SetObject("ShoppingCart", shopping);
-                }
-                return RedirectToAction("Index", "ShoppingCart");
-            }
-            else
+            if (!ModelState.IsValid)
             {
                 return View("Names", nameVMs);
             }
-        }
 
-
-        public Boolean CheckTicketHistory(SelectTicketVM ticketVM)
-        {
-            var hasTicket = false;
-            var currentUserID = _userManager.GetUserId(User);
-            var ticketList = _ticketService.FindByStringId(currentUserID);
-
-            foreach (var ticket in ticketList.Result)
+            var ticketVM = HttpContext.Session.GetObject<SelectTicketVM>("TicketVM");
+            if (ticketVM == null)
             {
-                if (ticket.Match.Datum == ticketVM.matchVM.Datum && ticket.MatchId != ticketVM.MatchId)
-                {
-                    hasTicket = true;
-                }
+                return NotFound();
             }
 
-            return hasTicket;
-        }
-
-
-
-
-        public Boolean CheckAbonnement(SelectTicketVM ticketVM)
-        {
-            var hasAbonnement = false;
-            var currentUserID = _userManager.GetUserId(User);
-            var AbonnementList = _abonnementService.FindByStringId(currentUserID);
-
-            foreach (var abonnement in AbonnementList.Result)
+            var match = await _matchService.FindById(ticketVM.MatchId);
+            var zone = await _zoneService.FindById(ticketVM.ZoneId);
+            if (match == null || zone == null)
             {
-                if (abonnement.ClubId == ticketVM.matchVM.ClubId)
-                {
-                    hasAbonnement = true;
-                }
+                return NotFound();
             }
 
-            return hasAbonnement;
-        }
-
-
-        public Boolean CheckTicketAmount(SelectTicketVM ticketVM)
-        {
-            var underMaxTickets = true;
-            var currentUserID = _userManager.GetUserId(User);
-            var ticketList = _ticketService.FindPerUser(currentUserID, ticketVM.MatchId);
-
-            if (ticketList.Result.Count() + ticketVM.Aantal > MaxTickets)
+            var shoppingcart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            if (shoppingcart == null)
             {
-                return false;
+                shoppingcart = new ShoppingCartVM();
+            }
+            if (shoppingcart.Carts == null)
+            {
+                shoppingcart.Carts = new List<CartTicketVM>();
             }
 
-            return underMaxTickets;
-        }
-
-        public Boolean FullMatch(int id)
-        {
-            Boolean isFull = false;
-            var match = _matchService.FindById(id).Result;
-            if (match != null)
+            for (int i = 0; i < ticketVM.Aantal; i++)
             {
-                int aantalVolleZones = 0;
-                var zones = _zoneService.FilterById(match.Stadion.StadionId).Result;
-                foreach (var zone in zones)
+                var item = new CartTicketVM
                 {
-                    int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(id, zone.ZoneId, match.SeizoenId).Result.Count();
-                    int aantalTicketPlaatsen = _stoelService.GetTakenSeatsByMatchID(match.MatchId, zone.ZoneId, match.SeizoenId).Result.Count();
-                    if (zone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
-                    {
-                        aantalVolleZones++;
-                    }
-                }
-
-                if (aantalVolleZones == zones.Count())
-                {
-                    return isFull = true;
-                }
+                    MatchID = ticketVM.MatchId,
+                    matchVM = _mapper.Map<MatchVM>(match),
+                    ZoneID = ticketVM.ZoneId,
+                    ZoneNaam = zone.Naam,
+                    FirstName = nameVMs[i].FirstName,
+                    LastName = nameVMs[i].LastName,
+                    Prijs = ticketVM.Prijs,
+                    DateCreated = DateTime.Now
+                };
+                shoppingcart?.Carts?.Add(item);
             }
-            return isFull;
+            HttpContext.Session.SetObject("ShoppingCart", shoppingcart);
 
-        }
-
-        public int CheckShoppingCart(SelectTicketVM ticketVM)
-        {
-            var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            int aantalTickets = 0;
-            if (shoppingCart != null)
-            {
-                if (shoppingCart.Carts != null)
-                {
-                    foreach (var item in shoppingCart.Carts)
-                    {
-                        if (item.MatchID == ticketVM.MatchId)
-                        {
-                            aantalTickets++;
-                        }
-                    }
-                }
-            }
-
-            return aantalTickets;
-        }
-
-        public Boolean CheckShoppingCartDate(SelectTicketVM ticketVM)
-        {
-            var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            Boolean DoubleBooked = false;
-            if (shoppingCart != null)
-            {
-                if (shoppingCart.Carts != null)
-                {
-                    foreach (var item in shoppingCart.Carts)
-                    {
-                        var currentmatch = _matchService.FindById(item.MatchID).Result;
-                        if (item.MatchID != ticketVM.MatchId && currentmatch.Datum == ticketVM.matchVM.Datum)
-                        {
-                            return DoubleBooked = true;
-                        }
-                    }
-                }
-            }
-
-            return DoubleBooked;
+            return RedirectToAction("Index", "ShoppingCart");
         }
     }
 }
