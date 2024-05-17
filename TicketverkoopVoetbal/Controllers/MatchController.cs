@@ -64,7 +64,9 @@ namespace TicketverkoopVoetbal.Controllers
                 }
                 else
                 {
+
                     matchlist = await _matchService.FilterById(entity.ClubID.Value);
+
                 }
 
                 var matchVMs = _mapper.Map<List<MatchVM>>(matchlist);

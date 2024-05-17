@@ -54,7 +54,7 @@ namespace TicketverkoopVoetbal.Controllers
 
                 var historyVM = new HistoryVM
                 {
-                    TicketVMs = _mapper.Map<List<TicketVM>>(ticketList),
+                    TicketVMs = _mapper.Map<List<HistoryTicketVM>>(ticketList),
                     AbonnementVMs = _mapper.Map<List<HistoryAbonnementVM>>(AbonnementList)
                 };
 

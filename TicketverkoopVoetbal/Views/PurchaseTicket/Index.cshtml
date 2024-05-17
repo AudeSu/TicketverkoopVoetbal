@@ -60,9 +60,9 @@
             <h2>Ticket Selectie</h2>
             <form asp-action="Index" method="post">
                 <div class="form-group">
-                    <input type="hidden" asp-for="MatchId" />
+                    <input type="hidden" asp-for="MatchID" />
                     <label for="ZoneId">Selecteer stadion zone:</label>
-                    <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control" required data-validation-required-message="Selecteer een stadion zone">
+                    <select asp-for="ZoneID" asp-items="@Model.Zones" class="form-control" required data-validation-required-message="Selecteer een stadion zone">
                         <option value="">Kies een Zone</option>
                     </select>
                 </div>

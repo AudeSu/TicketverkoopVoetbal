@@ -57,5 +57,10 @@ namespace TicketverkoopVoetbal.Services
         {
             return await _matchDAO.GetFutureMatches();
         }
+
+        public async Task<IEnumerable<Match>?> GetFutureMatchesById(int id)
+        {
+            return await _matchDAO.GetFutureMatchesById(id);
+        }
     }
 }

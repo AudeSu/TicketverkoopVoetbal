@@ -87,6 +87,7 @@ namespace TicketverkoopVoetbal.Controllers
                 HotelLijst = await GetHotelsAsync(match.Stadion.Stad)
             };
 
+
             if (IsDoubleBooked(ticketVM) || IsInShoppingCart(ticketVM))
             {
                 return View("DoubleBooked");
@@ -127,6 +128,7 @@ namespace TicketverkoopVoetbal.Controllers
                 ticketVM.HotelLijst = await GetHotelsAsync(match.Stadion.Stad);
                 ticketVM.Zones = new SelectList(await _zoneService.FilterById(match.StadionId), "ZoneId", "Naam", ticketVM.ZoneId);
                 ticketVM.VrijePlaatsen = GetAvailableSeats(ticketVM);
+
 
                 HttpContext.Session.SetObject("TicketVM", ticketVM);
 
@@ -216,7 +218,7 @@ namespace TicketverkoopVoetbal.Controllers
 
             foreach (var ticket in ticketList)
             {
-                if (ticket.Match.Datum == ticketVM.matchVM.Datum && ticket.MatchId != ticketVM.MatchId)
+                if (ticket.Match.Datum == ticketVM.matchVM.Datum && ticket.MatchId != ticketVM.MatchID)
                 {
                     return true;
                 }
@@ -245,6 +247,7 @@ namespace TicketverkoopVoetbal.Controllers
         {
             var currentUserID = _userManager.GetUserId(User);
             var tickets = _ticketService.FindPerUser(currentUserID, ticketVM.MatchId).Result;
+
 
             return tickets.Count() + ticketVM.Aantal < _maxTickets;
         }
@@ -285,6 +288,7 @@ namespace TicketverkoopVoetbal.Controllers
                     if (item.MatchID == ticketVM.MatchId)
                     {
                         aantalTickets++;
+
                     }
                 }
             }
@@ -303,6 +307,7 @@ namespace TicketverkoopVoetbal.Controllers
                     if (item.MatchID != ticketVM.MatchId && currentmatch.Datum == ticketVM.matchVM.Datum)
                     {
                         return true;
+
                     }
                 }
             }

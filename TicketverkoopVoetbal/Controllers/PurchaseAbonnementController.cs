@@ -70,12 +70,14 @@ namespace TicketverkoopVoetbal.Controllers
                 return View("HasAbonnement");
             }
 
+
             var abonnement = new AbonnementVM
+
             {
-                ClubId = club.ClubId,
+                ClubID = club.ClubId,
                 StadionNaam = club.Thuisstadion.Naam,
                 Naam = club.Naam,
-                SeizoenId = currentSeizoen.SeizoenId,
+                SeizoenID = currentSeizoen.SeizoenId,
                 Seizoen = _mapper.Map<SeizoenVM>(currentSeizoen),
                 Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam")
             };
@@ -85,7 +87,7 @@ namespace TicketverkoopVoetbal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(AbonnementVM abonnementVM)
+        public async Task<IActionResult> Index(SelectAbonnementVM abonnementVM)
         {
             if (abonnementVM == null)
             {
@@ -141,7 +143,7 @@ namespace TicketverkoopVoetbal.Controllers
             var abonnementList = await _abonnementService.FindByStringId(currentUserId);
             return abonnementList.Any(abonnement => abonnement.ClubId == clubId && abonnement.SeizoenId == currentSeizoen.SeizoenId);
         }
-
+        
         private async Task<bool> IsZoneFullAsync(AbonnementVM abonnementVM)
         {
             var currentZone = await _zoneService.FindById(abonnementVM.ZoneId);
@@ -154,6 +156,7 @@ namespace TicketverkoopVoetbal.Controllers
                 {
                     return true;
                 }
+
             }
             return false;
         }
@@ -188,7 +191,17 @@ namespace TicketverkoopVoetbal.Controllers
         private bool CheckShoppingCart(CartAbonnementVM abonnement)
         {
             var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            return shoppingCart?.Abonnementen?.Any(a => a.ClubId == abonnement.ClubId) ?? false;
+
+            if (shoppingCart != null)
+            {
+                if (shoppingCart.Abonnementen != null && shoppingCart.Abonnementen.Any(a => a.ClubID == abonnement.ClubID))
+                {
+                    return true;
+                }
+            }
+
+            return false;
+
         }
     }
 }

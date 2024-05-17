@@ -1,4 +1,4 @@
-﻿@model TicketverkoopVoetbal.ViewModels.AbonnementVM
+﻿@model TicketverkoopVoetbal.ViewModels.SelectAbonnementVM
 @{
     ViewData["Title"] = "Index";
 }
@@ -31,12 +31,12 @@
             <h2>Abonnement Selectie</h2>
             <form asp-action="Index" method="post" >
                 <div class="form-group">
-                    <input type="hidden" asp-for="ClubId" />
-                    <input type="hidden" asp-for="SeizoenId" />
+                    <input type="hidden" asp-for="ClubID" />
+                    <input type="hidden" asp-for="SeizoenID" />
                     <input type="hidden" asp-for="StadionNaam" />
                     <input type="hidden" asp-for="Naam" />
                     <label for="ZoneId">Selecteer stadion zone:</label>
-                    <select asp-for="ZoneId" asp-items="@Model.Zones" class="form-control" required data-validation-required-message="Selecteer een stadion zone">
+                    <select asp-for="ZoneID" asp-items="@Model.Zones" class="form-control" required data-validation-required-message="Selecteer een stadion zone">
                         <option value="">Kies een Zone</option>
                     </select>
                     @if (TempData["ErrorVolzetMessage"] != null)
