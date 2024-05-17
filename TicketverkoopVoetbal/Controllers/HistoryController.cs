@@ -49,7 +49,7 @@ namespace TicketverkoopVoetbal.Controllers
 
                 HistoryVM historyVM = new()
                 {
-                    TicketVMs = _mapper.Map<List<TicketVM>>(ticketList),
+                    TicketVMs = _mapper.Map<List<HistoryTicketVM>>(ticketList),
                     AbonnementVMs = _mapper.Map<List<HistoryAbonnementVM>>(AbonnementList)
                 };
                 historyVM.TicketVMs.Sort((t1, t2) => DateTime.Compare(t1.Datum.GetValueOrDefault(), t2.Datum.GetValueOrDefault()));

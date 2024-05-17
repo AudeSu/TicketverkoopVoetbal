@@ -140,5 +140,28 @@ namespace TicketverkoopVoetbal.Repositories
                 throw;
             }
         }
+
+        public async Task<IEnumerable<Match>?> GetFutureMatchesById(int id)
+        {
+            try
+            {
+                var currentDate = DateTime.Today;
+                var currentTime = DateTime.Now.TimeOfDay;
+
+                return await _dbContext.Matches
+                    .Where(m => m.ThuisploegId == id && (m.Datum > currentDate || (m.Datum == currentDate && m.Startuur > currentTime)))
+                    .OrderBy(m => m.Datum)
+                    .ThenBy(m => m.Startuur)
+                    .Include(m => m.Thuisploeg)
+                    .Include(m => m.Uitploeg)
+                    .Include(m => m.Stadion)
+                    .ToListAsync();
+            }
+            catch (Exception)
+            {
+                Console.WriteLine("Error in DAO");
+                throw;
+            }
+        }
     }
 }

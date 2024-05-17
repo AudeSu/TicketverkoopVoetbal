@@ -112,8 +112,8 @@ namespace TicketverkoopVoetbal.Controllers
                     foreach (var item in abonnementen)
                     {
                         Abonnement abonnement = _mapper.Map<Abonnement>(item);
-                        abonnement.Club = _clubService.FindById(item.ClubId).Result;
-                        abonnement.Stoeltje = _stoelService.FindById(item.StoeltjeId).Result;
+                        abonnement.Club = _clubService.FindById(item.ClubID).Result;
+                        abonnement.Stoeltje = _stoelService.FindById(item.StoeltjeID).Result;
                         abonnement.Seizoen = _seizoenService.FindById(item.SeizoenID).Result;
                         abonnementList.Add(abonnement);
                     }
@@ -154,9 +154,9 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 var currentAbonnement = abonnementList[i];
                 CreateStoelVM stoelVM = new CreateStoelVM();
-                stoelVM.ZoneID = currentAbonnement.ZoneId;
+                stoelVM.ZoneID = currentAbonnement.ZoneID;
                 stoelVM.StadionID = currentAbonnement.clubVM.StadionID;
-                stoelVM.ClubID = currentAbonnement.ClubId;
+                stoelVM.ClubID = currentAbonnement.ClubID;
                 stoelVM.MatchID = null;
                 stoelVM.Bezet = true;
                 stoelVM.SeizoenID = currentAbonnement.SeizoenID;
@@ -164,7 +164,7 @@ namespace TicketverkoopVoetbal.Controllers
                 await _stoelService.Add(stoel);
 
                 currentAbonnement.GebruikerID = _userManager.GetUserId(User);
-                currentAbonnement.StoeltjeId = stoel.StoeltjeId;
+                currentAbonnement.StoeltjeID = stoel.StoeltjeId;
                 //voorlopig hardcoded want ik weet niet hoe
                 currentAbonnement.SeizoenID = _seizoenService.GetNextSeizoen().Result.SeizoenId;
 
@@ -231,7 +231,7 @@ namespace TicketverkoopVoetbal.Controllers
                 return NotFound();
             }
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            CartAbonnementVM? itemToRemove = cartList?.Abonnementen?.FirstOrDefault(r => r.ClubId == clubId);
+            CartAbonnementVM? itemToRemove = cartList?.Abonnementen?.FirstOrDefault(r => r.ClubID == clubId);
 
             if (itemToRemove != null)
             {

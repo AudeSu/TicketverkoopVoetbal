@@ -63,12 +63,12 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return View("HasAbonnement");
             }
-            AbonnementVM abonnement = new()
+            SelectAbonnementVM abonnement = new()
             {
-                ClubId = club.ClubId,
+                ClubID = club.ClubId,
                 StadionNaam = club.Thuisstadion.Naam,
                 Naam = club.Naam,
-                SeizoenId = currentSeizoen.SeizoenId,
+                SeizoenID = currentSeizoen.SeizoenId,
                 Seizoen = _mapper.Map<SeizoenVM>(currentSeizoen),
                 Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam")
             };
@@ -77,20 +77,20 @@ namespace TicketverkoopVoetbal.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Index(AbonnementVM abonnementVM)
+        public async Task<IActionResult> Index(SelectAbonnementVM abonnementVM)
         {
             if (abonnementVM == null)
             {
                 return NotFound();
             }
 
-            var club = await _clubService.FindById(Convert.ToInt32(abonnementVM.ClubId));
-            var zone = await _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId));
+            var club = await _clubService.FindById(Convert.ToInt32(abonnementVM.ClubID));
+            var zone = await _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneID));
             if (club != null)
             {
                 if (VrijePlaatsen(abonnementVM))
                 {
-                    abonnementVM.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam", abonnementVM.ZoneId);
+                    abonnementVM.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam", abonnementVM.ZoneID);
                     abonnementVM.Seizoen = _mapper.Map<SeizoenVM>(_seizoenService.GetNextSeizoen().Result);
                     TempData["ErrorVolzetMessage"] = $"Er zijn geen plaatsen meer beschikbaar in deze zone";
                     return View(abonnementVM);
@@ -146,15 +146,15 @@ namespace TicketverkoopVoetbal.Controllers
             return hasAbonnement;
         }
 
-        public Boolean VrijePlaatsen(AbonnementVM abonnementVM)
+        public Boolean VrijePlaatsen(SelectAbonnementVM abonnementVM)
         {
             Boolean isFull = false;
-            var currentZone = _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId)).Result;
-            int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(abonnementVM.ClubId, abonnementVM.ZoneId, abonnementVM.SeizoenId).Result.Count();
-            var matchList = _matchService.FindByHomeClub(abonnementVM.ClubId).Result;
+            var currentZone = _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneID)).Result;
+            int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(abonnementVM.ClubID, abonnementVM.ZoneID, abonnementVM.SeizoenID).Result.Count();
+            var matchList = _matchService.FindByHomeClub(abonnementVM.ClubID).Result;
             foreach (var match in matchList)
             {
-                    int aantalTicketPlaatsen = _stoelService.GetTakenSeatsByMatchID(match.MatchId, abonnementVM.ZoneId, abonnementVM.SeizoenId).Result.Count();
+                    int aantalTicketPlaatsen = _stoelService.GetTakenSeatsByMatchID(match.MatchId, abonnementVM.ZoneID, abonnementVM.SeizoenID).Result.Count();
                     if (currentZone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
                     {
                         isFull = true;
@@ -206,7 +206,7 @@ namespace TicketverkoopVoetbal.Controllers
             var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
             if (shoppingCart != null)
             {
-                if (shoppingCart.Abonnementen != null && shoppingCart.Abonnementen.Any(a => a.ClubId == abonnement.ClubId))
+                if (shoppingCart.Abonnementen != null && shoppingCart.Abonnementen.Any(a => a.ClubID == abonnement.ClubID))
                 {
                     return true;
                 }
