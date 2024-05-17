@@ -89,7 +89,7 @@ namespace TicketverkoopVoetbal.Repositories
             {
 
                 return await _dbContext.Stoeltjes
-                    .Where(b => b.ZoneId == ZoneID && b.ClubId== ClubID && b.MatchId == null && b.Bezet == true)
+                    .Where(b => b.ZoneId == ZoneID && b.ClubId== ClubID && b.MatchId == null && b.Bezet == true && b.SeizoenId == SeizoenID)
                     .ToListAsync();
             }
             catch (Exception)
@@ -99,13 +99,13 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
-        public async Task<IEnumerable<Stoeltje>>GetTakenSeatsByMatchID(int MatchID, int ZoneID)
+        public async Task<IEnumerable<Stoeltje>>GetTakenSeatsByMatchID(int MatchID, int ZoneID, int SeizoenID)
         {
             try
             {
 
                 return await _dbContext.Stoeltjes
-                    .Where(b => b.ZoneId == ZoneID &&  b.MatchId == MatchID && b.Bezet == true)
+                    .Where(b => b.ZoneId == ZoneID &&  b.MatchId == MatchID && b.Bezet == true && b.SeizoenId == SeizoenID)
                     .ToListAsync();
             }
             catch (Exception)
@@ -115,13 +115,13 @@ namespace TicketverkoopVoetbal.Repositories
             }
         }
 
-        public async Task<Stoeltje?>GetEmptySeat(int MatchID, int ZoneID)
+        public async Task<Stoeltje?>GetEmptySeat(int MatchID, int ZoneID, int SeizoenID)
         {
             try
             {
 
                 return await _dbContext.Stoeltjes
-                    .Where(b => b.ZoneId == ZoneID && b.MatchId == MatchID && b.Bezet == false)
+                    .Where(b => b.ZoneId == ZoneID && b.MatchId == MatchID && b.Bezet == false && b.SeizoenId == SeizoenID)
                     .FirstOrDefaultAsync();
             }
             catch (Exception)

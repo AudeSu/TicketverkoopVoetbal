@@ -159,6 +159,7 @@ namespace TicketverkoopVoetbal.Controllers
                 stoelVM.ClubID = currentAbonnement.ClubId;
                 stoelVM.MatchID = null;
                 stoelVM.Bezet = true;
+                stoelVM.SeizoenID = currentAbonnement.SeizoenID;
                 Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
                 await _stoelService.Add(stoel);
 
@@ -178,7 +179,8 @@ namespace TicketverkoopVoetbal.Controllers
             for (int i = 0; i < ticketLijst.Count; i++)
             {
                 var currentTicket = ticketLijst[i];
-                var emptyStoel = await _stoelService.GetEmptySeat(currentTicket.MatchID, currentTicket.ZoneID);
+                var currentMatch = await _matchService.FindById(currentTicket.MatchID);
+                var emptyStoel = await _stoelService.GetEmptySeat(currentTicket.MatchID, currentTicket.ZoneID, currentMatch.SeizoenId);
                 if (emptyStoel != null)
                 {
                     emptyStoel.Bezet = true;
@@ -192,6 +194,7 @@ namespace TicketverkoopVoetbal.Controllers
                     stoelVM.StadionID = currentTicket.matchVM.StadionId;
                     stoelVM.ClubID = currentTicket.matchVM.ClubId;
                     stoelVM.MatchID = currentTicket.MatchID;
+                    stoelVM.SeizoenID = currentMatch.SeizoenId;
                     stoelVM.Bezet = true;
                     Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
                     await _stoelService.Add(stoel);

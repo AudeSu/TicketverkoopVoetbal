@@ -9,8 +9,8 @@ namespace TicketverkoopVoetbal.Repositories.Interfaces
 {
     public interface IStoelDAO<T> : IDAO<T> where T : class
     {
-        Task<IEnumerable<T>> GetTakenSeatsByMatchID(int MatchID, int ZoneID);
+        Task<IEnumerable<T>> GetTakenSeatsByMatchID(int MatchID, int ZoneID, int SeizoenID);
         Task<IEnumerable<T>> GetTakenSeatsByClubID(int ClubID, int ZoneID, int SeizoenID);
-        Task<T?> GetEmptySeat(int MatchID, int ZoneID);
+        Task<T?> GetEmptySeat(int MatchID, int ZoneID, int SeizoenID);
     }
 }
