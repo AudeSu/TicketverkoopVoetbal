@@ -41,18 +41,25 @@ namespace TicketverkoopVoetbal.Controllers
         [Authorize]
         public async Task<IActionResult> Index()
         {
+            var currentUserID = _userManager.GetUserId(User);
+            if (string.IsNullOrEmpty(currentUserID))
+            {
+                return NotFound();
+            }
+
             try
             {
-                var currentUserID = _userManager.GetUserId(User);
                 var ticketList = await _ticketService.FindByStringId(currentUserID);
                 var AbonnementList = await _abonnementService.FindByStringId(currentUserID);
 
-                HistoryVM historyVM = new()
+                var historyVM = new HistoryVM
                 {
                     TicketVMs = _mapper.Map<List<TicketVM>>(ticketList),
                     AbonnementVMs = _mapper.Map<List<HistoryAbonnementVM>>(AbonnementList)
                 };
+
                 historyVM.TicketVMs.Sort((t1, t2) => DateTime.Compare(t1.Datum.GetValueOrDefault(), t2.Datum.GetValueOrDefault()));
+
                 foreach (var item in historyVM.AbonnementVMs)
                 {
                     var seizoen = await _seizoenService.FindById(item.SeizoenID);
@@ -79,8 +86,13 @@ namespace TicketverkoopVoetbal.Controllers
 
         public async Task<IActionResult> DeleteTicket(int ticketID)
         {
-            var ticket = await _ticketService.FindById(Convert.ToInt32(ticketID));
-            if (ticketID == 0 || ticket == null)
+            if (ticketID <= 0)
+            {
+                return NotFound();
+            }
+
+            var ticket = await _ticketService.FindById(ticketID);
+            if (ticket == null)
             {
                 return NotFound();
             }
