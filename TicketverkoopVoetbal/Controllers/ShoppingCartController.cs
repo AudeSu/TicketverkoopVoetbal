@@ -156,6 +156,7 @@ namespace TicketverkoopVoetbal.Controllers
         {
             foreach (var currentAbonnement in abonnementList)
             {
+
                 CreateStoelVM stoelVM = new CreateStoelVM
                 {
                     ZoneID = currentAbonnement.ZoneID,
