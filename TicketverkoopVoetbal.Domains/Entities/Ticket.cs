@@ -13,8 +13,6 @@ public partial class Ticket
 
     public int MatchId { get; set; }
 
-    public int ZoneId { get; set; }
-
     public string FirstName { get; set; } = null!;
 
     public string LastName { get; set; } = null!;
@@ -24,6 +22,4 @@ public partial class Ticket
     public virtual Match Match { get; set; } = null!;
 
     public virtual Stoeltje Stoeltje { get; set; } = null!;
-
-    public virtual Zone Zone { get; set; } = null!;
 }

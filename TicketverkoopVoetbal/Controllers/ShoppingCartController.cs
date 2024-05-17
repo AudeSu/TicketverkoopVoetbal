@@ -21,7 +21,6 @@ namespace TicketverkoopVoetbal.Controllers
         private readonly ITicketService<Ticket> _ticketService;
         private readonly IMatchService<Match> _matchService;
         private readonly IService<Club> _clubService;
-        private readonly IService<Zone> _zoneService;
         private readonly ISeizoenService<Seizoen> _seizoenService;
         private readonly IUserService<AspNetUser> _UserService;
         private readonly UserManager<ApplicationUser> _userManager;
@@ -36,7 +35,6 @@ namespace TicketverkoopVoetbal.Controllers
             ITicketService<Ticket> ticketService,
             IMatchService<Match> matchService,
             IService<Club> clubService,
-            IService<Zone> zoneService,
             ISeizoenService<Seizoen> seizoenService,
             IUserService<AspNetUser> userService,
             UserManager<ApplicationUser> userManager,
@@ -51,7 +49,6 @@ namespace TicketverkoopVoetbal.Controllers
             _matchService = matchService;
             _clubService = clubService;
             _seizoenService = seizoenService;
-            _zoneService = zoneService;
             _UserService = userService;
             _userManager = userManager;
             _hostingEnvironment = hostingEnvironment;
@@ -105,7 +102,7 @@ namespace TicketverkoopVoetbal.Controllers
                     {
                         Ticket ticket = _mapper.Map<Ticket>(item);
                         ticket.Match = _matchService.FindById(item.MatchID).Result;
-                        ticket.Zone = _zoneService.FindById(item.ZoneID).Result;
+                        ticket.Stoeltje = _stoelService.FindById(item.StoeltjeID).Result;
                         ticketList.Add(ticket);
                     }
                 }
