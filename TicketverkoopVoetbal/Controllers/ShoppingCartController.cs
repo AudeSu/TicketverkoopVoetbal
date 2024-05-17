@@ -67,9 +67,13 @@ namespace TicketverkoopVoetbal.Controllers
         public async Task<IActionResult> Purchase()
         {
             var currentUser = await _userManager.GetUserAsync(User);
+            if (currentUser == null)
+            {
+                return RedirectToAction("Index", "Match");
+            }
             var ASPcurrentUser = await _UserService.FindByStringId(currentUser.Id);
             ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            if (cartList == null|| currentUser == null)
+            if (cartList == null || currentUser == null)
             {
                 return RedirectToAction("Index", "Match");
             }
@@ -150,22 +154,21 @@ namespace TicketverkoopVoetbal.Controllers
 
         private async Task CreateAbonnement(List<CartAbonnementVM> abonnementList)
         {
-            for (int i = 0; i < abonnementList.Count; i++)
+            foreach (var currentAbonnement in abonnementList)
             {
-                var currentAbonnement = abonnementList[i];
-                CreateStoelVM stoelVM = new CreateStoelVM();
-                stoelVM.ZoneID = currentAbonnement.ZoneID;
-                stoelVM.StadionID = currentAbonnement.clubVM.StadionID;
-                stoelVM.ClubID = currentAbonnement.ClubID;
-                stoelVM.MatchID = null;
-                stoelVM.Bezet = true;
-                stoelVM.SeizoenID = currentAbonnement.SeizoenID;
+                CreateStoelVM stoelVM = new CreateStoelVM
+                {
+                    ZoneID = currentAbonnement.ZoneID,
+                    StadionID = currentAbonnement.clubVM.StadionID,
+                    ClubID = currentAbonnement.ClubID,
+                    Bezet = true,
+                    SeizoenID = currentAbonnement.SeizoenID
+                };
                 Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
                 await _stoelService.Add(stoel);
 
                 currentAbonnement.GebruikerID = _userManager.GetUserId(User);
                 currentAbonnement.StoeltjeID = stoel.StoeltjeId;
-                //voorlopig hardcoded want ik weet niet hoe
                 currentAbonnement.SeizoenID = _seizoenService.GetNextSeizoen().Result.SeizoenId;
 
                 Abonnement abonnement = _mapper.Map<Abonnement>(currentAbonnement);
@@ -176,9 +179,8 @@ namespace TicketverkoopVoetbal.Controllers
 
         private async Task CreateTicket(List<CartTicketVM> ticketLijst)
         {
-            for (int i = 0; i < ticketLijst.Count; i++)
+            foreach (var currentTicket in ticketLijst)
             {
-                var currentTicket = ticketLijst[i];
                 var currentMatch = await _matchService.FindById(currentTicket.MatchID);
                 var emptyStoel = await _stoelService.GetEmptySeat(currentTicket.MatchID, currentTicket.ZoneID, currentMatch.SeizoenId);
                 if (emptyStoel != null)
@@ -189,13 +191,15 @@ namespace TicketverkoopVoetbal.Controllers
                 }
                 else
                 {
-                    CreateStoelVM stoelVM = new CreateStoelVM();
-                    stoelVM.ZoneID = currentTicket.ZoneID;
-                    stoelVM.StadionID = currentTicket.matchVM.StadionId;
-                    stoelVM.ClubID = currentTicket.matchVM.ClubId;
-                    stoelVM.MatchID = currentTicket.MatchID;
-                    stoelVM.SeizoenID = currentMatch.SeizoenId;
-                    stoelVM.Bezet = true;
+                    CreateStoelVM stoelVM = new CreateStoelVM
+                    {
+                        ZoneID = currentTicket.ZoneID,
+                        StadionID = currentTicket.matchVM.StadionId,
+                        ClubID = currentTicket.matchVM.ClubId,
+                        MatchID = currentTicket.MatchID,
+                        SeizoenID = currentMatch.SeizoenId,
+                        Bezet = true,
+                    };
                     Stoeltje stoel = _mapper.Map<Stoeltje>(stoelVM);
                     await _stoelService.Add(stoel);
                     currentTicket.StoeltjeID = stoel.StoeltjeId;
@@ -213,8 +217,8 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return NotFound();
             }
-            ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            CartTicketVM? itemToRemove = cartList?.Carts?.FirstOrDefault(r => r.MatchID == matchId);
+            var cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            var itemToRemove = cartList?.Carts?.FirstOrDefault(r => r.MatchID == matchId);
 
             if (itemToRemove != null)
             {
@@ -230,8 +234,8 @@ namespace TicketverkoopVoetbal.Controllers
             {
                 return NotFound();
             }
-            ShoppingCartVM? cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            CartAbonnementVM? itemToRemove = cartList?.Abonnementen?.FirstOrDefault(r => r.ClubID == clubId);
+            var cartList = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            var itemToRemove = cartList?.Abonnementen?.FirstOrDefault(r => r.ClubID == clubId);
 
             if (itemToRemove != null)
             {

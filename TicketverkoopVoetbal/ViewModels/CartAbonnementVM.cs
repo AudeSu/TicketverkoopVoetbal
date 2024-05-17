@@ -2,11 +2,6 @@
 {
     public class CartAbonnementVM : SelectAbonnementVM
     {
-        //public int ClubId { get; set; }
-        //public string GebruikerID { get; set; }
-        //public int StoeltjeId { get; set; }
-        //public int SeizoenID { get; set; }
-        //public int ZoneId { get; set; }
         public string ZoneNaam { get; set; }
         public decimal Prijs { get; set; }
         public ClubVM clubVM { get; set; }
