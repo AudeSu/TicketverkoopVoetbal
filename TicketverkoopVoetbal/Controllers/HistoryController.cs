@@ -59,11 +59,15 @@ namespace TicketverkoopVoetbal.Controllers
                     item.seizoenVM = _mapper.Map<SeizoenVM>(seizoen);
                     var stoel = await _stoelService.FindById(item.StoeltjeID);
                     item.ZoneNaam = stoel!.Zone.Naam;
+                    item.Prijs = stoel!.Zone.PrijsAbonnement;
                 }
                 foreach (var item in historyVM.TicketVMs)
                 {
                     var match = await _matchService.FindById(item.MatchID);
                     item.matchVM = _mapper.Map<MatchVM>(match);
+                    var stoel = await _stoelService.FindById(item.StoeltjeID);
+                    item.ZoneNaam = stoel!.Zone.Naam;
+                    item.Prijs = stoel!.Zone.PrijsTicket;
                 }
                 return View(historyVM);
             }

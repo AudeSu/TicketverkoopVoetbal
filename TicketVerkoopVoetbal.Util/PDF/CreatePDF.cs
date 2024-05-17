@@ -85,8 +85,8 @@ namespace TicketVerkoopVoetbal.Util.PDF
                     tableTickets.AddCell(ticket.Match.Thuisploeg.Naam);
                     tableTickets.AddCell(ticket.Match.Uitploeg.Naam);
                     tableTickets.AddCell(ticket.FirstName + " " + ticket.LastName);
-                    tableTickets.AddCell(ticket.Zone.PrijsTicket.ToString("C"));
-                    totalPrice += ticket.Zone.PrijsTicket;
+                    tableTickets.AddCell(ticket.Stoeltje.Zone.PrijsTicket.ToString("C"));
+                    totalPrice += ticket.Stoeltje.Zone.PrijsTicket;
                 }
                 document.Add(tableTickets);
             }
@@ -138,7 +138,7 @@ namespace TicketVerkoopVoetbal.Util.PDF
                     .Add(new Paragraph($"Datum: {ticket.Match.Datum:d MMMM yyyy}"))
                     .Add(new Paragraph($"Startuur: {ticket.Match.Startuur:hh\\:mm}"))
                     .Add(new Paragraph($"Stadion: {ticket.Match.Stadion.Naam}"))
-                    .Add(new Paragraph($"Zone: {ticket.Zone.Naam}"))
+                    .Add(new Paragraph($"Zone: {ticket.Stoeltje.Zone.Naam}"))
                     .Add(new Paragraph($"Stoeltje: {ticket.StoeltjeId}"))
                     .SetBorder(Border.NO_BORDER);
 

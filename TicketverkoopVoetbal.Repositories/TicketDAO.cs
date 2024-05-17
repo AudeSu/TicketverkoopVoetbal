@@ -52,14 +52,11 @@ namespace TicketverkoopVoetbal.Repositories
             try
             {
                 return await _dbContext.Tickets
-                .Where(a => a.TicketId == id)
-                .Include(a => a.Gebruikers)
-                .Include(a => a.Match)
-                .Include(b => b.Stoeltje)
-                .Include(b => b.Zone)
-
-
-                .FirstOrDefaultAsync();
+                    .Where(a => a.TicketId == id)
+                    .Include(a => a.Gebruikers)
+                    .Include(a => a.Match)
+                    .Include(b => b.Stoeltje)
+                    .FirstOrDefaultAsync();
             }
             catch (Exception)
             {
@@ -83,14 +80,11 @@ namespace TicketverkoopVoetbal.Repositories
             try
             {
                 return await _dbContext.Tickets
-                .Where(a => a.GebruikersId == id)
-                .Include(a => a.Gebruikers)
-                .Include(a => a.Match)
-                .Include(b => b.Stoeltje)
-                .Include(b => b.Zone)
-
-
-                 .ToListAsync();
+                    .Where(a => a.GebruikersId == id)
+                    .Include(a => a.Gebruikers)
+                    .Include(a => a.Match)
+                    .Include(b => b.Stoeltje)
+                    .ToListAsync();
             }
             catch (Exception)
             {
@@ -104,14 +98,11 @@ namespace TicketverkoopVoetbal.Repositories
             try
             {
                 return await _dbContext.Tickets
-                .Where(a => a.GebruikersId == id && a.MatchId == matchID)
-                .Include(a => a.Gebruikers)
-                .Include(a => a.Match)
-                .Include(b => b.Stoeltje)
-                .Include(b => b.Zone)
-
-
-                 .ToListAsync();
+                    .Where(a => a.GebruikersId == id && a.MatchId == matchID)
+                    .Include(a => a.Gebruikers)
+                    .Include(a => a.Match)
+                    .Include(b => b.Stoeltje)
+                    .ToListAsync();
             }
             catch (Exception)
             {

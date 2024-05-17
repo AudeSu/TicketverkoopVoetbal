@@ -39,7 +39,7 @@ public partial class AspNetUser
 
     public string? FirstName { get; set; }
 
-    public string? LastName { get; set; }
+    public string LastName { get; set; } = null!;
 
     public virtual ICollection<Abonnement> Abonnements { get; set; } = new List<Abonnement>();
 
