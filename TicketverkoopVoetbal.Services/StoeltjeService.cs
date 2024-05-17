@@ -49,14 +49,14 @@ namespace TicketverkoopVoetbal.Services
             return await _stoeltjeDAO.GetTakenSeatsByClubID(ClubID,ZoneID,SeizoenID);
         }
 
-        public async Task<IEnumerable<Stoeltje>>GetTakenSeatsByMatchID(int MatchID, int ZoneID)
+        public async Task<IEnumerable<Stoeltje>>GetTakenSeatsByMatchID(int MatchID, int ZoneID, int SeizoenID)
         {
-            return await _stoeltjeDAO.GetTakenSeatsByMatchID(MatchID,ZoneID);
+            return await _stoeltjeDAO.GetTakenSeatsByMatchID(MatchID,ZoneID, SeizoenID);
         }
 
-        public async Task<Stoeltje?> GetEmptySeat(int MatchID, int ZoneID)
+        public async Task<Stoeltje?> GetEmptySeat(int MatchID, int ZoneID, int SeizoenID)
         {
-            return await _stoeltjeDAO.GetEmptySeat(MatchID, ZoneID);
+            return await _stoeltjeDAO.GetEmptySeat(MatchID, ZoneID, SeizoenID);
         }
     }
 }

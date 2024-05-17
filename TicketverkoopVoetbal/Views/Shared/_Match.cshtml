@@ -19,15 +19,25 @@
             <div class="team-away-container">
                 <img src="@Model.UitploegLogoPath" alt="Uitploeg logo" class="team-logo" />
                 <span class="team-away-name">@Model.UitploegNaam</span>
-            </div> 
+            </div>
         </div>
         <div class="col-md-2">
             @if (Model.Datum.HasValue && Model.Datum.Value <= DateTime.Today.AddMonths(1))
             {
                 <div class="add-to-cart">
-                    <a asp-controller="PurchaseTicket" asp-action="Index" asp-route-id="@Model.MatchId">
-                        <button class="btn btn-primary">Add to Cart</button>
-                    </a>
+                    @if (TempData["ErrorFullMatch"] != null)
+                    {
+                        <a>
+                            <button class="btn btn-primary"> @TempData["ErrorFullMatch"]</button>
+                        </a>
+                    }
+                    else
+                    {
+                        <a asp-controller="PurchaseTicket" asp-action="Index" asp-route-id="@Model.MatchId">
+                            <button class="btn btn-primary">Add to Cart</button>
+                        </a>
+                    }
+
                 </div>
             }
         </div>
