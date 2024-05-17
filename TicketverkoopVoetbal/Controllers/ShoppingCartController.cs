@@ -160,7 +160,7 @@ namespace TicketverkoopVoetbal.Controllers
                 CreateStoelVM stoelVM = new CreateStoelVM
                 {
                     ZoneID = currentAbonnement.ZoneID,
-                    StadionID = currentAbonnement.clubVM.StadionID,
+                    StadionID = currentAbonnement.ClubVM.StadionID,
                     ClubID = currentAbonnement.ClubID,
                     Bezet = true,
                     SeizoenID = currentAbonnement.SeizoenID

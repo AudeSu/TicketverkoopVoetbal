@@ -71,8 +71,7 @@ namespace TicketverkoopVoetbal.Controllers
             }
 
 
-            var abonnement = new AbonnementVM
-
+            var abonnement = new SelectAbonnementVM
             {
                 ClubID = club.ClubId,
                 StadionNaam = club.Thuisstadion.Naam,
@@ -94,8 +93,8 @@ namespace TicketverkoopVoetbal.Controllers
                 return NotFound();
             }
 
-            var club = await _clubService.FindById(Convert.ToInt32(abonnementVM.ClubId));
-            var zone = await _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId));
+            var club = await _clubService.FindById(Convert.ToInt32(abonnementVM.ClubID));
+            var zone = await _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneID));
             if (club == null || zone == null)
             {
                 return NotFound();
@@ -103,7 +102,7 @@ namespace TicketverkoopVoetbal.Controllers
 
             if (await IsZoneFullAsync(abonnementVM))
             {
-                abonnementVM.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam", abonnementVM.ZoneId);
+                abonnementVM.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam", abonnementVM.ZoneID);
                 abonnementVM.Seizoen = _mapper.Map<SeizoenVM>(_seizoenService.GetNextSeizoen().Result);
                 TempData["ErrorVolzetMessage"] = $"Er zijn geen plaatsen meer beschikbaar in deze zone";
                 return View(abonnementVM);
@@ -144,14 +143,14 @@ namespace TicketverkoopVoetbal.Controllers
             return abonnementList.Any(abonnement => abonnement.ClubId == clubId && abonnement.SeizoenId == currentSeizoen.SeizoenId);
         }
         
-        private async Task<bool> IsZoneFullAsync(AbonnementVM abonnementVM)
+        private async Task<bool> IsZoneFullAsync(SelectAbonnementVM abonnementVM)
         {
-            var currentZone = await _zoneService.FindById(abonnementVM.ZoneId);
-            int aantalAbonnementPlaatsen = (await _stoelService.GetTakenSeatsByClubID(abonnementVM.ClubId, abonnementVM.ZoneId, abonnementVM.SeizoenId)).Count();
-            var matchList = await _matchService.FindByHomeClub(abonnementVM.ClubId);
+            var currentZone = await _zoneService.FindById(abonnementVM.ZoneID);
+            int aantalAbonnementPlaatsen = (await _stoelService.GetTakenSeatsByClubID(abonnementVM.ClubID, abonnementVM.ZoneID, abonnementVM.SeizoenID)).Count();
+            var matchList = await _matchService.FindByHomeClub(abonnementVM.ClubID);
             foreach (var match in matchList)
             {
-                int aantalTicketPlaatsen = (await _stoelService.GetTakenSeatsByMatchID(match.MatchId, abonnementVM.ZoneId, abonnementVM.SeizoenId)).Count();
+                int aantalTicketPlaatsen = (await _stoelService.GetTakenSeatsByMatchID(match.MatchId, abonnementVM.ZoneID, abonnementVM.SeizoenID)).Count();
                 if (currentZone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
                 {
                     return true;
