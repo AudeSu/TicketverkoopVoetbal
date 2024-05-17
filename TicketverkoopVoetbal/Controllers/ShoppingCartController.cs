@@ -155,7 +155,7 @@ namespace TicketverkoopVoetbal.Controllers
                 var currentAbonnement = abonnementList[i];
                 CreateStoelVM stoelVM = new CreateStoelVM();
                 stoelVM.ZoneID = currentAbonnement.ZoneId;
-                stoelVM.StadionID = currentAbonnement.clubVM.StadionID;
+                stoelVM.StadionID = currentAbonnement.ClubVM.StadionID;
                 stoelVM.ClubID = currentAbonnement.ClubId;
                 stoelVM.MatchID = null;
                 stoelVM.Bezet = true;

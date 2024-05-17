@@ -45,25 +45,32 @@ namespace TicketverkoopVoetbal.Controllers
         [Authorize]
         public async Task<IActionResult> Index(int? id)
         {
-            var club = await _clubService.FindById(Convert.ToInt32(id));
-            var currentSeizoen = _seizoenService.GetNextSeizoen().Result;
+            if (!id.HasValue)
+            {
+                return NotFound();
+            }
+
+            var club = await _clubService.FindById(id.Value);
             if (club == null)
             {
                 return NotFound();
             }
-            if (CheckFullMatch(club.ClubId, currentSeizoen))
-            {
-                return View("FullMatch");
-            }
+
+            var currentSeizoen = _seizoenService.GetNextSeizoen().Result;
             if (currentSeizoen == null)
             {
                 return View("NoSeizoen");
             }
-            if (CheckAbonnement(club.ClubId, currentSeizoen))
+            if (await CheckFullMatchAsync(club.ClubId, currentSeizoen))
+            {
+                return View("FullMatch");
+            }
+            if (await CheckAbonnementAsync(club.ClubId, currentSeizoen))
             {
                 return View("HasAbonnement");
             }
-            AbonnementVM abonnement = new()
+
+            var abonnement = new AbonnementVM
             {
                 ClubId = club.ClubId,
                 StadionNaam = club.Thuisstadion.Naam,
@@ -72,6 +79,7 @@ namespace TicketverkoopVoetbal.Controllers
                 Seizoen = _mapper.Map<SeizoenVM>(currentSeizoen),
                 Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam")
             };
+
             return View(abonnement);
         }
 
@@ -86,133 +94,101 @@ namespace TicketverkoopVoetbal.Controllers
 
             var club = await _clubService.FindById(Convert.ToInt32(abonnementVM.ClubId));
             var zone = await _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId));
-            if (club != null)
+            if (club == null || zone == null)
             {
-                if (VrijePlaatsen(abonnementVM))
-                {
-                    abonnementVM.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam", abonnementVM.ZoneId);
-                    abonnementVM.Seizoen = _mapper.Map<SeizoenVM>(_seizoenService.GetNextSeizoen().Result);
-                    TempData["ErrorVolzetMessage"] = $"Er zijn geen plaatsen meer beschikbaar in deze zone";
-                    return View(abonnementVM);
-                }
-                CartAbonnementVM abonnement = _mapper.Map<CartAbonnementVM>(abonnementVM);
-                {
-                    abonnement.clubVM = _mapper.Map<ClubVM>(club);
-                    abonnement.ZoneNaam = zone.Naam;
-                    abonnement.Prijs = zone.PrijsAbonnement;
-                    abonnement.DateCreated = DateTime.Now;
-                };
-
-                if (CheckShoppingCart(abonnement))
-                {
-                    return View("DoubleBooked");
-                }
-                ShoppingCartVM? shopping;
-
-                if (HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart") != null)
-                {
-                    shopping = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-                }
-                else
-                {
-                    shopping = new ShoppingCartVM();
-                }
-                if (shopping.Abonnementen == null)
-                {
-                    shopping.Abonnementen = new List<CartAbonnementVM>();
-                }
-                shopping.Abonnementen.Add(abonnement);
-
-                HttpContext.Session.SetObject("ShoppingCart", shopping);
-
+                return NotFound();
             }
+
+            if (await IsZoneFullAsync(abonnementVM))
+            {
+                abonnementVM.Zones = new SelectList(await _zoneService.FilterById(club.Thuisstadion.StadionId), "ZoneId", "Naam", abonnementVM.ZoneId);
+                abonnementVM.Seizoen = _mapper.Map<SeizoenVM>(_seizoenService.GetNextSeizoen().Result);
+                TempData["ErrorVolzetMessage"] = $"Er zijn geen plaatsen meer beschikbaar in deze zone";
+                return View(abonnementVM);
+            }
+
+            var abonnement = _mapper.Map<CartAbonnementVM>(abonnementVM);
+            abonnement.ClubVM = _mapper.Map<ClubVM>(club);
+            abonnement.ZoneNaam = zone.Naam;
+            abonnement.Prijs = zone.PrijsAbonnement;
+            abonnement.DateCreated = DateTime.Now;
+
+            if (CheckShoppingCart(abonnement))
+            {
+                return View("DoubleBooked");
+            }
+
+            var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
+            if (shoppingCart == null)
+            {
+                shoppingCart = new ShoppingCartVM();
+            }
+
+            if (shoppingCart.Abonnementen == null)
+            {
+                shoppingCart.Abonnementen = new List<CartAbonnementVM>();
+            }
+
+            shoppingCart.Abonnementen.Add(abonnement);
+            HttpContext.Session.SetObject("ShoppingCart", shoppingCart);
+
             return RedirectToAction("Index", "ShoppingCart");
         }
 
-        public Boolean CheckAbonnement(int? id, Seizoen currentSeizoen)
+        private async Task<bool> CheckAbonnementAsync(int clubId, Seizoen currentSeizoen)
         {
-            var hasAbonnement = false;
-            var currentUserID = _userManager.GetUserId(User);
-            var AbonnementList = _abonnementService.FindByStringId(currentUserID);
-
-            foreach (var abonnement in AbonnementList.Result)
-            {
-                if (abonnement.ClubId == id && abonnement.SeizoenId == currentSeizoen.SeizoenId)
-                {
-                    hasAbonnement = true;
-                }
-            }
-
-            return hasAbonnement;
+            var currentUserId = _userManager.GetUserId(User);
+            var abonnementList = await _abonnementService.FindByStringId(currentUserId);
+            return abonnementList.Any(abonnement => abonnement.ClubId == clubId && abonnement.SeizoenId == currentSeizoen.SeizoenId);
         }
 
-        public Boolean VrijePlaatsen(AbonnementVM abonnementVM)
+        private async Task<bool> IsZoneFullAsync(AbonnementVM abonnementVM)
         {
-            Boolean isFull = false;
-            var currentZone = _zoneService.FindById(Convert.ToInt32(abonnementVM.ZoneId)).Result;
-            int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(abonnementVM.ClubId, abonnementVM.ZoneId, abonnementVM.SeizoenId).Result.Count();
-            var matchList = _matchService.FindByHomeClub(abonnementVM.ClubId).Result;
+            var currentZone = await _zoneService.FindById(abonnementVM.ZoneId);
+            int aantalAbonnementPlaatsen = (await _stoelService.GetTakenSeatsByClubID(abonnementVM.ClubId, abonnementVM.ZoneId, abonnementVM.SeizoenId)).Count();
+            var matchList = await _matchService.FindByHomeClub(abonnementVM.ClubId);
             foreach (var match in matchList)
             {
-                    int aantalTicketPlaatsen = _stoelService.GetTakenSeatsByMatchID(match.MatchId, abonnementVM.ZoneId, abonnementVM.SeizoenId).Result.Count();
-                    if (currentZone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
-                    {
-                        isFull = true;
-                        return isFull;
-                    }
+                int aantalTicketPlaatsen = (await _stoelService.GetTakenSeatsByMatchID(match.MatchId, abonnementVM.ZoneId, abonnementVM.SeizoenId)).Count();
+                if (currentZone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
+                {
+                    return true;
+                }
             }
-
-            return isFull;
+            return false;
         }
 
-        public Boolean CheckFullMatch(int id, Seizoen currentSeizoen)
+        private async Task<bool> CheckFullMatchAsync(int clubId, Seizoen currentSeizoen)
         {
-            Boolean isFull = false;
-            var matchList = _matchService.FindByHomeClub(id).Result;
+            var matchList = await _matchService.FindByHomeClub(clubId);
             foreach (var match in matchList)
             {
                 if (match.SeizoenId == currentSeizoen.SeizoenId)
                 {
                     int aantalVolleZones = 0;
-                    var zones = _zoneService.FilterById(match.Stadion.StadionId).Result;
-                    if (zones.Any())
+                    var zones = await _zoneService.FilterById(match.Stadion.StadionId);
+                    foreach (var zone in zones)
                     {
-                        foreach (var zone in zones)
+                        int aantalAbonnementPlaatsen = (await _stoelService.GetTakenSeatsByClubID(clubId, zone.ZoneId, currentSeizoen.SeizoenId)).Count();
+                        int aantalTicketPlaatsen = (await _stoelService.GetTakenSeatsByMatchID(match.MatchId, zone.ZoneId, currentSeizoen.SeizoenId)).Count();
+                        if (zone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
                         {
-
-                            int aantalAbonnementPlaatsen = _stoelService.GetTakenSeatsByClubID(id, zone.ZoneId, currentSeizoen.SeizoenId).Result.Count();
-                            int aantalTicketPlaatsen = _stoelService.GetTakenSeatsByMatchID(match.MatchId, zone.ZoneId, currentSeizoen.SeizoenId).Result.Count();
-                            if (zone.Capaciteit - (aantalAbonnementPlaatsen + aantalTicketPlaatsen) <= 0)
-                            {
-                                aantalVolleZones++;
-                            }
-                        }
-
-
-                        if (aantalVolleZones == zones.Count())
-                        {
-                            return isFull = true;
+                            aantalVolleZones++;
                         }
                     }
-
-
+                    if (aantalVolleZones == zones.Count())
+                    {
+                        return true;
+                    }
                 }
             }
-            return isFull;
+            return false;
         }
 
-        public Boolean CheckShoppingCart(CartAbonnementVM abonnement)
+        private bool CheckShoppingCart(CartAbonnementVM abonnement)
         {
             var shoppingCart = HttpContext.Session.GetObject<ShoppingCartVM>("ShoppingCart");
-            if (shoppingCart != null)
-            {
-                if (shoppingCart.Abonnementen != null && shoppingCart.Abonnementen.Any(a => a.ClubId == abonnement.ClubId))
-                {
-                    return true;
-                }
-            }
-
-            return false;
+            return shoppingCart?.Abonnementen?.Any(a => a.ClubId == abonnement.ClubId) ?? false;
         }
     }
 }

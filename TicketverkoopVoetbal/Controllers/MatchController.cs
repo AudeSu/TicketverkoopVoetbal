@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Diagnostics;
 using TicketverkoopVoetbal.Domains.Entities;
-using TicketverkoopVoetbal.Services;
 using TicketverkoopVoetbal.Services.Interfaces;
 using TicketverkoopVoetbal.ViewModels;
 
@@ -13,21 +12,15 @@ namespace TicketverkoopVoetbal.Controllers
     {
         private readonly IMatchService<Match> _matchService;
         private readonly IService<Club> _clubService;
-        private readonly IService<Zone> _zoneService;
-        private readonly IStoelService<Stoeltje> _stoelService;
         private readonly IMapper _mapper;
 
         public MatchController(
             IMatchService<Match> matchservice,
             IService<Club> clubService,
-            IService<Zone> zoneService,
-            IStoelService<Stoeltje> stoelService,
             IMapper mapper)
         {
             _matchService = matchservice;
             _clubService = clubService;
-            _stoelService = stoelService;
-            _zoneService = zoneService;
             _mapper = mapper;
         }
 
